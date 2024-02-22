@@ -1,1 +1,5 @@
 rootProject.name = 'AllergySafeDiet'
+include 'API'
+include 'Core'
+include 'UI'
+
