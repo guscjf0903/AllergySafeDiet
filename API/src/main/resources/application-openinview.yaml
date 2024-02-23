@@ -1,0 +1,25 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  devtools:
+    livereload:
+      enabled: true
+  jpa:
+    properties:
+      hibernate:
+    open-in-view: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  devtools:
+    livereload:
+      enabled: false
+  jpa:
+    properties:
+      hibernate:
+    open-in-view: false

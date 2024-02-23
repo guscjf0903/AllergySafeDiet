@@ -1,8 +1,7 @@
 package org.ui.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.core.dto.LoginDto;
-import org.core.response.LoginResponse;
+import org.core.dto.SignupDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,17 +12,17 @@ import org.springframework.web.client.RestTemplate;
 
 @Controller
 @RequiredArgsConstructor
-public class LoginUiController {
-    @GetMapping("/login")
-    public String showLoginForm() {
+public class SignupUiController {
+    @GetMapping("/signup")
+    public String showSignUpForm() {
         return "LoginAndSignupForm";
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginDto loginDto, @Value("${api.url}") String url) {
+    @PostMapping("/signup")
+    public ResponseEntity<String> registerUser(@RequestBody SignupDto signupDTO, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<LoginResponse> loginStatus = restTemplate.postForEntity(url + "/login", loginDto, LoginResponse.class);
+        ResponseEntity<String> signupStatus = restTemplate.postForEntity(url + "/signup", signupDTO, String.class);
 
-        return loginStatus;
+        return signupStatus;
     }
 }
