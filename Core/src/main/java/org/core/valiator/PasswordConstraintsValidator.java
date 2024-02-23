@@ -19,7 +19,7 @@ public class PasswordConstraintsValidator implements ConstraintValidator<Passwor
                         //비밀번호 길이가 8~20 사이여야 한다.
                         new LengthRule(8, 20),
                         //대문자 확인 유무
-                        new CharacterRule(EnglishCharacterData.UpperCase, 0),
+                        // new CharacterRule(EnglishCharacterData.UpperCase, 0),
                         //적어도 하나의 소문자가 있어야 한다.
                         new CharacterRule(EnglishCharacterData.LowerCase, 1),
                         //적어도 하나의 숫자가 있어야 한다.
