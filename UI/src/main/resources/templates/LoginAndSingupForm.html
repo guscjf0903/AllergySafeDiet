@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <link rel="stylesheet" href="/css/LoginAndSignup.css">
+</head>
+<body>
+<div id="SignupForm">
+    <form class="form">
+        <ul class="tab-group">
+            <li class="tab active"><a href="#signup">Sign Up</a></li>
+            <li class="tab"><a href="#login">Log In</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="signup">
+                <h1>Sign Up for Free</h1>
+
+                <form>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                ID<span class="req">*</span>
+                            </label>
+                            <input type="text" id="userName" name="userName" minlength="4" maxlength="20" required autocomplete="off" />
+                        </div>
+
+                        <div class="field-wrap">
+                            <label>
+                                Password<span class="req">*</span>
+                            </label>
+                            <input type="password" id="password" name="password" minlength="8" maxlength="20" required autocomplete="off"/>
+                        </div>
+                    </div>
+
+                    <div class="field-wrap">
+                        <label>
+                            Email Address<span class="req">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" required autocomplete="off"/>
+                    </div>
+
+                    <div class="BirthDate">
+                        <label>
+                            BirthDate<span class="req">*</span>
+                        </label>
+                        <input type="Date" id="birthDate" name="birthDate" required autocomplete="off"/>
+                    </div>
+
+                    <div class="field-wrap">
+                        <div class="gender">
+                            <label for="male">Male</label>
+                            <input type="radio" id="male" name="gender" value="male" required>
+                            <label for="female">Female</label>
+                            <input type="radio" id="female" name="gender" value="female" required>
+                        </div>
+                    </div>
+
+                    <div class="field-wrap">
+                        <label>
+                            Height<span class="req">*</span>
+                        </label>
+                        <input type="number" id="height" name="height" required autocomplete="off">
+                    </div>
+                    <div class="field-wrap">
+                        <label>
+                            Weight<span class="req">*</span>
+                        </label>
+                        <input type="number" id="weight" name="weight" required autocomplete="off">
+                    </div>
+                    <button id="signupBtn" class="button button-block" type="button">Sign Up</button>
+                </form>
+
+            </div>
+
+            <div id="login">
+                <h1>Welcome Back!</h1>
+                <form>
+                    <div class="field-wrap">
+                        <label>
+                            ID<span class="req">*</span>
+                        </label>
+                        <input type="text" id="loginId" name="loginId" required autocomplete="off"/>
+                    </div>
+
+                    <div class="field-wrap">
+                        <label>
+                            Password<span class="req">*</span>
+                        </label>
+                        <input type="password" id="loginPassword" name="loginPassword" required autocomplete="off"/>
+                    </div>
+
+                    <p class="forgot"><a href="#">Forgot Password?</a></p>
+
+                    <button id="loginBtn" class="button button-block" type="button">Log In</button>
+                </form>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/SignupTap.js"></script>
+<!--<script src="/send_SignupData.js"></script>-->
+<script src="/send_LoginData.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // 회원가입 버튼 클릭 시 이벤트 핸들러
+        $('#signupBtn').click(function(event) {
+            event.preventDefault();
+            sendSignupData();
+        });
+
+        // 로그인 버튼 클릭 시 이벤트 핸들러
+        $('#loginBtn').click(function(event) {
+            event.preventDefault();
+            SendLogin();
+        });
+    });
+</script>
+
+</body>
+</html>
