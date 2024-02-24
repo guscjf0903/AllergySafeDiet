@@ -20,13 +20,6 @@ public class SignupUiController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@RequestBody SignupDto signupDTO, @Value("${api.url}") String url) {
-        System.out.println("signupDTO = " + signupDTO.getUserName());
-        System.out.println("signupDTO = " + signupDTO.getPassword());
-        System.out.println("signupDTO = " + signupDTO.getGender());
-        System.out.println("signupDTO = " + signupDTO.getBirthDate());
-        System.out.println("signupDTO = " + signupDTO.getEmail());
-        System.out.println("signupDTO = " + signupDTO.getHeight());
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> signupStatus = restTemplate.postForEntity(url + "/signup", signupDTO, String.class);
 

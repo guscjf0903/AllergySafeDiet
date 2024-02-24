@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메뉴 정보 입력</title>
+    <link rel="stylesheet" href="/css/postMenu.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="menu-tab" data-toggle="tab" href="#menu" role="tab" aria-controls="menu" aria-selected="true">메뉴 정보</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="disease-tab" data-toggle="tab" href="#disease" role="tab" aria-controls="disease" aria-selected="false">질병 정보</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <input type="hidden" id="loginToken" name="loginToken">
+
+        <div class="tab-pane fade show active" id="menu" role="tabpanel" aria-labelledby="menu-tab">
+            <form id="menuPostForm" onsubmit="return sendPostMenuData()">
+                <div class="form-group">
+                    <div id="allMenuList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="meal-time">식사 타입:</label>
+                    <select id="meal-time" name="meal-time">
+                        <option value="breakfast">아침</option>
+                        <option value="lunch">점심</option>
+                        <option value="dinner">저녁</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="food-time">음식을 먹은 시간은 언제인가요?</label>
+                    <input type="time" class="form-control" id="food-time" name="food-time" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="food-name">음식 이름을 입력해주세요</label>
+                    <input type="text" class="form-control" id="food-name" name="food-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>원재료</label>
+                    <div id="ingredients-list"></div>
+                    <button type="button" id="add-ingredient" onclick="addIngredientField()">원재료 추가</button>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="remark">특이사항을 입력해주세요!</label>
+                    <input type="text" class="form-control" id="remark" required>
+                </div>
+
+                <button type="submit" class="btn btn-secondary" id="postMenuSubmit">작성 완료</button>            </form>
+        </div>
+
+
+
+
+        <div class="tab-pane fade" id="disease" role="tabpanel" aria-labelledby="disease-tab">
+            <form id="diseasePostForm" onsubmit="return sendDiseaseData()">
+                <div class="form-group">
+                    <div id="DiseaseData"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="diseaseStep">단계 선택 (1-10) :</label>
+                    <input type="number" class="form-control" id="diseaseStep" min="1" max="10" required>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="remark">특이사항을 입력해주세요!</label>
+                    <input type="text" class="form-control" id="DiseaseRemark" required>
+                </div>
+
+                <button type="submit" class="btn btn-secondary" id="diseaseSubmit">작성 완료</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="/send_loginToken.js"></script>
+<script src="/send_MenuData.js"></script>
+
+<!-- jQuery 및 부트스트랩 스크립트 추가 -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#postMenuSubmit').click(function(event) {
+            event.preventDefault();
+            send_MenuData();
+        });
+    });
+
+    $(document).ready(function() {
+        $('#diseaseSubmit').click(function(event) {
+            event.preventDefault();
+            send_DiseaseData();
+        });
+    });
+
+</script>
+</body>
+</html>
