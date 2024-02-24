@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>메뉴 정보 입력</title>
     <link rel="stylesheet" href="/css/postMenu.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -27,14 +28,14 @@
         <input type="hidden" id="loginToken" name="loginToken">
 
         <div class="tab-pane fade show active" id="menu" role="tabpanel" aria-labelledby="menu-tab">
-            <form id="menuPostForm" onsubmit="return sendPostMenuData()">
+            <form id="menuPostForm" onsubmit="return sendMenuData()">
                 <div class="form-group">
                     <div id="allMenuList"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="meal-time">식사 타입:</label>
-                    <select id="meal-time" name="meal-time">
+                    <label for="foodType">식사 타입:</label>
+                    <select id="foodType" name="foodType">
                         <option value="breakfast">아침</option>
                         <option value="lunch">점심</option>
                         <option value="dinner">저녁</option>
@@ -42,25 +43,25 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="food-time">음식을 먹은 시간은 언제인가요?</label>
-                    <input type="time" class="form-control" id="food-time" name="food-time" required>
+                    <label for="foodTime">음식을 먹은 시간은 언제인가요?</label>
+                    <input type="time" class="form-control" id="foodTime" name="foodTime" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="food-name">음식 이름을 입력해주세요</label>
-                    <input type="text" class="form-control" id="food-name" name="food-name" required>
+                    <label for="foodName">음식 이름을 입력해주세요</label>
+                    <input type="text" class="form-control" id="foodName" name="foodName" required>
                 </div>
 
                 <div class="form-group">
                     <label>원재료</label>
-                    <div id="ingredients-list"></div>
-                    <button type="button" id="add-ingredient" onclick="addIngredientField()">원재료 추가</button>
+                    <div id="ingredientsList"></div>
+                    <button type="button" id="addIngredient">원재료 추가</button>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="remark">특이사항을 입력해주세요!</label>
-                    <input type="text" class="form-control" id="remark" required>
+                    <label for="notes">특이사항을 입력해주세요!</label>
+                    <input type="text" class="form-control" id="notes" required>
                 </div>
 
                 <button type="submit" class="btn btn-secondary" id="postMenuSubmit">작성 완료</button>            </form>
@@ -105,7 +106,7 @@
     $(document).ready(function() {
         $('#postMenuSubmit').click(function(event) {
             event.preventDefault();
-            send_MenuData();
+            sendMenuData();
         });
     });
 
