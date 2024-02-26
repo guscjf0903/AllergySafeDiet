@@ -31,10 +31,10 @@ public class MenuAndHealthUiController {
         return "NewMenuAndHealthForm";
     }
 
-    @PostMapping("/")
-    public ResponseEntity<List> postMenuData(@RequestBody MenuDto menuDto, @Value("${api.url}") String url) {
+    @PostMapping("/menu")
+    public ResponseEntity postMenuData(@RequestBody MenuDto menuDto, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
 
-        return restTemplate.postForEntity(url + "/menu-and-health-data/", menuDto, List.class);
+        return restTemplate.postForEntity(url + "/menu-and-health-data/menu", menuDto, ResponseEntity.class);
     }
 }
