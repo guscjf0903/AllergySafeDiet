@@ -13,9 +13,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuDto {
+    private LocalDate postDate;
     private String foodType;
     private LocalTime foodTime;
     private String foodName;
     private List<String> ingredients;
     private String notes;
+    private int loginToken;
+
 }
