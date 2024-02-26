@@ -51,10 +51,12 @@ function sendMenuData() {
         contentType: 'application/json',
         data: JSON.stringify(menuData),
         success: function(response) {
+            alert("식단을 성공적으로 추가하였습니다.");
+            window.location.href = '/menu-and-health-data/' + $("#postDate").val();
             console.log('서버 응답:', response);
-
         },
         error: function(xhr, status, error) {
+            alert("식단 추가에 실패하였습니다.");
             console.error('에러:', error);
 
         }
