@@ -40,7 +40,7 @@ public class FoodEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "food_date", nullable = false)
     private LocalDate date;
 
     @Column(name = "meal_type", nullable = false)

@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/menu-and-health-data")
+@RequestMapping("/menu_health_data")
 public class MenuAndHealthUiController {
 
     @GetMapping("/calendar")
@@ -35,6 +35,6 @@ public class MenuAndHealthUiController {
     public ResponseEntity postMenuData(@RequestBody MenuDto menuDto, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
 
-        return restTemplate.postForEntity(url + "/menu-and-health-data/menu", menuDto, ResponseEntity.class);
+        return restTemplate.postForEntity(url + "/menu_health_data/menu", menuDto, ResponseEntity.class);
     }
 }
