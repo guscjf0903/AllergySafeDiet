@@ -6,10 +6,10 @@ import lombok.Getter;
 
 @Getter
 public class LoginResponse {
-    private final Long loginToken;
+    private final String loginToken;
 
     @JsonCreator
-    public LoginResponse(@JsonProperty("loginToken") Long loginToken) {
+    public LoginResponse(@JsonProperty("loginToken") String loginToken) {
         this.loginToken = loginToken;
     }
 }

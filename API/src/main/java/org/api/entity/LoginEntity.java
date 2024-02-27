@@ -34,16 +34,24 @@ public class LoginEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
+    @Column(name = "login_token" , nullable = false, unique = true)
+    private String loginToken;
+
+    @Column(name = "token_expirationtime", nullable = false)
+    private LocalDateTime tokenExpirationTime;
+
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime loginTime;
 
-    public LoginEntity(UserEntity user) {
+    public LoginEntity(UserEntity user, String loginToken, LocalDateTime tokenExpirationTime) {
         this.user = user;
+        this.loginToken = loginToken;
+        this.tokenExpirationTime = tokenExpirationTime;
     }
 
-    public static LoginEntity of(UserEntity user) {
-        return new LoginEntity(user);
+    public static LoginEntity of(UserEntity user, String loginToken, LocalDateTime tokenExpirationTime) {
+        return new LoginEntity(user, loginToken, tokenExpirationTime);
     }
 
 }
