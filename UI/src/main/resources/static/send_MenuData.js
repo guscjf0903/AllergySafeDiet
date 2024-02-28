@@ -46,7 +46,7 @@ function sendMenuData() {
     });
 
     $.ajax({
-        url: '/menu-and-health-data/menu', // 원하는 URL로 변경
+        url: '/menu_health_data/menu', // 원하는 URL로 변경
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(menuData),
@@ -56,9 +56,13 @@ function sendMenuData() {
             console.log('서버 응답:', response);
         },
         error: function(xhr, status, error) {
+            if(xhr.title === "NOT_FOUND_LOGINID") {
+                alert("로그인이 필요합니다.");
+                window.location.href = '/login';
+            }
             alert("식단 추가에 실패하였습니다.");
-            console.error('에러:', error);
-
+            var errorMessage = JSON.parse(xhr.responseText);
+            console.error('에러:', errorMessage);
         }
     });
 

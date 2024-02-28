@@ -22,7 +22,7 @@ function sendSignupData() {
         success: function (response) {
             console.log(response);
             alert("회원가입이 완료되었습니다.");
-            window.location.href = '/login';
+            $('.tab a[href="#login"]').click();
         },
         error: function (error) {
             alert("회원가입에 실패하였습니다.");

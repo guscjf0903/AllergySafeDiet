@@ -17,6 +17,7 @@ spring:
       dev:
         - db-dev
         - openinview-dev
+        - openApi
       prod:
         - db-prod
         - openinview-prod
