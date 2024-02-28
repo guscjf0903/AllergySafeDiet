@@ -3,6 +3,7 @@ package org.ui.controller;
 import jakarta.websocket.server.PathParam;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.core.dto.IngredientsDto;
 import org.core.dto.MenuDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,6 @@ public class MenuAndHealthUiController {
     public ResponseEntity<?> getFoodRecipes(@RequestParam(name = "foodName") String foodName, @Value("${api.url}") String url) {
         System.out.println(foodName);
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForEntity(url + "/recipes?foodName=" + foodName, ResponseEntity.class);
+        return restTemplate.getForEntity(url + "/recipes?foodName=" + foodName, List.class);
     }
 }
