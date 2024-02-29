@@ -22,6 +22,5 @@ public class MenuDto {
     private String foodName;
     private List<String> ingredients;
     private String notes;
-    private Long loginToken;
-
+    private String loginToken;
 }

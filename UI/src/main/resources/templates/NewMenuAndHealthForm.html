@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container mt-3">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="menu-tab" data-toggle="tab" href="#menu" role="tab" aria-controls="menu" aria-selected="true">메뉴 정보</a>
@@ -26,51 +26,42 @@
     <div class="tab-content" id="myTabContent">
         <input type="hidden" id="loginToken" name="loginToken">
         <input type="hidden" id="postDate" th:value="${date}">
-
-
-
         <div class="tab-pane fade show active" id="menu" role="tabpanel" aria-labelledby="menu-tab">
             <form id="menuPostForm" onsubmit="return sendMenuData()">
-                <div class="form-group">
-                    <div id="allMenuList"></div>
+                <div class="form-row align-items-end">
+                    <div class="col">
+                        <label for="foodType">식사 타입:</label>
+                        <select id="foodType" name="foodType" class="form-control">
+                            <option value="breakfast">아침</option>
+                            <option value="lunch">점심</option>
+                            <option value="dinner">저녁</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="foodTime">음식을 먹은 시간:</label>
+                        <input type="time" class="form-control" id="foodTime" name="foodTime" required>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="foodType">식사 타입:</label>
-                    <select id="foodType" name="foodType">
-                        <option value="breakfast">아침</option>
-                        <option value="lunch">점심</option>
-                        <option value="dinner">저녁</option>
-                    </select>
+                <div class="form-row align-items-end mt-3">
+                    <div class="col-9">
+                        <label for="foodName">음식 이름:</label>
+                        <input type="text" class="form-control" id="foodName" name="foodName" required>
+                    </div>
+                    <div class="col">
+                        <button type="button" id="searchRecipe" class="btn btn-primary">재료 검색</button>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="foodTime">음식을 먹은 시간은 언제인가요?</label>
-                    <input type="time" class="form-control" id="foodTime" name="foodTime" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="foodName">음식 이름을 입력해주세요</label>
-                    <input type="text" class="form-control" id="foodName" name="foodName" required>
-                </div>
-                <div class="form-group">
-                    <button type="button" id="searchRecipe" class="btn btn-primary">재료 검색</button>
-                </div>
-
-                <div class="form-group">
-                    <label>원재료</label>
-                    <div id="ingredientsList"></div>
-                    <button type="button" id="addIngredient">원재료 추가</button>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="notes">특이사항을 입력해주세요!</label>
+                <div id="ingredientsWrapper" class="mt-3"></div>
+                <button type="button" id="addIngredient" class="btn btn-info mt-3">원재료 추가</button>
+                <div id="ingredientsList" class="row mt-3"></div>
+                <div class="form-group mt-3">
+                    <label for="notes">특이사항:</label>
                     <input type="text" class="form-control" id="notes" required>
                 </div>
-
-                <button type="submit" class="btn btn-secondary" id="postMenuSubmit">작성 완료</button>            </form>
+                <button type="submit" class="btn btn-secondary">작성 완료</button>
+            </form>
         </div>
+
 
 
 

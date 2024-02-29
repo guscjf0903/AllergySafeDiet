@@ -55,11 +55,11 @@ public class LoginService {
     }
 
     @Transactional(readOnly = true)
-    public LoginEntity validateLoginId(Long loginToken) {
+    public LoginEntity validateLoginId(String loginToken) {
         if (loginToken == null) {
             throw new CustomException(NOT_FOUND_LOGINID);
         }
-        return loginRepository.findById(loginToken)
+        return loginRepository.findByLoginToken(loginToken)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
     }
 
