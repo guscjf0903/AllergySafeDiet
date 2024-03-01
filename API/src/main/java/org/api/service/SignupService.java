@@ -24,5 +24,10 @@ public class SignupService {
             throw new CustomException(USERSIGNUP_FAILED);
         }
     }
+
+    @Transactional(readOnly = true)
+    public boolean checkDuplicateMail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }
 

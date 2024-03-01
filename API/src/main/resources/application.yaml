@@ -18,6 +18,7 @@ spring:
         - db-dev
         - openinview-dev
         - openApi
+        - gmail
       prod:
         - db-prod
         - openinview-prod
