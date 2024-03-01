@@ -14,14 +14,16 @@ import org.springframework.stereotype.Service;
 public class VerificationCodeService {
     private final MailService mailService;
     private final SignupService signupService;
+    private final RedisService redisService;
 
     public void sendCodeToEmail(String email) {
         if(signupService.checkDuplicateMail(email)) {
             throw new CustomException(DUPLICATE_EMAIL);
         }
         String subject = "Email Verification";
-        String message = createCode();
-        mailService.sendMail(email, subject, message);
+        String code = createCode();
+        redisService.saveVerificationCode(email, code); // 인증코드 redis에 저장
+        mailService.sendMail(email, subject, code);
     }
 
     private String createCode() {
@@ -36,5 +38,14 @@ public class VerificationCodeService {
         } catch (Exception e) {
             throw new CustomException(ERROR_CREATE_CODE);
         }
+    }
+
+    public boolean verifyCode(String email, String submittedCode) {
+        String storedCode = redisService.getVerificationCode(email);
+        if (storedCode != null && storedCode.equals(submittedCode)) {
+            redisService.deleteVerificationCode(email); // 코드 검증 후 삭제
+            return true;
+        }
+        return false;
     }
 }

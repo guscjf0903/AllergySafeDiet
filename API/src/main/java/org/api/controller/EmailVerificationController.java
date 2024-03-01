@@ -2,7 +2,6 @@ package org.api.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.api.service.MailService;
 import org.api.service.VerificationCodeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,5 +19,16 @@ public class EmailVerificationController {
         verificationCodeService.sendCodeToEmail(email);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/emails/verifications")
+    public ResponseEntity<?> verificationEmail(@RequestParam("email") @Valid String email,
+                                            @RequestParam("code") String authCode) {
+        boolean result = verificationCodeService.verifyCode(email, authCode);
+        if(result) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
