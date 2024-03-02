@@ -15,10 +15,18 @@ $(document).ready(function() {
             success: function(response) {
                 $('#verificationCodeSection').show();
                 // 인증 코드 입력란을 표시
-                alert("Verification email sent. Please check your email.");
+                Swal.fire( // 성공 알림
+                    'Sent!',
+                    'Verification email sent. Please check your email.',
+                    'success'
+                );
             },
             error: function() {
-                alert("Failed to send verification email. Please try again.");
+                Swal.fire( // 오류 알림
+                    'Error!',
+                    'Failed to send verification email. Please try again.',
+                    'error'
+                );
             }
         });
     });
@@ -37,11 +45,11 @@ $(document).ready(function() {
             },
             success: function(response) {
                 $('#checkVerificationEmail').val('true');
-                $('#verificationStatus').text("Email verification successful!");
+                $('#verificationStatus').text("Email verification successful!").css('color', 'green');
             },
             error: function() {
                 $('#checkVerificationEmail').val('false');
-                $('#verificationStatus').text("Email verification failed. Please try again.");
+                $('#verificationStatus').text("Email verification failed. Please try again.").css('color', 'red');
             }
         });
     });

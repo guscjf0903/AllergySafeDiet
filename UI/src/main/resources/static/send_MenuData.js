@@ -90,10 +90,6 @@ function sendMenuData() {
             console.log('서버 응답:', response);
         },
         error: function(xhr, status, error) {
-            if(xhr.title === "NOT_FOUND_LOGINID") {
-                alert("로그인이 필요합니다.");
-                window.location.href = '/login';
-            }
             alert("식단 추가에 실패하였습니다.");
             var errorMessage = JSON.parse(xhr.responseText);
             console.error('에러:', errorMessage);

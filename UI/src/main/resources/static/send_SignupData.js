@@ -23,11 +23,19 @@ function sendSignupData() {
         data: JSON.stringify(data),
         success: function (response) {
             console.log(response);
-            alert("회원가입이 완료되었습니다.");
+            Swal.fire( // 성공 알림
+                'Done!',
+                'Sign up successful.',
+                'success'
+            );
             $('.tab a[href="#login"]').click();
         },
         error: function (error) {
-            alert("회원가입에 실패하였습니다.");
+            Swal.fire( // 오류 알림
+                'Error!',
+                'Failed to sign up. Please try again.',
+                'error'
+            );
             console.log(error);
         }
     })
