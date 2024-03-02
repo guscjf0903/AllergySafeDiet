@@ -34,13 +34,26 @@
                             <input type="password" id="password" name="password" minlength="8" maxlength="20" required autocomplete="off"/>
                         </div>
                     </div>
-
-                    <div class="field-wrap">
+                    <div class="field-wrap email-verify-wrap">
                         <label>
                             Email Address<span class="req">*</span>
                         </label>
                         <input type="email" id="email" name="email" required autocomplete="off"/>
+                        <input type="hidden" id="verificationEmail" name="verificationEmail">
+                        <button id="verifyEmailBtn" class="button button-small">Verify Email</button>
                     </div>
+
+                    <div id="verificationCodeSection" class="field-wrap code-verify-wrap" style="display:none;">
+                        <div class="field-wrap">
+                            <label>
+                                Verification Code<span class="req">*</span>
+                            </label>
+                            <input type="text" id="verificationCode" name="verificationCode" autocomplete="off"/>
+                        </div>
+                        <button id="submitVerificationCodeBtn" class="button button-small">Submit Code</button>
+                        <button id="resendVerificationEmailBtn" class="button button-small">Resend Email</button>
+                    </div>
+
 
                     <div class="BirthDate">
                         <label>
@@ -98,6 +111,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/SignupTap.js"></script>
+<script src="/VerificationEmail.js"></script>
 <script src="/send_SignupData.js"></script>
 <script src="/send_LoginData.js"></script>
 

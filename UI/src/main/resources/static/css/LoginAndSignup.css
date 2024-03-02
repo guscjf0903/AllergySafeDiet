@@ -195,6 +195,26 @@ textarea {
     display: block;
     width: 100%;
 }
+.email-verify-wrap {
+    display: flex;
+    justify-content: space-between; /* 내부 요소들을 양 끝으로 정렬 */
+}
+
+.email-verify-wrap input[type="email"] {
+    flex: 1; /* 이메일 입력 필드가 가능한 많은 공간을 차지하도록 함 */
+    margin-right: 10px; /* 버튼과의 간격 */
+}
+
+.button-small {
+    padding: 8px 10px; /* 버튼 패딩 조절 */
+    font-size: 0.8rem; /* 글꼴 크기 줄임 */
+    width: auto; /* 자동 너비 설정 */
+    margin-top: 0; /* 상단 여백 제거 */
+    height: 38px; /* 입력 필드와 버튼의 높이를 동일하게 설정 */
+
+}
+
+
 
 .forgot {
     margin-top: -20px;

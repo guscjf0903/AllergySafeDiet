@@ -3,10 +3,12 @@ package org.api.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.api.service.VerificationCodeService;
+import org.core.dto.EmailDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RequiredArgsConstructor
@@ -15,8 +17,8 @@ public class EmailVerificationController {
     private final VerificationCodeService verificationCodeService;
 
     @PostMapping("/email/verification_request")
-    public ResponseEntity<?> sendVerificationEmail(@Valid @RequestParam("email") String email) {
-        verificationCodeService.sendCodeToEmail(email);
+    public ResponseEntity<?> sendVerificationEmail(@Valid @RequestBody EmailDto emailDto) {
+        verificationCodeService.sendCodeToEmail(emailDto.getEmail());
 
         return ResponseEntity.ok().build();
     }

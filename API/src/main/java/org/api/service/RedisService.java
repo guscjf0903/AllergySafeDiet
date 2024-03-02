@@ -13,6 +13,9 @@ public class RedisService {
 
     public void saveVerificationCode(String email, String code) {
         String key = "verificationCode:" + email;
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
+            stringRedisTemplate.delete(key);
+        }
         ValueOperations<String, String> valueOps = stringRedisTemplate.opsForValue();
         valueOps.set(key, code, 5, TimeUnit.MINUTES); // 코드는 5분 후 만료.
     }
