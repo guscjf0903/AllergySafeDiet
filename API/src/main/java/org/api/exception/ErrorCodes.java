@@ -14,7 +14,8 @@ public enum ErrorCodes {
     DUPLICATE_DISEASEDATE_ERROR(404, "이미 등록된 날짜의 질병 데이터가 존재합니다."),
     NOT_FOUND_RECIPE(404, "존재하지 않는 레시피입니다."),
     DUPLICATE_EMAIL(400, "이미 등록된 이메일입니다."),
-    ERROR_CREATE_CODE(500, "인증코드 생성에 실패하였습니다.");
+    ERROR_CREATE_CODE(500, "인증코드 생성에 실패하였습니다."),
+    INVALID_EMAIL(404, "이메일이 인증되지 않았습니다.");
 
 
     private final int status;

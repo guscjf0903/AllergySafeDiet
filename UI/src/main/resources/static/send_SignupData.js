@@ -5,6 +5,7 @@ function sendSignupData() {
     var birthDate = $("#birthDate").val();
     var gender = $('input[name="gender"]:checked').val();
     var height = $("#height").val();
+    var checkVerificationEmail = $("#checkVerificationEmail").val();
 
     var data = {
         userName: userName,
@@ -13,6 +14,7 @@ function sendSignupData() {
         birthDate: birthDate,
         gender: gender,
         height: height,
+        checkVerificationEmail: checkVerificationEmail
     };
     $.ajax({
         url: "/signup",

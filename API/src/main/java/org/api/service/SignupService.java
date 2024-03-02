@@ -1,5 +1,6 @@
 package org.api.service;
 
+import static org.api.exception.ErrorCodes.INVALID_EMAIL;
 import static org.api.exception.ErrorCodes.USERSIGNUP_FAILED;
 
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,17 @@ public class SignupService {
 
     @Transactional
     public void registerUser(SignupDto signupDTO) {
-        try{
-            UserEntity user = UserEntity.of(signupDTO);
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new CustomException(USERSIGNUP_FAILED);
+        checkVerificationMail(signupDTO.isCheckVerificationEmail());
+        UserEntity user = UserEntity.of(signupDTO);
+        userRepository.save(user);
+    }
+
+    private void checkVerificationMail(boolean checkVerificationEmail) { //이메일 인증 확인
+        if(!checkVerificationEmail) {
+            throw new CustomException(INVALID_EMAIL);
         }
     }
+
 
     @Transactional(readOnly = true)
     public boolean checkDuplicateMail(String email) {

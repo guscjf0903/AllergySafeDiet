@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -31,8 +32,13 @@ public class SignupUiController {
     public ResponseEntity<String> sendVerificationEmail(@RequestBody EmailDto emailDto, @Value("${api.url}") String url) {
         System.out.println(emailDto.getEmail());
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> verificationStatus = restTemplate.postForEntity(url + "/email/verification_request", emailDto, String.class);
 
-        return verificationStatus;
+        return restTemplate.postForEntity(url + "/email/verification_request", emailDto, String.class);
+    }
+
+    @GetMapping("/emails/verifications")
+    public ResponseEntity<String> verificationEmail(@RequestParam String email,@RequestParam int verificationCode, @Value("${api.url}") String url) {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForEntity(url + "/emails/verifications?email=" + email + "&code=" + verificationCode, String.class);
     }
 }

@@ -29,17 +29,18 @@ $(document).ready(function() {
         var verificationCode = $('#verificationCode').val();
         // API 호출로 이메일 및 인증 코드 데이터 전송
         $.ajax({
-            url: 'YOUR_VERIFICATION_API_ENDPOINT', // 인증 API 엔드포인트를 여기에 입력하세요.
-            type: 'POST',
+            url: '/emails/verifications', // 인증 API 엔드포인트를 여기에 입력하세요.
+            type: 'GET',
             data: {
                 email: email,
                 verificationCode: verificationCode
             },
             success: function(response) {
-                $('#verificationEmail')
+                $('#checkVerificationEmail').val('true');
                 $('#verificationStatus').text("Email verification successful!");
             },
             error: function() {
+                $('#checkVerificationEmail').val('false');
                 $('#verificationStatus').text("Email verification failed. Please try again.");
             }
         });

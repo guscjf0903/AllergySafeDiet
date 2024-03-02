@@ -39,7 +39,7 @@
                             Email Address<span class="req">*</span>
                         </label>
                         <input type="email" id="email" name="email" required autocomplete="off"/>
-                        <input type="hidden" id="verificationEmail" name="verificationEmail">
+                        <input type="hidden" id="checkVerificationEmail" name="checkVerificationEmail">
                         <button id="verifyEmailBtn" class="button button-small">Verify Email</button>
                     </div>
 
@@ -52,6 +52,7 @@
                         </div>
                         <button id="submitVerificationCodeBtn" class="button button-small">Submit Code</button>
                         <button id="resendVerificationEmailBtn" class="button button-small">Resend Email</button>
+                        <div id="verificationStatus" class="verification-status"></div>
                     </div>
 
 

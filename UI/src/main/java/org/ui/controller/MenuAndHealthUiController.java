@@ -38,12 +38,6 @@ public class MenuAndHealthUiController {
     @PostMapping("/menu")
     public ResponseEntity<?> postMenuData(@RequestBody MenuDto menuDto, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
-        System.out.println(menuDto.getFoodName());
-        System.out.println(menuDto.getMealType());
-        System.out.println(menuDto.getMealTime());
-        System.out.println(menuDto.getIngredients());
-        System.out.println(menuDto.getNotes());
-        System.out.println(menuDto.getDate());
         try{
             return restTemplate.postForEntity(url + "/menu_health_data/menu", menuDto, ResponseEntity.class);
         }catch (HttpClientErrorException | HttpServerErrorException e ) { //api에서 보낸 에러메세지를 받아오기 위해

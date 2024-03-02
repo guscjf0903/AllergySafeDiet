@@ -27,4 +27,5 @@ public class SignupDto {
     private Date birthDate;
     private String gender;
     private int height;
+    private boolean checkVerificationEmail;
 }
