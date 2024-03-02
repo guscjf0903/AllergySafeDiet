@@ -55,8 +55,8 @@
                 <button type="button" id="addIngredient" class="btn btn-info mt-3">원재료 추가</button>
                 <div id="ingredientsList" class="row mt-3"></div>
                 <div class="form-group mt-3">
-                    <label for="notes">특이사항:</label>
-                    <input type="text" class="form-control" id="notes" required>
+                    <label for="foodNotes">특이사항:</label>
+                    <input type="text" class="form-control" id="foodNotes" required>
                 </div>
                 <button type="submit" class="btn btn-secondary">작성 완료</button>
             </form>
@@ -66,25 +66,43 @@
 
 
 
-        <div class="tab-pane fade" id="disease" role="tabpanel" aria-labelledby="disease-tab">
-            <form id="diseasePostForm" onsubmit="return sendDiseaseData()">
+        <div class="tab-pane fade" id="health" role="tabpanel" aria-labelledby="health-tab">
+            <div id="dataStatusMessage"></div>
+            <form id="healthPostForm" onsubmit="return sendHealthData()">
                 <div class="form-group">
-                    <div id="DiseaseData"></div>
+                    <div id="HealthData"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="diseaseStep">단계 선택 (1-10) :</label>
-                    <input type="number" class="form-control" id="diseaseStep" min="1" max="10" required>
+                    <label for="allergiesStatus">알러지 상태 선택 (1-10) :</label>
+                    <input type="number" class="form-control" id="allergiesStatus" min="1" max="10" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="conditionStatus">컨디션 선택 (1-10) :</label>
+                    <input type="number" class="form-control" id="conditionStatus" min="1" max="10" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">몸무게 :</label>
+                    <input type="number" class="form-control" id="weight" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sleepTime">수면시간 :</label>
+                    <input type="number" class="form-control" id="sleepTime" min="1" max="24" required>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="remark">특이사항을 입력해주세요!</label>
-                    <input type="text" class="form-control" id="DiseaseRemark" required>
+                    <label for="healthNotes">특이사항을 입력해주세요!</label>
+                    <input type="text" class="form-control" id="healthNotes" required>
                 </div>
 
-                <button type="submit" class="btn btn-secondary" id="diseaseSubmit">작성 완료</button>
+                <button type="submit" class="btn btn-secondary" id="healthDataSubmit">작성 완료</button>
             </form>
+            <button id="addDataButton" class="btn btn-primary" style="display:none;">데이터 추가</button>
+            <button id="editDataButton" class="btn btn-primary" style="display:none;">수정</button>
         </div>
     </div>
 </div>
@@ -92,6 +110,7 @@
 
 <script src="/send_MenuData.js"></script>
 <script src="/SearchRecipe.js"></script>
+<script src="/checkHealthData.js"></script>
 
 <!-- jQuery 및 부트스트랩 스크립트 추가 -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

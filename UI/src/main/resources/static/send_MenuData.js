@@ -69,7 +69,7 @@ function sendMenuData() {
         mealTime : $("#foodTime").val(),
         foodName : $("#foodName").val(),
         ingredients : [],
-        notes : $("#notes").val()
+        notes : $("#foodNotes").val()
     };
 
     $('#ingredientsList .ingredient-container').each(function() {
@@ -89,10 +89,9 @@ function sendMenuData() {
             window.location.href = '/menu-and-health-data/' + $("#postDate").val();
             console.log('서버 응답:', response);
         },
-        error: function(xhr, status, error) {
+        error: function() {
             alert("식단 추가에 실패하였습니다.");
-            var errorMessage = JSON.parse(xhr.responseText);
-            console.error('에러:', errorMessage);
+            console.error('서버 요청 실패');
         }
     });
 

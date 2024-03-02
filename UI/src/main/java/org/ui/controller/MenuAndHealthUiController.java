@@ -1,8 +1,10 @@
 package org.ui.controller;
 
 import jakarta.websocket.server.PathParam;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.core.dto.HealthDto;
 import org.core.dto.IngredientsDto;
 import org.core.dto.MenuDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,4 +54,12 @@ public class MenuAndHealthUiController {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForEntity(url + "/recipes?foodName=" + foodName, List.class);
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<HealthDto> checkHealthData(@RequestParam(name = "date") String date, @Value("${api.url}") String url) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        return restTemplate.getForEntity(url + "/menu_health_data/health?date=" + date, HealthDto.class);
+    }
+
 }
