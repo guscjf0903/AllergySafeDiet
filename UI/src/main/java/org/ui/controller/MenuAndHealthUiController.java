@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @RequestMapping("/menu_health_data")
 public class MenuAndHealthUiController {
+    @Value("${api.url}") String apiUrl;
 
     @GetMapping("/calendar")
     public String showDataCalender() {
@@ -35,23 +36,9 @@ public class MenuAndHealthUiController {
     @GetMapping("menu/{date}")
     public String showMenuDataForm(@PathVariable("date") String date, Model model) {
         model.addAttribute("date", date);
+        model.addAttribute("apiUrl", apiUrl);
+
         return "FoodMenuInfo";
-    }
-    @PostMapping("/menu")
-    public ResponseEntity<?> postMenuData(@RequestBody MenuDto menuDto, @Value("${api.url}") String url) {
-        RestTemplate restTemplate = new RestTemplate();
-        try{
-            return restTemplate.postForEntity(url + "/menu_health_data/menu", menuDto, ResponseEntity.class);
-        }catch (HttpClientErrorException | HttpServerErrorException e ) { //api에서 보낸 에러메세지를 받아오기 위해
-            System.out.println(e.getResponseBodyAsString());
-            System.out.println(e.getStatusCode());
-            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
-        }
-    }
-    @GetMapping("/recipes")
-    public ResponseEntity<?> getFoodRecipes(@RequestParam(name = "foodName") String foodName, @Value("${api.url}") String url) {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForEntity(url + "/recipes?foodName=" + foodName, List.class);
     }
 
 

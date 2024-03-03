@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var apiUrl = $('#apiUrl').data('url');
+
     // 이메일 인증 버튼 클릭 이벤트
     $('#verifyEmailBtn').click(function() {
         var email = $('#email').val();
@@ -7,7 +9,7 @@ $(document).ready(function() {
         };
         // API 호출로 이메일 데이터 전송
         $.ajax({
-            url: '/email/verification_request', // API 엔드포인트를 여기에 입력하세요.
+            url: apiUrl + '/email/verification_request', // API 엔드포인트를 여기에 입력하세요.
             type: 'POST',
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -37,7 +39,7 @@ $(document).ready(function() {
         var verificationCode = $('#verificationCode').val();
         // API 호출로 이메일 및 인증 코드 데이터 전송
         $.ajax({
-            url: '/emails/verifications', // 인증 API 엔드포인트를 여기에 입력하세요.
+            url: apiUrl + '/emails/verifications', // 인증 API 엔드포인트를 여기에 입력하세요.
             type: 'GET',
             data: {
                 email: email,

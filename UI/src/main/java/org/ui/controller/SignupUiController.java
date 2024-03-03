@@ -23,17 +23,4 @@ public class SignupUiController {
         model.addAttribute("apiUrl", apiUrl);
         return "LoginAndSignupForm";
     }
-
-    @PostMapping("/email/verification_request")
-    public ResponseEntity<String> sendVerificationEmail(@RequestBody EmailDto emailDto, @Value("${api.url}") String url) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        return restTemplate.postForEntity(url + "/email/verification_request", emailDto, String.class);
-    }
-
-    @GetMapping("/emails/verifications")
-    public ResponseEntity<String> verificationEmail(@RequestParam String email,@RequestParam int verificationCode, @Value("${api.url}") String url) {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForEntity(url + "/emails/verifications?email=" + email + "&code=" + verificationCode, String.class);
-    }
 }

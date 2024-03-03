@@ -1,11 +1,13 @@
 $(document).ready(function() {
+    var apiUrl = $('#apiUrl').data('url');
+
     $('#searchRecipe').click(function() {
         var foodName = $('#foodName').val(); // 음식 이름 값 가져오기
         if(foodName) { // 음식 이름이 비어있지 않은 경우
             $.ajax({
-                url: '/menu_health_data/recipes',
-                type: 'GET', // HTTP 메소드
-                data: { foodName: foodName }, // 요청과 함께 보낼 데이터
+                url: apiUrl + '/recipes',
+                type: 'GET',
+                data: { foodName: foodName },
                 success: function(data) {
                     updateIngredientsList(data);
                     alert("원재료 검색 성공!");

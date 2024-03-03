@@ -3,7 +3,6 @@ $('#addIngredient').click(function() {
 });
 function addIngredientToList(ingredientName) {
     var $ingredientsList = $('#ingredientsList');
-
     // 원재료 입력 필드 생성 (이미 존재하는 값이 있으면 그 값을 사용)
     var $ingredientField = $('<input>', {
         type: 'text',
@@ -30,6 +29,7 @@ function addIngredientToList(ingredientName) {
 }
 
 function sendMenuData() {
+    var apiUrl = $('#apiUrl').data('url');
     var menuData = {
         loginToken : sessionStorage.getItem("loginToken"),
         date : $("#postDate").val(),
@@ -48,7 +48,7 @@ function sendMenuData() {
     });
 
     $.ajax({
-        url: '/menu_health_data/menu', // 원하는 URL로 변경
+        url: apiUrl + '/menu_health_data/menu', // 원하는 URL로 변경
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(menuData),

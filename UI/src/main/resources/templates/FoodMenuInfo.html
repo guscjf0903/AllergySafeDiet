@@ -16,6 +16,7 @@
 <div class="container mt-3">
     <input type="hidden" id="loginToken" name="loginToken">
     <input type="hidden" id="postDate" th:value="${date}">
+    <div id="apiUrl" th:data-url="${apiUrl}"></div>
     <form id="menuPostForm" onsubmit="return sendMenuData()">
         <div class="form-row align-items-end">
             <div class="col">
