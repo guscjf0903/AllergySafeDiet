@@ -13,12 +13,9 @@ public class ErrorDto {
     private static final URI BLANK_TYPE = URI.create("about:blank");
 
     @Nullable
-    private URI type = BLANK_TYPE;
-
+    private URI type;
     private String detail;
-
     private String title;
-
     @Nullable
     private String instance;
 

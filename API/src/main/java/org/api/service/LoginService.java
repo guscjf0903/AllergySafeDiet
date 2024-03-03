@@ -4,7 +4,6 @@ import static org.api.exception.ErrorCodes.NOT_FOUND_LOGINID;
 import static org.api.exception.ErrorCodes.NOT_FOUND_USER;
 import static org.api.exception.ErrorCodes.PASSWORD_DISMATCH;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

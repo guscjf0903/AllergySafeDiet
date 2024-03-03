@@ -1,6 +1,5 @@
 package org.core.dto;
 
-import jakarta.validation.constraints.Email;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

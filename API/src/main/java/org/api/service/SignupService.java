@@ -1,7 +1,6 @@
 package org.api.service;
 
 import static org.api.exception.ErrorCodes.INVALID_EMAIL;
-import static org.api.exception.ErrorCodes.USERSIGNUP_FAILED;
 
 import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
