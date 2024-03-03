@@ -37,7 +37,6 @@ public class MenuAndHealthUiController {
     public String showMenuDataForm(@PathVariable("date") String date, Model model) {
         model.addAttribute("date", date);
         model.addAttribute("apiUrl", apiUrl);
-
         return "FoodMenuInfo";
     }
 

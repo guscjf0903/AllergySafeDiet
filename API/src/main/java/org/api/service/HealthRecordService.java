@@ -18,6 +18,7 @@ public class HealthRecordService {
 
     @Transactional
     public void saveHealthData(HealthDto healthDto) {
+        System.out.println("Test");
         LoginEntity loginEntity = loginService.validateLoginId(healthDto.getLoginToken());
         HealthEntity healthEntity = HealthEntity.of(loginEntity.getUser() ,healthDto);
 
@@ -26,8 +27,10 @@ public class HealthRecordService {
 
 
     @Transactional(readOnly = true)
-    public Optional<HealthDto> getHealthDataByDate(LocalDate date) {
-        HealthEntity healthEntity = healthRepository.getHealthDataByDate(date);
+    public Optional<HealthDto> getHealthDataByDate(LocalDate date, String loginToken) {
+        LoginEntity loginEntity = loginService.validateLoginId(loginToken);
+        HealthEntity healthEntity = healthRepository.getHealthDataByDateAndUserUserId(date, loginEntity.getUser().getUserId());
+
         if(healthEntity == null) {
             return Optional.empty();
         } else {

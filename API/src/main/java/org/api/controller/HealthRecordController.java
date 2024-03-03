@@ -1,5 +1,6 @@
 package org.api.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -29,8 +30,8 @@ public class HealthRecordController {
     private final HealthRecordService healthRecordService;
 
     @GetMapping("/health")
-    public ResponseEntity<?> getHealthData(@RequestParam(name = "date") LocalDate date) {
-        Optional<HealthDto> healthDto = healthRecordService.getHealthDataByDate(date);
+    public ResponseEntity<?> getHealthData(@RequestParam(name = "date") LocalDate date, @RequestParam(name = "loginToken") String loginToken) {
+        Optional<HealthDto> healthDto = healthRecordService.getHealthDataByDate(date, loginToken);
 
         return healthDto
                 .map(data -> ResponseEntity.ok().body(data))
