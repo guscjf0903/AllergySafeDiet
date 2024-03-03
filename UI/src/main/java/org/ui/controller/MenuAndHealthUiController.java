@@ -64,8 +64,10 @@ public class MenuAndHealthUiController {
     @GetMapping("/health")
     public ResponseEntity<HealthDto> checkHealthData(@RequestParam(name = "date") LocalDate date, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<HealthDto> response = restTemplate.getForEntity(url + "/menu_health_data/health?date=" + date, HealthDto.class);
+        System.out.println(response.getStatusCode());
 
-        return restTemplate.getForEntity(url + "/menu_health_data/health?date=" + date, HealthDto.class);
+        return response;
     }
     @PostMapping("/health")
     public ResponseEntity<?> postHealthData(@RequestBody HealthDto healthDto, @Value("${api.url}") String url) {

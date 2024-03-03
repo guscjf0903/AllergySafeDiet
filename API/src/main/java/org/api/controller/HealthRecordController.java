@@ -11,6 +11,8 @@ import org.api.service.HealthRecordService;
 import org.api.service.IngredientService;
 import org.core.dto.HealthDto;
 import org.core.dto.MenuDto;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,12 @@ public class HealthRecordController {
         return healthDto
                 .map(data -> ResponseEntity.ok().body(data))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+    }
+
+    @PostMapping("/health")
+    public ResponseEntity<?> postHealthData(@RequestBody HealthDto healthDto) {
+        healthRecordService.saveHealthData(healthDto);
+        return ResponseEntity.ok().build();
     }
 
 }

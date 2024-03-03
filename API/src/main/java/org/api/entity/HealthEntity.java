@@ -77,4 +77,16 @@ public class HealthEntity {
                 healthDto.getConditionStatus(), healthDto.getWeight(), healthDto.getSleepTime(), healthDto.getHealthNotes());
     }
 
+    public static HealthDto toDto(HealthEntity healthEntity) {
+        HealthDto dto = new HealthDto();
+        dto.setDate(healthEntity.date);
+        dto.setAllergiesStatus(healthEntity.allergiesStatus);
+        dto.setConditionStatus(healthEntity.conditionStatus);
+        dto.setWeight(healthEntity.weight);
+        dto.setSleepTime(healthEntity.sleepTime);
+        dto.setHealthNotes(healthEntity.notes);
+
+        return dto;
+    }
+
 }

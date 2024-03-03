@@ -38,18 +38,16 @@ $(document).ready(function() {
             method: 'GET',
             contentType: 'application/json',
             data: {date: postDate},
-            success: function(response) {
-                $('#allergiesStatus').val(response.allergiesStatus);
-                $('#conditionStatus').val(response.conditionStatus);
-                $('#weight').val(response.weight);
-                $('#sleepTime').val(response.sleepTime);
-                $('#healthNotes').val(response.healthNotes);
-            },
-            statusCode: {
-                204: function() {
-                    // 데이터가 없을 때의 처리
+            complete: function(xhr) {
+                if(xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    $('#allergiesStatus').val(response.allergiesStatus);
+                    $('#conditionStatus').val(response.conditionStatus);
+                    $('#weight').val(response.weight);
+                    $('#sleepTime').val(response.sleepTime);
+                    $('#healthNotes').val(response.healthNotes);
+                } else if(xhr.status === 204) {
                     $('#dataStatusMessage').text('해당 날짜에 데이터가 없습니다. 새로운 데이터를 입력해주세요.').show();
-                    // 폼 필드 초기화 (선택적)
                     $('#allergiesStatus').val('');
                     $('#conditionStatus').val('');
                     $('#weight').val('');

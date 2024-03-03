@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
+import org.api.entity.LoginEntity;
 import org.api.repository.HealthRepository;
 import org.core.dto.HealthDto;
 import org.springframework.stereotype.Service;
@@ -12,22 +13,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HealthRecordService {
     private final HealthRepository healthRepository;
-    public Optional<HealthDto> getHealthDataByDate(LocalDate date) {
-        HealthEntity healthEntity = healthRepository.getHealthDataByDate(date);
-        HealthDto healthDto = setHealthDto(healthEntity);
+    private final LoginService loginService;
 
-        return Optional.of(healthDto);
+    public void saveHealthData(HealthDto healthDto) {
+        LoginEntity loginEntity = loginService.validateLoginId(healthDto.getLoginToken());
+        HealthEntity healthEntity = HealthEntity.of(loginEntity.getUser() ,healthDto);
+
+        healthRepository.save(healthEntity);
     }
 
-    private HealthDto setHealthDto(HealthEntity healthEntity) {
-        HealthDto healthDto = new HealthDto();
-        healthDto.setDate(healthEntity.getDate());
-        healthDto.setAllergiesStatus(healthEntity.getAllergiesStatus());
-        healthDto.setConditionStatus(healthEntity.getConditionStatus());
-        healthDto.setWeight(healthEntity.getWeight());
-        healthDto.setSleepTime(healthEntity.getSleepTime());
-        healthDto.setHealthNotes(healthEntity.getNotes());
 
-        return healthDto;
+    public Optional<HealthDto> getHealthDataByDate(LocalDate date) {
+        HealthEntity healthEntity = healthRepository.getHealthDataByDate(date);
+        if(healthEntity == null) {
+            return Optional.empty();
+        } else {
+            HealthDto healthDto = HealthEntity.toDto(healthEntity);
+            return Optional.of(healthDto);
+        }
     }
 }

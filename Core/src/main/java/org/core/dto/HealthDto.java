@@ -18,5 +18,6 @@ public class HealthDto {
     private int weight;
     private int sleepTime;
     private String healthNotes;
+    private String loginToken;
 
 }

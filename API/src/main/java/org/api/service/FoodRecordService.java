@@ -16,7 +16,6 @@ public class FoodRecordService {
 
     @Transactional
     public FoodEntity saveMenuData(MenuDto menuDto) {
-        System.out.println(menuDto.getLoginToken());
         LoginEntity loginEntity = loginService.validateLoginId(menuDto.getLoginToken());
         FoodEntity foodEntity = FoodEntity.of(loginEntity.getUser(), menuDto);
 
