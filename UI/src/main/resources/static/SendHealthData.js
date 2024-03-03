@@ -1,6 +1,6 @@
 $(document).ready(function() {
     checkHealthData();
-
+    var apiUrl = $('#apiUrl').data('url');
     $('#healthDataSubmit').submit(function(e) {
         var healthData = {
             loginToken : sessionStorage.getItem("loginToken"),
@@ -13,7 +13,7 @@ $(document).ready(function() {
         };
         e.preventDefault();
         $.ajax({
-            url: '/menu_health_data/health', // 실제 API 엔드포인트
+            url: apiUrl + '/menu_health_data/health', // 실제 API 엔드포인트
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(healthData),
@@ -34,7 +34,7 @@ $(document).ready(function() {
         // API 호출하여 데이터 존재 여부 확인
         var postDate = $('#postDate').val(); // 날짜 입력 필드에서 날짜 가져오기
         $.ajax({
-            url: '/menu_health_data/health', // 실제 API 엔드포인트
+            url: apiUrl + '/menu_health_data/health', // 실제 API 엔드포인트
             method: 'GET',
             contentType: 'application/json',
             data: {

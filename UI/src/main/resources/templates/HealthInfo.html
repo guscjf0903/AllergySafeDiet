@@ -17,7 +17,9 @@
 <div class="container mt-3">
   <input type="hidden" id="loginToken" name="loginToken">
   <input type="hidden" id="postDate" th:value="${date}">
-   <div id="dataStatusMessage"></div>
+  <div id="apiUrl" th:data-url="${apiUrl}"></div>
+
+  <div id="dataStatusMessage"></div>
       <form id="healthPostForm">
         <div class="form-group">
           <div id="HealthData"></div>

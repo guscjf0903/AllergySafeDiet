@@ -41,24 +41,11 @@ public class MenuAndHealthUiController {
         return "FoodMenuInfo";
     }
 
-
-
     @GetMapping("health/{date}")
     public String showHealthDataForm(@PathVariable("date") String date, Model model) {
         model.addAttribute("date", date);
+        model.addAttribute("apiUrl", apiUrl);
         return "HealthInfo";
-    }
-    @GetMapping("/health")
-    public ResponseEntity<HealthDto> checkHealthData(@RequestParam(name = "date") LocalDate date, @Value("${api.url}") String url) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        return restTemplate.getForEntity(url + "/menu_health_data/health?date=" + date, HealthDto.class);
-    }
-    @PostMapping("/health")
-    public ResponseEntity<?> postHealthData(@RequestBody HealthDto healthDto, @Value("${api.url}") String url) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        return restTemplate.postForEntity(url + "/menu_health_data/health", healthDto, ResponseEntity.class);
     }
 
 }
