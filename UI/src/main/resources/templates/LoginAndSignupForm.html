@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/LoginAndSignup.css">
 </head>
 <body>
-<div id="SignupForm">
+<div id="SignupAndLoginForm">
     <form class="form">
         <ul class="tab-group">
             <li class="tab active"><a href="#signup">Sign Up</a></li>
@@ -18,7 +18,6 @@
             <div id="apiUrl" th:data-url="${apiUrl}"></div>
             <div id="signup">
                 <h1>Sign Up for Free</h1>
-
                 <form>
                     <div class="top-row">
                         <div class="field-wrap">
@@ -51,8 +50,8 @@
                             </label>
                             <input type="text" id="verificationCode" name="verificationCode" autocomplete="off"/>
                         </div>
-                        <button id="submitVerificationCodeBtn" class="button button-small">Submit Code</button>
-                        <button id="resendVerificationEmailBtn" class="button button-small">Resend Email</button>
+                        <button id="submitVerificationCodeBtn" class="button button-small" type="button">Submit Code</button>
+                        <button id="resendVerificationEmailBtn" class="button button-small" type="button">Resend Email</button>
                         <div id="verificationStatus" class="verification-status"></div>
                     </div>
 
@@ -117,36 +116,6 @@
 <script src="/VerificationEmail.js"></script>
 <script src="/SendSignupData.js"></script>
 <script src="/SendLoginData.js"></script>
-
-<script>
-    $(document).ready(function() {
-        // 회원가입 버튼 클릭 시 이벤트 핸들러
-        $('#signupBtn').click(function(event) {
-            event.preventDefault();
-            sendSignupData();
-        });
-
-        // 로그인 버튼 클릭 시 이벤트 핸들러
-        $('#loginBtn').click(function(event) {
-            event.preventDefault();
-            SendLogin();
-        });
-    });
-
-    $(document).ready(function() {
-        $('.tab a').on('click', function (e) {
-            e.preventDefault();
-
-            $(this).parent().addClass('active');
-            $(this).parent().siblings().removeClass('active');
-
-            var target = $(this).attr('href');
-            $('.tab-content > div').not(target).hide();
-
-            $(target).fadeIn(600);
-        });
-    });
-</script>
 
 </body>
 </html>

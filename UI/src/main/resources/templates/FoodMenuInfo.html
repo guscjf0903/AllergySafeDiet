@@ -17,7 +17,7 @@
     <input type="hidden" id="loginToken" name="loginToken">
     <input type="hidden" id="postDate" th:value="${date}">
     <div id="apiUrl" th:data-url="${apiUrl}"></div>
-    <form id="menuPostForm" onsubmit="return sendMenuData()">
+    <form id="menuPostForm">
         <div class="form-row align-items-end">
             <div class="col">
                 <label for="foodType">식사 타입:</label>
@@ -53,15 +53,6 @@
 </div>
 <script src="/SendMenuData.js"></script>
 <script src="/SearchRecipe.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#postMenuSubmit').click(function(event) {
-            event.preventDefault();
-            sendMenuData();
-        });
-    });
-</script>
-
 
 </body>
 </html>
