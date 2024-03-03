@@ -20,7 +20,6 @@ public class SignupDto {
     @Password
     @NotBlank(message = "Please enter a password")
     private String password;
-
     @NotBlank(message = "Please enter a email")
     @Email(message = "Please enter a valid email")
     private String email;

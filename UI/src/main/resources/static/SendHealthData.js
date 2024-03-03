@@ -37,7 +37,10 @@ $(document).ready(function() {
             url: '/menu_health_data/health', // 실제 API 엔드포인트
             method: 'GET',
             contentType: 'application/json',
-            data: {date: postDate},
+            data: {
+                date: postDate,
+                loginToken: sessionStorage.getItem("loginToken")
+            },
             complete: function(xhr) {
                 if(xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);

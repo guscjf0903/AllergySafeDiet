@@ -1,4 +1,6 @@
 function sendSignupData() {
+    var apiUrl = $('#apiUrl').data('url');
+
     var userName = $("#userName").val();
     var password = $("#password").val();
     var email = $("#email").val();
@@ -17,7 +19,7 @@ function sendSignupData() {
         checkVerificationEmail: checkVerificationEmail
     };
     $.ajax({
-        url: "/signup",
+        url: apiUrl + "/signup",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify(data),
