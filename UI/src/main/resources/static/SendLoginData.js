@@ -1,4 +1,5 @@
 function SendLogin() {
+    var apiUrl = $('#apiUrl').data('url');
     var loginId = $('#loginId').val();
     var loginPassword = $('#loginPassword').val();
 
@@ -8,7 +9,7 @@ function SendLogin() {
     };
 
     $.ajax({
-        url: '/login',
+        url: apiUrl + '/login',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(data),
