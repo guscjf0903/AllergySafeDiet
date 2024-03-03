@@ -1,16 +1,6 @@
 $(document).ready(function() {
     checkHealthData();
 
-    $('#addDataButton').click(function() {
-        $('#healthPostForm').show();
-        $(this).hide();
-    });
-
-    $('#editDataButton').click(function() {
-        $('#healthPostForm').show();
-        $(this).hide();
-    });
-
     $('#healthDataSubmit').submit(function(e) {
         var healthData = {
             loginToken : sessionStorage.getItem("loginToken"),
@@ -30,7 +20,7 @@ $(document).ready(function() {
 
             success: function() {
                 alert('데이터가 성공적으로 저장되었습니다.');
-                window.location.href = '/menu-and-health-data/' + $("#postDate").val();
+                window.location.href = '/menu_health_data/' + $("#postDate").val();
             },
             error: function() {
                 alert('데이터 저장에 실패했습니다. 다시 시도해주세요.');
@@ -49,23 +39,27 @@ $(document).ready(function() {
             contentType: 'application/json',
             data: {date: postDate},
             success: function(response) {
-                if (response.dataExists) {
-                    $('#dataStatusMessage').text('해당 날짜에 데이터가 존재합니다. 수정하시겠습니까?');
-                    $('#editDataButton').show();
-
-                    $('#allergiesStatus').val(response.data.allergiesStatus);
-                    $('#conditionStatus').val(response.data.conditionStatus);
-                    $('#weight').val(response.data.weight);
-                    $('#sleepTime').val(response.data.sleepTime);
-                    $('#healthNotes').val(response.data.healthNotes);
-
-                } else {
-                    $('#dataStatusMessage').text('해당 날짜에 데이터가 없습니다. 추가하시겠습니까?');
-                    $('#addDataButton').show();
+                $('#allergiesStatus').val(response.allergiesStatus);
+                $('#conditionStatus').val(response.conditionStatus);
+                $('#weight').val(response.weight);
+                $('#sleepTime').val(response.sleepTime);
+                $('#healthNotes').val(response.healthNotes);
+            },
+            statusCode: {
+                204: function() {
+                    // 데이터가 없을 때의 처리
+                    $('#dataStatusMessage').text('해당 날짜에 데이터가 없습니다. 새로운 데이터를 입력해주세요.').show();
+                    // 폼 필드 초기화 (선택적)
+                    $('#allergiesStatus').val('');
+                    $('#conditionStatus').val('');
+                    $('#weight').val('');
+                    $('#sleepTime').val('');
+                    $('#healthNotes').val('');
                 }
             },
             error: function() {
                 $('#dataStatusMessage').text('데이터를 불러오는데 문제가 발생했습니다.');
+                console.error('데이터를 불러오는데 문제가 발생했습니다.');
             }
         });
     }

@@ -29,38 +29,6 @@ function addIngredientToList(ingredientName) {
     $ingredientsList.append($ingredientContainer);
 }
 
-
-
-//
-// $(document).ready(function() {
-//     $('#addIngredient').click(function() {
-//         var $ingredientsList = $('#ingredientsList');
-//
-//         // 원재료 입력 필드 생성
-//         var $ingredientField = $('<input>', {
-//             type: 'text',
-//             placeholder: '재료 이름',
-//             class: 'form-control',
-//             required: true
-//         });
-//
-//         // 삭제 버튼 생성
-//         var $deleteButton = $('<button>', {
-//             text: '삭제',
-//             type: 'button',
-//             class: 'btn btn-danger btn-sm'
-//         }).click(function() {
-//             $(this).parent().remove();
-//         });
-//
-//         // 원재료 입력 필드와 삭제 버튼을 포함하는 컨테이너 생성
-//         var $ingredientContainer = $('<div>', {class: 'ingredient-container'}).append($ingredientField, $deleteButton);
-//
-//         // 전체 리스트에 추가
-//         $ingredientsList.append($ingredientContainer);
-//     });
-// });
-
 function sendMenuData() {
     var menuData = {
         loginToken : sessionStorage.getItem("loginToken"),
@@ -86,7 +54,7 @@ function sendMenuData() {
         data: JSON.stringify(menuData),
         success: function(response) {
             alert("식단을 성공적으로 추가하였습니다.");
-            window.location.href = '/menu-and-health-data/' + $("#postDate").val();
+            window.location.href = '/menu_health_data/' + $("#postDate").val();
             console.log('서버 응답:', response);
         },
         error: function() {

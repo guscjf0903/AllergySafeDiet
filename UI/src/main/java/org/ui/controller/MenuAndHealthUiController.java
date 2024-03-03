@@ -1,6 +1,7 @@
 package org.ui.controller;
 
 import jakarta.websocket.server.PathParam;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,11 @@ public class MenuAndHealthUiController {
         return "DataCalender";
     }
 
-    @GetMapping("/edit/{date}")
-    public String showNewMenuAndHealthDataForm(@PathVariable("date") String date, Model model) {
+    @GetMapping("menu/{date}")
+    public String showMenuDataForm(@PathVariable("date") String date, Model model) {
         model.addAttribute("date", date);
-        return "NewMenuAndHealthForm";
+        return "FoodMenuInfo";
     }
-
     @PostMapping("/menu")
     public ResponseEntity<?> postMenuData(@RequestBody MenuDto menuDto, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
@@ -48,18 +48,30 @@ public class MenuAndHealthUiController {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
         }
     }
-
     @GetMapping("/recipes")
     public ResponseEntity<?> getFoodRecipes(@RequestParam(name = "foodName") String foodName, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForEntity(url + "/recipes?foodName=" + foodName, List.class);
     }
 
+
+
+    @GetMapping("health/{date}")
+    public String showHealthDataForm(@PathVariable("date") String date, Model model) {
+        model.addAttribute("date", date);
+        return "HealthInfo";
+    }
     @GetMapping("/health")
-    public ResponseEntity<HealthDto> checkHealthData(@RequestParam(name = "date") String date, @Value("${api.url}") String url) {
+    public ResponseEntity<HealthDto> checkHealthData(@RequestParam(name = "date") LocalDate date, @Value("${api.url}") String url) {
         RestTemplate restTemplate = new RestTemplate();
 
         return restTemplate.getForEntity(url + "/menu_health_data/health?date=" + date, HealthDto.class);
+    }
+    @PostMapping("/health")
+    public ResponseEntity<?> postHealthData(@RequestBody HealthDto healthDto, @Value("${api.url}") String url) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        return restTemplate.postForEntity(url + "/menu_health_data/health", healthDto, ResponseEntity.class);
     }
 
 }

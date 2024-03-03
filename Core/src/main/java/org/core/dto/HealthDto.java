@@ -17,6 +17,6 @@ public class HealthDto {
     private int conditionStatus;
     private int weight;
     private int sleepTime;
-    private int healthNotes;
+    private String healthNotes;
 
 }

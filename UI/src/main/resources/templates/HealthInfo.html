@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메뉴 정보 입력</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-3">
+  <input type="hidden" id="loginToken" name="loginToken">
+  <input type="hidden" id="postDate" th:value="${date}">
+   <div id="dataStatusMessage"></div>
+      <form id="healthPostForm">
+        <div class="form-group">
+          <div id="HealthData"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="allergiesStatus">알러지 상태 선택 (1-10) :</label>
+          <input type="number" class="form-control" id="allergiesStatus" min="1" max="10" required>
+        </div>
+
+        <div class="form-group">
+          <label for="conditionStatus">컨디션 선택 (1-10) :</label>
+          <input type="number" class="form-control" id="conditionStatus" min="1" max="10" required>
+        </div>
+
+        <div class="form-group">
+          <label for="weight">몸무게 :</label>
+          <input type="number" class="form-control" id="weight" required>
+        </div>
+
+        <div class="form-group">
+          <label for="sleepTime">수면시간 :</label>
+          <input type="number" class="form-control" id="sleepTime" min="1" max="24" required>
+        </div>
+
+
+        <div class="form-group">
+          <label for="healthNotes">특이사항을 입력해주세요!</label>
+          <input type="text" class="form-control" id="healthNotes" required>
+        </div>
+
+        <button type="submit" class="btn btn-secondary" id="healthDataSubmit">작성 완료</button>
+      </form>
+</div>
+<script src="/SendHealthData.js"></script>
+
+</body>
+
