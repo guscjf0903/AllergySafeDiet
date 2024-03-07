@@ -17,7 +17,7 @@ public class SignupService {
 
     @Transactional
     public void registerUser(SignupDto signupDTO) {
-        checkVerificationMail(signupDTO.isCheckVerificationEmail());
+        checkVerificationMail(signupDTO.checkVerificationEmail());
         UserEntity user = UserEntity.of(signupDTO);
         userRepository.save(user);
     }

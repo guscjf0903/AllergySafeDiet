@@ -9,6 +9,7 @@ import org.core.dto.MenuDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +21,8 @@ public class FoodRecordController {
     private final IngredientService ingredientService;
 
     @PostMapping("/menu")
-    public ResponseEntity<?> postMenuData(@RequestBody @Valid MenuDto menuDto) {
-        FoodEntity foodEntity = foodRecordService.saveMenuData(menuDto);
+    public ResponseEntity<?> postMenuData(@RequestBody @Valid MenuDto menuDto, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        FoodEntity foodEntity = foodRecordService.saveMenuData(menuDto, authorizationHeader);
         ingredientService.saveIngredient(foodEntity, menuDto);
 
         return ResponseEntity.ok().build();

@@ -31,7 +31,6 @@ $(document).ready(function() {
     $('#menuPostForm').submit(function(e) {
         var apiUrl = $('#apiUrl').data('url');
         var menuData = {
-            loginToken : sessionStorage.getItem("loginToken"),
             date : $("#postDate").val(),
             mealType : $("#foodType").val(),
             mealTime : $("#foodTime").val(),
@@ -47,8 +46,11 @@ $(document).ready(function() {
         });
         e.preventDefault();
         $.ajax({
-            url: apiUrl + '/menu_health_data/menu', // 원하는 URL로 변경
+            url: apiUrl + '/menu_health_data/menu',
             type: 'POST',
+            headers: {
+                'Authorization': sessionStorage.getItem("loginToken"),
+            },
             contentType: 'application/json',
             data: JSON.stringify(menuData),
             success: function(response) {

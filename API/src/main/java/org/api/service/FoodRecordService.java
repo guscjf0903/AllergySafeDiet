@@ -15,8 +15,8 @@ public class FoodRecordService {
     private final FoodRepository foodRepository;
 
     @Transactional
-    public FoodEntity saveMenuData(MenuDto menuDto) {
-        LoginEntity loginEntity = loginService.validateLoginId(menuDto.getLoginToken());
+    public FoodEntity saveMenuData(MenuDto menuDto, String authorizationHeader) {
+        LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
         FoodEntity foodEntity = FoodEntity.of(loginEntity.getUser(), menuDto);
 
         foodRepository.save(foodEntity);

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +23,8 @@ public class HealthRecordController {
     private final HealthRecordService healthRecordService;
 
     @GetMapping("/health")
-    public ResponseEntity<?> getHealthData(@RequestParam(name = "date") LocalDate date, @RequestParam(name = "loginToken") String loginToken) {
-        Optional<HealthDto> healthDto = healthRecordService.getHealthDataByDate(date, loginToken);
+    public ResponseEntity<?> getHealthData(@RequestParam(name = "date") LocalDate date, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        Optional<HealthDto> healthDto = healthRecordService.getHealthDataByDate(date, authorizationHeader);
 
         return healthDto
                 .map(data -> ResponseEntity.ok().body(data))
@@ -31,8 +32,8 @@ public class HealthRecordController {
     }
 
     @PostMapping("/health")
-    public ResponseEntity<?> postHealthData(@RequestBody HealthDto healthDto) {
-        healthRecordService.saveHealthData(healthDto);
+    public ResponseEntity<?> postHealthData(@RequestBody HealthDto healthDto, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        healthRecordService.saveHealthData(healthDto, authorizationHeader);
         return ResponseEntity.ok().build();
     }
 
