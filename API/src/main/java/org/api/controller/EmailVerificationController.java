@@ -25,9 +25,9 @@ public class EmailVerificationController {
 
     @GetMapping("/emails/verifications")
     public ResponseEntity<?> verificationEmail(@RequestParam("email") @Valid String email,
-                                            @RequestParam("verificationCode") String verificationCode) {
+                                               @RequestParam("verificationCode") String verificationCode) {
         boolean result = verificationCodeService.verifyCode(email, verificationCode);
-        if(result) {
+        if (result) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

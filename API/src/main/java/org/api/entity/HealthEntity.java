@@ -38,53 +38,46 @@ public class HealthEntity {
     private UserEntity user;
 
     @Column(name = "health_date", nullable = false)
-    private LocalDate date;
+    private LocalDate healthDate;
 
-    @Column(name = "allergies")
+    @Column(name = "allergies_status")
     private int allergiesStatus;
 
-    @Column(name = "condition")
+    @Column(name = "condition_status")
     private int conditionStatus;
 
     @Column(name = "weight")
     private int weight;
 
-    @Column(name = "sleeptime")
+    @Column(name = "sleep_time")
     private int sleepTime;
 
     @Column(name = "health_notes")
-    private String notes;
+    private String healthNotes;
 
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public HealthEntity(UserEntity user, LocalDate date, int allergiesStatus,
-                        int conditionStatus, int weight, int sleepTime, String notes) {
+    public HealthEntity(UserEntity user, LocalDate healthDate, int allergiesStatus,
+                        int conditionStatus, int weight, int sleepTime, String healthNotes) {
         this.user = user;
-        this.date = date;
+        this.healthDate = healthDate;
         this.allergiesStatus = allergiesStatus;
         this.conditionStatus = conditionStatus;
         this.weight = weight;
         this.sleepTime = sleepTime;
-        this.notes = notes;
+        this.healthNotes = healthNotes;
     }
 
     public static HealthEntity of(UserEntity user, HealthDto healthDto) {
-        return new HealthEntity(user, healthDto.getDate(), healthDto.getAllergiesStatus(),
-                healthDto.getConditionStatus(), healthDto.getWeight(), healthDto.getSleepTime(), healthDto.getHealthNotes());
+        return new HealthEntity(user, healthDto.date(), healthDto.allergiesStatus(), healthDto.conditionStatus(),
+                healthDto.weight(), healthDto.sleepTime(), healthDto.healthNotes());
     }
 
     public static HealthDto toDto(HealthEntity healthEntity) {
-        HealthDto dto = new HealthDto();
-        dto.setDate(healthEntity.date);
-        dto.setAllergiesStatus(healthEntity.allergiesStatus);
-        dto.setConditionStatus(healthEntity.conditionStatus);
-        dto.setWeight(healthEntity.weight);
-        dto.setSleepTime(healthEntity.sleepTime);
-        dto.setHealthNotes(healthEntity.notes);
-
-        return dto;
+        return new HealthDto(healthEntity.healthDate, healthEntity.allergiesStatus, healthEntity.conditionStatus,
+                healthEntity.weight, healthEntity.sleepTime, healthEntity.healthNotes);
     }
 
 }

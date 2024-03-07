@@ -30,7 +30,7 @@ public class UserEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "user_name", unique = true)
     private String userName;
 
     @Column(name = "password")
@@ -50,7 +50,7 @@ public class UserEntity {
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false) // created_at 컬럼 매핑
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     public UserEntity(String userName, String password, String email, Date birthDate, String gender, int height) {
         this.userName = userName;

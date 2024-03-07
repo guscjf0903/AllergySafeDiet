@@ -1,8 +1,8 @@
 $(document).ready(function() {
-    var apiUrl = $('#apiUrl').data('url');
+    const apiUrl = $('#apiUrl').data('url');
 
     $('#searchRecipe').click(function() {
-        var foodName = $('#foodName').val(); // 음식 이름 값 가져오기
+        const foodName = $('#foodName').val(); // 음식 이름 값 가져오기
         if(foodName) { // 음식 이름이 비어있지 않은 경우
             $.ajax({
                 url: apiUrl + '/recipes',

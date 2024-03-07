@@ -38,7 +38,7 @@ public class FoodEntity {
     private UserEntity user;
 
     @Column(name = "food_date", nullable = false)
-    private LocalDate date;
+    private LocalDate foodDate;
 
     @Column(name = "meal_type", nullable = false)
     private String mealType;
@@ -50,20 +50,20 @@ public class FoodEntity {
     private String foodName;
 
     @Column(name = "food_notes")
-    private String notes;
+    private String foodNotes;
 
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public FoodEntity(UserEntity user, LocalDate date, String mealType,
-                      LocalTime mealTime, String foodName, String notes) {
+    public FoodEntity(UserEntity user, LocalDate foodDate, String mealType,
+                      LocalTime mealTime, String foodName, String foodNotes) {
         this.user = user;
-        this.date = date;
+        this.foodDate = foodDate;
         this.mealType = mealType;
         this.mealTime = mealTime;
         this.foodName = foodName;
-        this.notes = notes;
+        this.foodNotes = foodNotes;
     }
 
     public static FoodEntity of(UserEntity user, MenuDto menuDto) {

@@ -37,10 +37,10 @@ public class LoginEntity {
     @Column(name = "login_token" , nullable = false, unique = true)
     private String loginToken;
 
-    @Column(name = "token_expirationtime", nullable = false)
+    @Column(name = "token_expiration_time", nullable = false)
     private LocalDateTime tokenExpirationTime;
 
-    @Column(name = "created_at")
+    @Column(name = "login_time")
     @CreatedDate
     private LocalDateTime loginTime;
 
