@@ -62,7 +62,7 @@ public class UserEntity {
     }
 
     public static UserEntity of(SignupDto signupDto) {
-        return new UserEntity(signupDto.getUserName(), signupDto.getPassword(), signupDto.getEmail(),
-                signupDto.getBirthDate(), signupDto.getGender(), signupDto.getHeight());
+        return new UserEntity(signupDto.userName(), signupDto.password(), signupDto.email(),
+                signupDto.birthDate(), signupDto.gender(), signupDto.height());
     }
 }

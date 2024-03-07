@@ -67,8 +67,8 @@ public class FoodEntity {
     }
 
     public static FoodEntity of(UserEntity user, MenuDto menuDto) {
-        return new FoodEntity(user, menuDto.getDate(), menuDto.getMealType(),
-                menuDto.getMealTime(), menuDto.getFoodName(), menuDto.getNotes());
+        return new FoodEntity(user, menuDto.date(), menuDto.mealType(),
+                menuDto.mealTime(), menuDto.foodName(), menuDto.notes());
     }
 
 }

@@ -5,10 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class IngredientsDto {
-    private String ingredientName;
-}
+public record IngredientsDto(
+        String ingredientName
+) {}

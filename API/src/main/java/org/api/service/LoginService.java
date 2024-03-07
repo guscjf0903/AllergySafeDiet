@@ -26,9 +26,9 @@ public class LoginService {
 
     @Transactional
     public LoginResponse loginUser(LoginDto loginDto) {
-        UserEntity userEntity = userRepository.findByUserName(loginDto.getLoginId())
+        UserEntity userEntity = userRepository.findByUserName(loginDto.loginId())
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-        if (!userEntity.getPassword().equals(loginDto.getLoginPassword())) {
+        if (!userEntity.getPassword().equals(loginDto.loginPassword())) {
             throw new CustomException(PASSWORD_DISMATCH);
         } //아이디 비밀번호 검증
 

@@ -15,13 +15,12 @@ public class IngredientService {
 
     @Transactional
     public void saveIngredient(FoodEntity foodEntity, MenuDto menuDto) {
-        if(menuDto.getIngredients() == null) return;
+        if(menuDto.ingredients() == null) return;
 
-        for(String ingredient : menuDto.getIngredients()) {
+        for(String ingredient : menuDto.ingredients()) {
             IngredientEntity ingredientEntity = IngredientEntity.of(foodEntity, ingredient);
             ingredientRepository.save(ingredientEntity);
         }
-
     }
 
 }

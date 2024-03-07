@@ -7,11 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class EmailDto {
-    @Email
-    private String email;
-}
+public record EmailDto(
+        @Email
+        String email
+) {}
