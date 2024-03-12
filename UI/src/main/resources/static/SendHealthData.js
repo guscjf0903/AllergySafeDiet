@@ -4,7 +4,6 @@ $(document).ready(function() {
 
     $('#healthPostForm').submit(function(e) {
         var healthData = {
-            loginToken : sessionStorage.getItem("loginToken"),
             date : $("#postDate").val(),
             allergiesStatus : $("#allergiesStatus").val(),
             conditionStatus : $("#conditionStatus").val(),
@@ -16,6 +15,9 @@ $(document).ready(function() {
         $.ajax({
             url: apiUrl + '/menu_health_data/health', // 실제 API 엔드포인트
             method: 'POST',
+            headers: {
+                'Authorization': sessionStorage.getItem("loginToken"),
+            },
             contentType: 'application/json',
             data: JSON.stringify(healthData),
 

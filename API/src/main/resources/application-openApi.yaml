@@ -6,3 +6,5 @@ spring:
 openApi:
   serviceKey : "b41bba1de384272175a1c678b60e86018f802fb81dd2632a8b59d3c30b0de9f0"
   baseUrl : "http://211.237.50.150:7080/openapi"
+  recipeInfoPath: "Grid_20150827000000000226_1"
+  recipeDetailsPath: "Grid_20150827000000000227_1"
