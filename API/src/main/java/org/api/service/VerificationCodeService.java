@@ -4,9 +4,14 @@ import static org.api.exception.ErrorCodes.DUPLICATE_EMAIL;
 import static org.api.exception.ErrorCodes.ERROR_CREATE_CODE;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.api.entity.redis_entity.VerificationMailRedisEntity;
 import org.api.exception.CustomException;
+import org.api.repository.redis_repository.VerificationMailRedisRepository;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -14,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class VerificationCodeService {
     private final MailService mailService;
     private final SignupService signupService;
-    private final RedisService redisService;
+    private final VerificationMailRedisRepository verificationMailRedisRepository;
 
     public void sendCodeToEmail(String email) {
         if(signupService.checkDuplicateMail(email)) {
@@ -22,8 +27,13 @@ public class VerificationCodeService {
         }
         String subject = "Email Verification";
         String code = createCode();
-        redisService.saveVerificationCode(email, code); // 인증코드 redis에 저장
+        saveVerificationCode(email, code); // 인증코드 redis에 저장
         mailService.sendMail(email, subject, code);
+    }
+
+    public void saveVerificationCode(String email, String code) {
+        VerificationMailRedisEntity verificationMailRedisEntity = new VerificationMailRedisEntity(email, code);
+        verificationMailRedisRepository.save(verificationMailRedisEntity);
     }
 
     private String createCode() {
@@ -41,11 +51,12 @@ public class VerificationCodeService {
     }
 
     public boolean verifyCode(String email, String submittedCode) {
-        String storedCode = redisService.getVerificationCode(email);
-        if (storedCode != null && storedCode.equals(submittedCode)) {
-            redisService.deleteVerificationCode(email); // 코드 검증 후 삭제
-            return true;
-        }
-        return false;
+        return verificationMailRedisRepository.findById(email)
+                .filter(entity -> entity.getVerificationCode().equals(submittedCode))
+                .map(entity -> {
+                    verificationMailRedisRepository.deleteById(email);
+                    return true;
+                })
+                .orElse(false);
     }
 }

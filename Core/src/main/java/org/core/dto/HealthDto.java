@@ -1,9 +1,9 @@
 package org.core.dto;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public record HealthDto (
-        LocalDate date,
+        Date date,
         int allergiesStatus,
         int conditionStatus,
         int weight,

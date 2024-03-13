@@ -10,8 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +38,7 @@ public class HealthEntity {
     private UserEntity user;
 
     @Column(name = "health_date", nullable = false)
-    private LocalDate healthDate;
+    private Date healthDate;
 
     @Column(name = "allergies_status")
     private int allergiesStatus;
@@ -59,7 +59,7 @@ public class HealthEntity {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public HealthEntity(UserEntity user, LocalDate healthDate, int allergiesStatus,
+    public HealthEntity(UserEntity user, Date healthDate, int allergiesStatus,
                         int conditionStatus, int weight, int sleepTime, String healthNotes) {
         this.user = user;
         this.healthDate = healthDate;

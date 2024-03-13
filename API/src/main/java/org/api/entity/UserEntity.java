@@ -7,7 +7,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,7 +52,7 @@ public class UserEntity {
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false) // created_at 컬럼 매핑
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     public UserEntity(String userName, String password, String email, Date birthDate, String gender, int height) {
         this.userName = userName;
