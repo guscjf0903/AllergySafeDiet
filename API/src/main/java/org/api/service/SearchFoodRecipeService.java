@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.api.config.OpenApiProperties;
 import org.api.entity.redis_entity.FoodRecipeRedisEntity;
@@ -24,26 +25,43 @@ public class SearchFoodRecipeService {
     private final ObjectMapper objectMapper;
     private final FoodRecipeRedisRepository foodRecipeRedisRepository;
 
-
     public List<IngredientsDto> getFoodRecipes(String foodName) throws IOException {
-        List<IngredientsDto> redisIngredients = getRecipesRedisCache(foodName);
-        if(redisIngredients != null) {
-            return redisIngredients;
-        }
-
-        String RecipeIdJsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO", foodName);
-        int recipeId = recipeIdExtractor(RecipeIdJsonString);
-
-        String IngredientsJsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID", recipeId);
-        List<IngredientsDto> apiIngredients = extractIngredientNames(IngredientsJsonString);
-        foodRecipeRedisRepository.save(new FoodRecipeRedisEntity(foodName, apiIngredients)); //redis에 저장
-
-        return apiIngredients;
+        return getRecipesRedisCache(foodName)
+                .orElseGet(() -> fetchAndCacheFoodRecipes(foodName));
     }
 
-    private List<IngredientsDto> getRecipesRedisCache(String foodName) {
-        Optional<FoodRecipeRedisEntity> cachedRecipe = foodRecipeRedisRepository.findById(foodName);
-        return cachedRecipe.map(FoodRecipeRedisEntity::getIngredients).orElse(null);
+    private Optional<List<IngredientsDto>> getRecipesRedisCache(String foodName) {
+        return foodRecipeRedisRepository.findById(foodName)
+                .map(entity -> entity.getIngredients().stream()
+                        .map(IngredientsDto::new)
+                        .collect(Collectors.toList()));
+    }
+
+    private List<IngredientsDto> fetchAndCacheFoodRecipes(String foodName) {
+        try {
+            int recipeId = getRecipeIdByName(foodName);
+            List<IngredientsDto> ingredients = getIngredientsByRecipeId(recipeId);
+
+            foodRecipeRedisRepository.save(new FoodRecipeRedisEntity(foodName, ingredients.stream()
+                    .map(IngredientsDto::ingredientName)
+                    .collect(Collectors.toList())
+            ));
+            return ingredients;
+
+        } catch (IOException e) {
+            throw new CustomException(NOT_FOUND_RECIPE);
+        }
+    }
+
+
+    private int getRecipeIdByName(String foodName) throws IOException {
+        String response = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO", foodName);
+        return recipeIdExtractor(response);
+    }
+
+    private List<IngredientsDto> getIngredientsByRecipeId(int recipeId) throws IOException {
+        String response = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID", recipeId);
+        return extractIngredientNames(response);
     }
 
     private int recipeIdExtractor(String jsonString) throws IOException { //1번쨰 openapi에서 받아온 jsonString을 파싱하여 recipeId를 추출하는 메소드
@@ -79,4 +97,41 @@ public class SearchFoodRecipeService {
 
         return ingredientNames;
     }
+//
+//    private List<IngredientsDto> fetchAndCacheFoodRecipes(String foodName) {
+//        try {
+//            int recipeId = getRecipeIdByName(foodName);
+//            List<IngredientsDto> ingredients = getIngredientsByRecipeId(recipeId);
+//
+//            foodRecipeRedisRepository.save(new FoodRecipeRedisEntity(foodName, ingredients.stream()
+//                    .map(IngredientsDto::getIngredientName)
+//                    .collect(Collectors.toList())));
+//            return ingredients;
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to fetch or cache food recipes", e);
+//        }
+//    }
+//
+//    public List<IngredientsDto> getFoodRecipes(String foodName) throws IOException {
+//        List<IngredientsDto> redisIngredients = getRecipesRedisCache(foodName);
+//        if(redisIngredients != null) {
+//            return redisIngredients;
+//        }
+//
+//        String RecipeIdJsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO", foodName);
+//        int recipeId = recipeIdExtractor(RecipeIdJsonString);
+//
+//        String IngredientsJsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID", recipeId);
+//        List<IngredientsDto> apiIngredients = extractIngredientNames(IngredientsJsonString);
+//        foodRecipeRedisRepository.save(new FoodRecipeRedisEntity(foodName, apiIngredients)); //redis에 저장
+//
+//        return apiIngredients;
+//    }
+//
+//    private List<IngredientsDto> getRecipesRedisCache(String foodName) {
+//        Optional<FoodRecipeRedisEntity> cachedRecipe = foodRecipeRedisRepository.findById(foodName);
+//        return cachedRecipe.map(FoodRecipeRedisEntity::getIngredients).orElse(null);
+//    }
+//
+
 }

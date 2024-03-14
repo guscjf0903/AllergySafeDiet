@@ -17,5 +17,5 @@ import org.springframework.data.redis.core.RedisHash;
 public class FoodRecipeRedisEntity {
     @Id
     private String foodName;
-    private List<IngredientsDto> ingredients;
+    private List<String> ingredients;
 }
