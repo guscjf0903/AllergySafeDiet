@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
 import org.api.entity.LoginEntity;
 import org.api.repository.HealthRepository;
+import org.api.repository.SupplementRepository;
 import org.core.dto.HealthDto;
+import org.core.response.HealthResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,27 +17,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class HealthRecordService {
     private final HealthRepository healthRepository;
     private final LoginService loginService;
+    private final SupplementRecordService supplementRecordService;
+
 
     @Transactional
     public void saveHealthData(HealthDto healthDto, String authorizationHeader) {
-        System.out.println("Test");
         LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
         HealthEntity healthEntity = HealthEntity.of(loginEntity.getUser() ,healthDto);
 
-        healthRepository.save(healthEntity);
+        HealthEntity health = healthRepository.save(healthEntity);
+        supplementRecordService.saveSupplementData(health, healthDto.pills());
     }
 
 
     @Transactional(readOnly = true)
-    public Optional<HealthDto> getHealthDataByDate(LocalDate date, String authorizationHeader) {
+    public Optional<HealthResponse> getHealthDataByDate(LocalDate date, String authorizationHeader) {
         LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
         HealthEntity healthEntity = healthRepository.getHealthDataByHealthDateAndUserUserId(date, loginEntity.getUser().getUserId());
 
         if(healthEntity == null) {
             return Optional.empty();
         } else {
-            HealthDto healthDto = HealthEntity.toDto(healthEntity);
-            return Optional.of(healthDto);
+            HealthResponse healthResponse = HealthResponse.toResponse(healthEntity.getHealthDate(), healthEntity.getAllergiesStatus(),
+                    healthEntity.getConditionStatus(), healthEntity.getWeight(),
+                    healthEntity.getSleepTime(), healthEntity.getHealthNotes(), healthEntity.getPillsDtoList());
+
+            return Optional.of(healthResponse);
         }
     }
 }

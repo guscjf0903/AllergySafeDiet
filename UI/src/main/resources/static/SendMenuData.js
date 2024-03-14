@@ -53,10 +53,9 @@ $(document).ready(function() {
             },
             contentType: 'application/json',
             data: JSON.stringify(menuData),
-            success: function(response) {
+            success: function() {
                 alert("식단을 성공적으로 추가하였습니다.");
                 window.location.href = '/menu_health_data/' + $("#postDate").val();
-                console.log('서버 응답:', response);
             },
             error: function() {
                 alert("식단 추가에 실패하였습니다.");

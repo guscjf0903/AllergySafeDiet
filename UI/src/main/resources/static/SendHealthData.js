@@ -2,6 +2,10 @@ $(document).ready(function() {
     checkHealthData();
     var apiUrl = $('#apiUrl').data('url');
 
+    $('#addPill').click(function() {
+        addPillToList('', ''); // 사용자가 새 알약 정보를 수동으로 추가할 수 있게 함
+    });
+
     $('#healthPostForm').submit(function(e) {
         var healthData = {
             date : $("#postDate").val(),
@@ -9,8 +13,19 @@ $(document).ready(function() {
             conditionStatus : $("#conditionStatus").val(),
             weight : $("#weight").val(),
             sleepTime : $("#sleepTime").val(),
-            healthNotes : $("#healthNotes").val()
+            healthNotes : $("#healthNotes").val(),
+            pills: []
         };
+        console.log(healthData);
+
+        $('#pillList .pill-container').each(function() {
+            var pillName = $(this).find('input[type=text]').val();
+            var pillCount = $(this).find('input[type=number]').val();
+            if (pillName && pillCount) {
+                healthData.pills.push({name: pillName, count: parseInt(pillCount)});
+            }
+        });
+
         e.preventDefault();
         $.ajax({
             url: apiUrl + '/menu_health_data/health', // 실제 API 엔드포인트
@@ -32,6 +47,42 @@ $(document).ready(function() {
         });
     });
 });
+
+
+function addPillToList(pillName, pillCount) {
+    var $pillList = $('#pillList');
+    // 알약 이름 입력 필드 생성
+    var $pillNameField = $('<input>', {
+        type: 'text',
+        value: pillName,
+        placeholder: '알약 이름',
+        class: 'form-control col mr-2',
+        required: true
+    });
+    // 알약 개수 입력 필드 생성
+    var $pillCountField = $('<input>', {
+        type: 'number',
+        value: pillCount,
+        placeholder: '개수',
+        class: 'form-control col',
+        required: true
+    });
+    // 삭제 버튼 생성
+    var $deleteButton = $('<button>', {
+        text: '삭제',
+        type: 'button',
+        class: 'btn btn-danger btn-sm ml-2'
+    }).click(function() {
+        $(this).parent().remove(); // 해당 알약 정보 컨테이너 삭제
+    });
+    // 알약 정보 컨테이너 생성
+    var $pillContainer = $('<div>', {class: 'pill-container d-flex align-items-center mt-2'}).append($pillNameField, $pillCountField, $deleteButton);
+    // 전체 리스트에 추가
+    $pillList.append($pillContainer);
+}
+
+
+
 function checkHealthData() {
     // API 호출하여 데이터 존재 여부 확인
     var apiUrl = $('#apiUrl').data('url');
@@ -55,13 +106,13 @@ function checkHealthData() {
                 $('#weight').val(response.weight);
                 $('#sleepTime').val(response.sleepTime);
                 $('#healthNotes').val(response.healthNotes);
+                response.pills.forEach(function(pill) {
+                    addPillToList(pill.name, pill.count);
+                });
+
             } else if(xhr.status === 204) {
                 $('#dataStatusMessage').text('해당 날짜에 데이터가 없습니다. 새로운 데이터를 입력해주세요.').show();
-                $('#allergiesStatus').val('');
-                $('#conditionStatus').val('');
-                $('#weight').val('');
-                $('#sleepTime').val('');
-                $('#healthNotes').val('');
+                $('#allergiesStatus, #conditionStatus, #weight, #sleepTime, #healthNotes').val('');
             }
         },
         error: function(response) {

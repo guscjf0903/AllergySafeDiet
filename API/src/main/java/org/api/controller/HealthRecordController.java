@@ -6,6 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.service.HealthRecordService;
 import org.core.dto.HealthDto;
+import org.core.response.HealthResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,9 @@ public class HealthRecordController {
 
     @GetMapping("/health")
     public ResponseEntity<?> getHealthData(@RequestParam(name = "date") LocalDate date, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        Optional<HealthDto> healthDto = healthRecordService.getHealthDataByDate(date, authorizationHeader);
+        Optional<HealthResponse> healthResponse = healthRecordService.getHealthDataByDate(date, authorizationHeader);
 
-        return healthDto
+        return healthResponse
                 .map(data -> ResponseEntity.ok().body(data))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }

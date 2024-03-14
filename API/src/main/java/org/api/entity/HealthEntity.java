@@ -1,6 +1,7 @@
 package org.api.entity;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -9,14 +10,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.core.dto.HealthDto;
+import org.core.dto.PillsDto;
+import org.core.response.HealthResponse;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -38,7 +45,7 @@ public class HealthEntity {
     private UserEntity user;
 
     @Column(name = "health_date", nullable = false)
-    private Date healthDate;
+    private LocalDate healthDate;
 
     @Column(name = "allergies_status")
     private int allergiesStatus;
@@ -59,7 +66,11 @@ public class HealthEntity {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public HealthEntity(UserEntity user, Date healthDate, int allergiesStatus,
+    @OneToMany(mappedBy = "health", cascade = CascadeType.ALL)
+    private List<SupplementEntity> supplements;
+
+
+    public HealthEntity(UserEntity user, LocalDate healthDate, int allergiesStatus,
                         int conditionStatus, int weight, int sleepTime, String healthNotes) {
         this.user = user;
         this.healthDate = healthDate;
@@ -70,14 +81,18 @@ public class HealthEntity {
         this.healthNotes = healthNotes;
     }
 
+    public List<PillsDto> getPillsDtoList() {
+        if (supplements == null) {
+            return List.of(); // supplements가 null인 경우, 빈 리스트 반환
+        }
+        return supplements.stream()
+                .map(supplement -> new PillsDto(supplement.getSupplementName(), supplement.getSupplementCount()))
+                .collect(Collectors.toList());
+    }
+
     public static HealthEntity of(UserEntity user, HealthDto healthDto) {
         return new HealthEntity(user, healthDto.date(), healthDto.allergiesStatus(), healthDto.conditionStatus(),
                 healthDto.weight(), healthDto.sleepTime(), healthDto.healthNotes());
-    }
-
-    public static HealthDto toDto(HealthEntity healthEntity) {
-        return new HealthDto(healthEntity.healthDate, healthEntity.allergiesStatus, healthEntity.conditionStatus,
-                healthEntity.weight, healthEntity.sleepTime, healthEntity.healthNotes);
     }
 
 }
