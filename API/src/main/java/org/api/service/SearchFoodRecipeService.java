@@ -7,9 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.config.OpenApiProperties;
+import org.api.entity.redis_entity.FoodRecipeRedisEntity;
 import org.api.exception.CustomException;
+import org.api.repository.redis_repository.FoodRecipeRedisRepository;
 import org.core.dto.IngredientsDto;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +22,28 @@ public class SearchFoodRecipeService {
     private final OpenApiProperties openApiProperties;
     private final OpenApiClient openApiClient;
     private final ObjectMapper objectMapper;
+    private final FoodRecipeRedisRepository foodRecipeRedisRepository;
 
 
     public List<IngredientsDto> getFoodRecipes(String foodName) throws IOException {
+        List<IngredientsDto> redisIngredients = getRecipesRedisCache(foodName);
+        if(redisIngredients != null) {
+            return redisIngredients;
+        }
+
         String RecipeIdJsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO", foodName);
         int recipeId = recipeIdExtractor(RecipeIdJsonString);
 
         String IngredientsJsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID", recipeId);
+        List<IngredientsDto> apiIngredients = extractIngredientNames(IngredientsJsonString);
+        foodRecipeRedisRepository.save(new FoodRecipeRedisEntity(foodName, apiIngredients)); //redis에 저장
 
-        return extractIngredientNames(IngredientsJsonString);
+        return apiIngredients;
+    }
+
+    private List<IngredientsDto> getRecipesRedisCache(String foodName) {
+        Optional<FoodRecipeRedisEntity> cachedRecipe = foodRecipeRedisRepository.findById(foodName);
+        return cachedRecipe.map(FoodRecipeRedisEntity::getIngredients).orElse(null);
     }
 
     private int recipeIdExtractor(String jsonString) throws IOException { //1번쨰 openapi에서 받아온 jsonString을 파싱하여 recipeId를 추출하는 메소드
