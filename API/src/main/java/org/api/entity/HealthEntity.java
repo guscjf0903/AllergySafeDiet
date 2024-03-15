@@ -14,7 +14,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -23,8 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.core.dto.HealthDto;
 import org.core.dto.PillsDto;
-import org.core.response.HealthResponse;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -66,6 +65,10 @@ public class HealthEntity {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
     @OneToMany(mappedBy = "health", cascade = CascadeType.ALL)
     private List<SupplementEntity> supplements;
 
@@ -93,6 +96,14 @@ public class HealthEntity {
     public static HealthEntity of(UserEntity user, HealthDto healthDto) {
         return new HealthEntity(user, healthDto.date(), healthDto.allergiesStatus(), healthDto.conditionStatus(),
                 healthDto.weight(), healthDto.sleepTime(), healthDto.healthNotes());
+    }
+
+    public void healthEntityUpdate(HealthDto healthDto) {
+        this.allergiesStatus = healthDto.allergiesStatus();
+        this.conditionStatus = healthDto.conditionStatus();
+        this.weight = healthDto.weight();
+        this.sleepTime = healthDto.sleepTime();
+        this.healthNotes = healthDto.healthNotes();
     }
 
 }

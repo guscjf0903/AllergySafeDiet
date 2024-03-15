@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
 import org.api.entity.LoginEntity;
 import org.api.repository.HealthRepository;
-import org.api.repository.SupplementRepository;
 import org.core.dto.HealthDto;
 import org.core.response.HealthResponse;
 import org.springframework.stereotype.Service;
@@ -33,16 +32,29 @@ public class HealthRecordService {
     @Transactional(readOnly = true)
     public Optional<HealthResponse> getHealthDataByDate(LocalDate date, String authorizationHeader) {
         LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
-        HealthEntity healthEntity = healthRepository.getHealthDataByHealthDateAndUserUserId(date, loginEntity.getUser().getUserId());
+        Optional<HealthEntity> getHealthEntity = healthRepository.getHealthDataByHealthDateAndUserUserId(date, loginEntity.getUser().getUserId());
 
-        if(healthEntity == null) {
+        if(getHealthEntity.isEmpty()) {
             return Optional.empty();
         } else {
+            HealthEntity healthEntity = getHealthEntity.get();
+
             HealthResponse healthResponse = HealthResponse.toResponse(healthEntity.getHealthDate(), healthEntity.getAllergiesStatus(),
                     healthEntity.getConditionStatus(), healthEntity.getWeight(),
                     healthEntity.getSleepTime(), healthEntity.getHealthNotes(), healthEntity.getPillsDtoList());
 
             return Optional.of(healthResponse);
         }
+    }
+
+    @Transactional
+    public void putHealthData(HealthDto healthDto, String authorizationHeader) {
+        LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
+
+        healthRepository.getHealthDataByHealthDateAndUserUserId(healthDto.date(),loginEntity.getUser().getUserId())
+                .ifPresent(orgHealthEntity -> {
+                    orgHealthEntity.healthEntityUpdate(healthDto);
+                    supplementRecordService.putSupplementData(orgHealthEntity, healthDto.pills());
+                });
     }
 }

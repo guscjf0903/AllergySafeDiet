@@ -23,4 +23,16 @@ public class SupplementRecordService {
             supplementRepository.save(supplementEntity);
         });
     }
+
+    @Transactional
+    public void putSupplementData(HealthEntity health, List<PillsDto> pillsDto) {
+        if(pillsDto == null || pillsDto.isEmpty()) return;
+
+        supplementRepository.deleteByHealthHealthRecordId(health.getHealthRecordId());
+
+        pillsDto.forEach(pill -> {
+            SupplementEntity supplementEntity = SupplementEntity.of(health, pill.name(), pill.count());
+            supplementRepository.save(supplementEntity);
+        });
+    }
 }

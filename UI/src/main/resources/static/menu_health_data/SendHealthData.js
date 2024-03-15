@@ -1,3 +1,5 @@
+var healthDataExists = false; // 전역 변수 선언
+
 $(document).ready(function() {
     checkHealthData();
     var apiUrl = $('#apiUrl').data('url');
@@ -26,10 +28,11 @@ $(document).ready(function() {
             }
         });
 
+        var method = healthDataExists ? 'PUT' : 'POST';
         e.preventDefault();
         $.ajax({
             url: apiUrl + '/menu_health_data/health', // 실제 API 엔드포인트
-            method: 'POST',
+            method: method,
             headers: {
                 'Authorization': sessionStorage.getItem("loginToken"),
             },
@@ -109,10 +112,11 @@ function checkHealthData() {
                 response.pills.forEach(function(pill) {
                     addPillToList(pill.name, pill.count);
                 });
-
+                healthDataExists = true;
             } else if(xhr.status === 204) {
                 $('#dataStatusMessage').text('해당 날짜에 데이터가 없습니다. 새로운 데이터를 입력해주세요.').show();
                 $('#allergiesStatus, #conditionStatus, #weight, #sleepTime, #healthNotes').val('');
+                healthDataExists = false;
             }
         },
         error: function(response) {
