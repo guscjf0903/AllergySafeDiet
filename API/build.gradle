@@ -43,6 +43,8 @@ dependencies {
 
     implementation 'org.postgresql:postgresql:42.6.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    testImplementation 'com.h2database:h2'
+
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
 
