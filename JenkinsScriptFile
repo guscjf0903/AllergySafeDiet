@@ -25,7 +25,7 @@ pipeline {
         stage('Build gradle') {
             steps {
                 script {
-                    sh './gradlew clean build'
+                    sh './gradlew clean build --args="--spring.profiles.active=dev"'
                 }
             }
             post {
