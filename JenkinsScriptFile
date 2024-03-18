@@ -48,7 +48,7 @@ pipeline {
         stage('Build Docker UI') {
             steps {
                 echo 'Build Docker UI'
-                dir ('DeliveryUI') {
+                dir ('UI') {
                     script {
                         dockerImageUI = docker.build("${repository}:UI")
                     }
@@ -71,7 +71,7 @@ pipeline {
         stage('Build Docker API') {
             steps {
                 echo 'Build Docker API'
-                dir ('DeliveryAPI') {
+                dir ('API') {
                     script {
                         dockerImageAPI = docker.build("${repository}:API")
                     }
