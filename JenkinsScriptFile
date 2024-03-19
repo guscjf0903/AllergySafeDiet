@@ -70,7 +70,7 @@ pipeline {
 
         stage('Build Docker API') {
             steps {
-                echo 'Build Docker API'
+                echo 'API'
                 dir ('API') {
                     script {
                         dockerImageAPI = docker.build("${repository}:API")
@@ -121,6 +121,6 @@ pipeline {
                 }
             }
 
-    }
+        }
     }
 }
