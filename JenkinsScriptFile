@@ -1,9 +1,6 @@
 pipeline {
     environment {
         repository = "majanada2/allergesafediet_app"
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub_token')
-        dockerImageAPI = ''
-        dockerImageUI = ''
     }
     agent any
     stages {
@@ -11,7 +8,6 @@ pipeline {
             steps {
                 checkout scm
             }
-
             post {
                 success {
                     echo 'Successfully Cloned Repository'
@@ -38,6 +34,7 @@ pipeline {
                 }
             }
         }
+
         stage('Debug') {
             steps {
                 echo 'Current Working Directory:'
@@ -48,7 +45,7 @@ pipeline {
         stage('Build Docker UI') {
             steps {
                 echo 'Build Docker UI'
-                dir ('UI') {
+                dir('UI') {
                     script {
                         dockerImageUI = docker.build("${repository}:UI")
                     }
@@ -62,16 +59,16 @@ pipeline {
         }
 
         stage('Debug After Build Docker UI') {
-                steps {
-                    echo 'Current Working Directory:'
-                    sh 'pwd'
-                }
+            steps {
+                echo 'Current Working Directory:'
+                sh 'pwd'
+            }
         }
 
         stage('Build Docker API') {
             steps {
                 echo 'API'
-                dir ('API') {
+                dir('API') {
                     script {
                         dockerImageAPI = docker.build("${repository}:API")
                     }
@@ -86,13 +83,10 @@ pipeline {
 
         stage('Push Docker UI') {
             steps {
-                echo 'Push Docker UI'
-                dir ('DeliveryUI') {
-                    script {
-                        docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                            dockerImageUI.push()
-                        }
-                        dockerImageUI.remove()
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub_token', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh "docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS"
+                        sh "docker push ${repository}:UI"
                     }
                 }
             }
@@ -105,13 +99,10 @@ pipeline {
 
         stage('Push Docker API') {
             steps {
-                echo 'Push Docker API'
-                dir ('DeliveryAPI') {
-                    script {
-                        docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                            dockerImageAPI.push()
-                        }
-                        dockerImageAPI.remove()
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub_token', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh "docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS"
+                        sh "docker push ${repository}:API"
                     }
                 }
             }
@@ -120,7 +111,6 @@ pipeline {
                     error 'This pipeline stops here...'
                 }
             }
-
         }
     }
 }
