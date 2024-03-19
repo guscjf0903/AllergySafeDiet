@@ -11,7 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,16 +64,25 @@ public class HealthEntity {
     @Column(name = "health_notes")
     private String healthNotes;
 
-    @Column(name = "created_at")
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "health", cascade = CascadeType.ALL)
     private List<SupplementEntity> supplements;
+
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Long createdAt;
+
+    @Column(name = "updated_at")
+    private Long updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now().toEpochMilli();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = Instant.now().toEpochMilli();
+    }
 
 
     public HealthEntity(UserEntity user, LocalDate healthDate, int allergiesStatus,

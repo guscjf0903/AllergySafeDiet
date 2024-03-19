@@ -8,7 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,9 +42,13 @@ public class LoginEntity {
     @Column(name = "token_expiration_time", nullable = false)
     private LocalDateTime tokenExpirationTime;
 
-    @Column(name = "login_time")
-    @CreatedDate
-    private LocalDateTime loginTime;
+    @Column(name = "login_time", nullable = false, updatable = false)
+    private Long loginTime;
+
+    @PrePersist
+    protected void onCreate() {
+        this.loginTime = Instant.now().toEpochMilli();
+    }
 
     public LoginEntity(UserEntity user, String loginToken, LocalDateTime tokenExpirationTime) {
         this.user = user;
