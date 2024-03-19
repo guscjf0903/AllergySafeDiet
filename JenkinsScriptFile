@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        repository = "guscjf0903@naver.com/allergesafediet_app"
+        repository = "majanada2/allergesafediet_app"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub_token')
         dockerImageAPI = ''
         dockerImageUI = ''
