@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MenuAndHealthUiController {
     @Value("${api.url}") String apiUrl;
 
-//    @GetMapping("/calendar")
-//    public String showDataCalender() {
-//        return "DataCalender";
-//    }
+    @GetMapping("/select_date")
+    public String showDataCalender(Model model) {
+        model.addAttribute("apiUrl", apiUrl);
+        return "SelectMenuAndHealthDate";
+    }
 
     @GetMapping("menu/{date}")
     public String showMenuDataForm(@PathVariable("date") String date, Model model) {

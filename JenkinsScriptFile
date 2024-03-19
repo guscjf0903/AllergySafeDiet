@@ -89,7 +89,7 @@ pipeline {
                 echo 'Push Docker UI'
                 dir ('DeliveryUI') {
                     script {
-                        docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
+                        docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
                             dockerImageUI.push()
                         }
                         dockerImageUI.remove()
@@ -108,7 +108,7 @@ pipeline {
                 echo 'Push Docker API'
                 dir ('DeliveryAPI') {
                     script {
-                        docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
+                        docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
                             dockerImageAPI.push()
                         }
                         dockerImageAPI.remove()

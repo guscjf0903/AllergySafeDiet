@@ -12,8 +12,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 @RequiredArgsConstructor
 public class EmailConfig {
-    @Autowired
-    private MailProperties mailProperties;
+    private final MailProperties mailProperties;
 
     @Bean
     public JavaMailSender javaMailSender() {

@@ -1,5 +1,7 @@
 package org.api.service;
 
+import java.time.LocalDate;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.LoginEntity;
 import org.api.entity.FoodEntity;
@@ -22,6 +24,11 @@ public class FoodRecordService {
         foodRepository.save(foodEntity);
 
         return foodEntity;
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<?> getMenuDataByDate(LocalDate date, String authorizationHeader) {
+        return Optional.empty();
     }
 
 }

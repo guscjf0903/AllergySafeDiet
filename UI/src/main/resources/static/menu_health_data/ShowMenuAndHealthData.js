@@ -1,3 +1,5 @@
+const apiUrl = $('#apiUrl').data('url');
+
 $(document).ready(function() {
     $('#datePicker').change(function() {
         const selectedDate = $(this).val();
@@ -17,7 +19,7 @@ $(document).ready(function() {
 function fetchFoodData(date) {
     // 예시 URL 및 AJAX 요청, 실제 URL로 교체 필요
     $.ajax({
-        url: `https://api.example.com/foodData?date=${date}`,
+        url: apiUrl + `/menu_health_data/menu?date=${date}`,
         type: 'GET',
         success: function(data) {
             displayFoodData(data);
@@ -33,6 +35,9 @@ function fetchHealthData(date) {
     $.ajax({
         url: `https://api.example.com/healthData?date=${date}`,
         type: 'GET',
+        headers: {
+            'Authorization': sessionStorage.getItem("loginToken"),
+        },
         success: function(data) {
             displayHealthData(data);
         },
