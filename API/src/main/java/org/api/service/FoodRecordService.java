@@ -30,5 +30,4 @@ public class FoodRecordService {
     public Optional<?> getMenuDataByDate(LocalDate date, String authorizationHeader) {
         return Optional.empty();
     }
-
 }

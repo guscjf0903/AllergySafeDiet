@@ -25,7 +25,7 @@ public class SearchFoodRecipeService {
     private final ObjectMapper objectMapper;
     private final FoodRecipeRedisRepository foodRecipeRedisRepository;
 
-    public List<IngredientsDto> getFoodRecipes(String foodName) throws IOException {
+    public List<IngredientsDto> getFoodRecipes(String foodName) {
         return getRecipesRedisCache(foodName)
                 .orElseGet(() -> fetchAndCacheFoodRecipes(foodName));
     }
@@ -66,33 +66,27 @@ public class SearchFoodRecipeService {
 
     private int recipeIdExtractor(String jsonString)
             throws IOException { //1번쨰 openapi에서 받아온 jsonString을 파싱하여 recipeId를 추출하는 메소드
-        int recipeId = 0;
         JsonNode rootNode = objectMapper.readTree(jsonString);
-        JsonNode rowsNode = rootNode.path(openApiProperties.getRecipeInfoPath()).path("row");
+        JsonNode recipeIdNode = rootNode.findValue("RECIPE_ID"); // 특정 키를 가진 첫 번째 노드를 찾음
 
-        if (rowsNode.isArray()) {
-            for (JsonNode rowNode : rowsNode) {
-                if (rowNode.has("RECIPE_ID")) {
-                    recipeId = rowNode.get("RECIPE_ID").intValue();
-                }
-            }
+        if (recipeIdNode != null && recipeIdNode.canConvertToInt()) {
+            return recipeIdNode.intValue();
+        } else {
+            throw new CustomException(NOT_FOUND_RECIPE); // RECIPE_ID를 찾을 수 없는 경우 예외를 발생
         }
-        if (recipeId == 0) {
-            throw new CustomException(NOT_FOUND_RECIPE);
-        }
-        return recipeId;
+
     }
 
     private List<IngredientsDto> extractIngredientNames(String jsonString) throws IOException {
         List<IngredientsDto> ingredientNames = new ArrayList<>();
         JsonNode rootNode = objectMapper.readTree(jsonString);
-        JsonNode rowsNode = rootNode.path(openApiProperties.getRecipeDetailsPath()).path("row");
 
-        if (rowsNode.isArray()) {
-            for (JsonNode rowNode : rowsNode) {
-                String ingredientName = rowNode.path("IRDNT_NM").asText();
-                ingredientNames.add(new IngredientsDto(ingredientName));
-            }
+        // "IRDNT_NM" 키를 가진 모든 노드를 찾아 리스트로 반환
+        List<JsonNode> ingredientNodes = rootNode.findValues("IRDNT_NM");
+
+        for (JsonNode ingredientNode : ingredientNodes) {
+            String ingredientName = ingredientNode.asText(); // JsonNode를 문자열로 변환
+            ingredientNames.add(new IngredientsDto(ingredientName)); // DTO 리스트에 추가
         }
 
         return ingredientNames;
