@@ -18,11 +18,14 @@ spring:
         - openinview-dev
         - openApi
         - gmail
+        - redis
       prod:
         - db-prod
         - openinview-prod
         - gmail
         - openApi
+        - redis
+
 
     include:
       - db
