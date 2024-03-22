@@ -8,6 +8,7 @@ import org.api.entity.FoodEntity;
 import org.api.service.IngredientService;
 import org.api.service.FoodRecordService;
 import org.core.dto.MenuDto;
+import org.core.response.FoodResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,20 @@ public class FoodRecordController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/menu")
+    @GetMapping(value = "/menu", params = "date")
     public ResponseEntity<Object> getMenuData(@RequestParam(name = "date") LocalDate date,
                                               @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         Optional<Object> menuResponse = foodRecordService.getMenuDataByDate(date, authorizationHeader);
+
+        return menuResponse
+                .map(data -> ResponseEntity.ok().body(data))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+    }
+
+    @GetMapping(value = "/menu", params = "id")
+    public ResponseEntity<FoodResponse> getMenuDataById(@RequestParam(name = "id") Long id,
+                                                  @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        Optional<FoodResponse> menuResponse = foodRecordService.getMenuDataById(id, authorizationHeader);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))

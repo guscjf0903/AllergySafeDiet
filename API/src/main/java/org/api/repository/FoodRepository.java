@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
     Optional<List<FoodEntity>> getFoodDataByFoodDateAndUserUserId(LocalDate date, Long userId);
+    Optional<FoodEntity> getFoodDataByFoodRecordIdAndUserUserId(Long id, Long userId);
 
 }

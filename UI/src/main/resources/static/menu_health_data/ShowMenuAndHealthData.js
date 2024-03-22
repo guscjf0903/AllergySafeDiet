@@ -9,11 +9,11 @@ $(document).ready(function() {
     });
 
     $('#addMenuBtn').click(function() {
-        // 메뉴 추가 로직
+        window.location.href = '/menu_health_data/menu?date=' + $("#datePicker").val();
     });
 
     $('#editHealthBtn').click(function() {
-        // 건강 데이터 수정 로직
+        window.location.href = '/menu_health_data/health?date=' + $("#datePicker").val();
     });
 });
 
@@ -55,12 +55,13 @@ function displayFoodData(data) {
         $('#foodData').html('<p>음식관련 데이터가 없습니다. 추가해주세요.</p>');
         return;
     }
+    data.sort((a, b) => a.mealTime.localeCompare(b.mealTime));
 
     let htmlContent = '<div class="table-responsive"><table class="table"><thead><tr><th>날짜</th><th>식사 종류</th><th>식사 시간</th><th>음식 이름</th><th>원재료</th><th>특이사항</th><th>조치</th></tr></thead><tbody>';
 
     data.forEach(menu => {
         const ingredientsList = menu.ingredients.map(ingredient => ingredient.ingredientName);
-
+        console.log(menu.id);
         htmlContent += `<tr>
             <td>${menu.date}</td>
             <td>${menu.mealType}</td>
@@ -80,8 +81,7 @@ function displayFoodData(data) {
     $('#foodData').html(htmlContent);
 
     $('.edit-menu').click(function() {
-        const menuId = $(this).data('id');
-        // 메뉴 수정 로직 실행
+        window.location.href = '/menu_health_data/menu/edit?id=' + $(this).data('id');
     });
     $('.delete-menu').click(function() {
         const menuId = $(this).data('id');

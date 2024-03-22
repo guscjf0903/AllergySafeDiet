@@ -28,7 +28,6 @@ public class HealthRecordController {
     public ResponseEntity<?> getHealthData(@RequestParam(name = "date") LocalDate date,
                                            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         Optional<HealthResponse> healthResponse = healthRecordService.getHealthDataByDate(date, authorizationHeader);
-        System.out.println("test");
         return healthResponse
                 .map(data -> ResponseEntity.ok().body(data))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());

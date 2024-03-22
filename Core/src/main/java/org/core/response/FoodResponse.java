@@ -6,6 +6,7 @@ import java.util.List;
 import org.core.dto.IngredientsDto;
 
 public record FoodResponse (
+        long id,
         LocalDate date,
         String mealType,
         LocalTime mealTime,
@@ -13,7 +14,7 @@ public record FoodResponse (
         List<IngredientsDto> ingredients,
         String foodNotes
 ){
-    public static FoodResponse toResponse(LocalDate date, String mealType, LocalTime mealTime, String foodName, List<IngredientsDto> ingredients, String notes) {
-        return new FoodResponse(date, mealType, mealTime, foodName, ingredients, notes);
+    public static FoodResponse toResponse(long id,LocalDate date, String mealType, LocalTime mealTime, String foodName, List<IngredientsDto> ingredients, String notes) {
+        return new FoodResponse(id, date, mealType, mealTime, foodName, ingredients, notes);
     }
 };

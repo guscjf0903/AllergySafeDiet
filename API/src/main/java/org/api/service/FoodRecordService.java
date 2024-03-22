@@ -30,6 +30,25 @@ public class FoodRecordService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<FoodResponse> getMenuDataById(Long id, String authorizationHeader) {
+        LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
+        Optional<FoodEntity> getFoodEntity = foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id,
+                loginEntity.getUser().getUserId());
+
+        if (getFoodEntity.isEmpty()) {
+            return Optional.empty();
+        } else {
+            FoodEntity foodEntity = getFoodEntity.get();
+
+            FoodResponse foodResponse = FoodResponse.toResponse(
+                    foodEntity.getFoodRecordId(),foodEntity.getFoodDate(), foodEntity.getMealType(),
+                    foodEntity.getMealTime(), foodEntity.getFoodName(),foodEntity.getIngredientsDtoList() ,foodEntity.getFoodNotes());
+
+            return Optional.of(foodResponse);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public Optional<Object> getMenuDataByDate(LocalDate date, String authorizationHeader) {
         LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
         Optional<List<FoodEntity>> getFoodEntity = foodRepository.getFoodDataByFoodDateAndUserUserId(date,
@@ -42,7 +61,7 @@ public class FoodRecordService {
             List<FoodResponse> foodResponseList = new ArrayList<>();
             for(FoodEntity foodEntity : foodEntityList) {
                 FoodResponse foodResponse = FoodResponse.toResponse(
-                        foodEntity.getFoodDate(), foodEntity.getMealType(),
+                        foodEntity.getFoodRecordId(),foodEntity.getFoodDate(), foodEntity.getMealType(),
                         foodEntity.getMealTime(), foodEntity.getFoodName(),foodEntity.getIngredientsDtoList() ,foodEntity.getFoodNotes());
 
                 foodResponseList.add(foodResponse);

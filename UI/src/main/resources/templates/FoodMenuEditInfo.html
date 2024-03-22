@@ -15,7 +15,7 @@
 <body>
 <div class="container mt-3">
     <input type="hidden" id="loginToken" name="loginToken">
-    <input type="hidden" id="postDate" th:value="${date}">
+    <div id="id" th:data-id="${id}"></div>
     <div id="apiUrl" th:data-url="${apiUrl}"></div>
     <form id="menuPostForm">
         <div class="form-row align-items-end">
@@ -51,9 +51,9 @@
         <button type="submit" class="btn btn-secondary">작성 완료</button>
     </form>
 </div>
-<script src="/menu_health_data/SendMenuData.js"></script>
-<script src="/menu_health_data/SearchRecipe.js"></script>
+<script src="/menu_health_data/EditMenuData.js"></script>
 <script src="/menu_health_data/addIngredientToList.js"></script>
+<script src="/menu_health_data/SearchRecipe.js"></script>
 
 </body>
 </html>
