@@ -8,7 +8,6 @@ import org.api.entity.FoodEntity;
 import org.api.service.IngredientService;
 import org.api.service.FoodRecordService;
 import org.core.dto.MenuDto;
-import org.core.response.HealthResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,8 @@ public class FoodRecordController {
     private final IngredientService ingredientService;
 
     @PostMapping("/menu")
-    public ResponseEntity<?> postMenuData(@RequestBody @Valid MenuDto menuDto, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    public ResponseEntity<?> postMenuData(@RequestBody @Valid MenuDto menuDto,
+                                          @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         FoodEntity foodEntity = foodRecordService.saveMenuData(menuDto, authorizationHeader);
         ingredientService.saveIngredient(foodEntity, menuDto);
 
@@ -35,8 +35,9 @@ public class FoodRecordController {
     }
 
     @GetMapping("/menu")
-    public ResponseEntity<?> getMenuData(@RequestParam(name = "date") LocalDate date, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        Optional<?> menuResponse = foodRecordService.getMenuDataByDate(date, authorizationHeader);
+    public ResponseEntity<Object> getMenuData(@RequestParam(name = "date") LocalDate date,
+                                              @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        Optional<Object> menuResponse = foodRecordService.getMenuDataByDate(date, authorizationHeader);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))

@@ -1,5 +1,6 @@
 package org.api.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,16 +8,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.core.dto.IngredientsDto;
 import org.core.dto.MenuDto;
+import org.core.dto.PillsDto;
 
 @Entity
 @Table(name = "food_record", schema = "allergysafediet_schema")
@@ -52,9 +58,21 @@ public class FoodEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Long createdAt;
 
+    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
+    private List<IngredientEntity> ingredientEntities;
+
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now().getEpochSecond();
+    }
+
+    public List<IngredientsDto> getIngredientsDtoList() {
+        if (ingredientEntities == null) {
+            return List.of(); // supplements가 null인 경우, 빈 리스트 반환
+        }
+        return ingredientEntities.stream()
+                .map(ingredient -> new IngredientsDto(ingredient.getIngredientName()))
+                .collect(Collectors.toList());
     }
 
     public FoodEntity(UserEntity user, LocalDate foodDate, String mealType,

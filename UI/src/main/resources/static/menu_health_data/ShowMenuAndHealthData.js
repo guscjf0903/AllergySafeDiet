@@ -3,6 +3,7 @@ const apiUrl = $('#apiUrl').data('url');
 $(document).ready(function() {
     $('#datePicker').change(function() {
         const selectedDate = $(this).val();
+
         fetchFoodData(selectedDate);
         fetchHealthData(selectedDate);
     });
@@ -17,12 +18,14 @@ $(document).ready(function() {
 });
 
 function fetchFoodData(date) {
-    // 예시 URL 및 AJAX 요청, 실제 URL로 교체 필요
     $.ajax({
         url: apiUrl + `/menu_health_data/menu?date=${date}`,
         type: 'GET',
-        success: function(data) {
-            displayFoodData(data);
+        headers: {
+            'Authorization': sessionStorage.getItem("loginToken"),
+        },
+        success: function(response) {
+            displayFoodData(response);
         },
         error: function() {
             $('#foodData').html('<p>음식관련 데이터가 없습니다. 추가해주세요.</p>');
@@ -31,9 +34,8 @@ function fetchFoodData(date) {
 }
 
 function fetchHealthData(date) {
-    // 예시 URL 및 AJAX 요청, 실제 URL로 교체 필요
     $.ajax({
-        url: `https://api.example.com/healthData?date=${date}`,
+        url: apiUrl + `/menu_health_data/health?date=${date}`,
         type: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem("loginToken"),
@@ -49,7 +51,7 @@ function fetchHealthData(date) {
 }
 
 function displayFoodData(data) {
-    if (!data || data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
         $('#foodData').html('<p>음식관련 데이터가 없습니다. 추가해주세요.</p>');
         return;
     }
@@ -57,13 +59,15 @@ function displayFoodData(data) {
     let htmlContent = '<div class="table-responsive"><table class="table"><thead><tr><th>날짜</th><th>식사 종류</th><th>식사 시간</th><th>음식 이름</th><th>원재료</th><th>특이사항</th><th>조치</th></tr></thead><tbody>';
 
     data.forEach(menu => {
+        const ingredientsList = menu.ingredients.map(ingredient => ingredient.ingredientName);
+
         htmlContent += `<tr>
             <td>${menu.date}</td>
             <td>${menu.mealType}</td>
             <td>${menu.mealTime}</td>
             <td>${menu.foodName}</td>
-            <td>${menu.ingredients.join(', ')}</td>
-            <td>${menu.notes}</td>
+            <td>${ingredientsList.join(', ')}</td>
+            <td>${menu.foodNotes}</td>
             <td>
                 <button class="btn btn-primary btn-sm edit-menu" data-id="${menu.id}">수정</button>
                 <button class="btn btn-danger btn-sm delete-menu" data-id="${menu.id}">삭제</button>
@@ -94,7 +98,7 @@ function displayHealthData(data) {
 
     let pillsContent = '';
     if (data.pills && data.pills.length > 0) {
-        pillsContent += data.pills.map(pill => `${pill.name} - ${pill.quantity}개`).join(', ');
+        pillsContent += data.pills.map(pill => `${pill.name} - ${pill.count}개`).join(', ');
     } else {
         pillsContent = '알약 정보 없음';
     }

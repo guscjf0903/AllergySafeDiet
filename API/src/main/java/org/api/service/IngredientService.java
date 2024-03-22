@@ -22,4 +22,5 @@ public class IngredientService {
             ingredientRepository.save(ingredientEntity);
         }
     }
+
 }
