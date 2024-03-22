@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.core.dto.HealthDto;
 import org.core.dto.IngredientsDto;
 import org.core.dto.MenuDto;
 import org.core.dto.PillsDto;
@@ -88,6 +89,15 @@ public class FoodEntity {
     public static FoodEntity of(UserEntity user, MenuDto menuDto) {
         return new FoodEntity(user, menuDto.date(), menuDto.mealType(),
                 menuDto.mealTime(), menuDto.foodName(), menuDto.notes());
+    }
+
+    public void foodEntityUpdate(MenuDto menuDto) {
+        this.foodDate = menuDto.date();
+        this.mealType = menuDto.mealType();
+        this.mealTime = menuDto.mealTime();
+        this.foodName = menuDto.foodName();
+        this.foodNotes = menuDto.notes();
+
     }
 
 }

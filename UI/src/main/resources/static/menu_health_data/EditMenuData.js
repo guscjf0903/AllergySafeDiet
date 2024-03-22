@@ -1,8 +1,7 @@
-var menuDataExists = false; // 전역 변수 선언
-
+var postDate;
 $(document).ready(function() {
-    checkMenuData(); // 메뉴 데이터 확인
     var apiUrl = $('#apiUrl').data('url');
+    checkMenuData(); // 메뉴 데이터 확인
 
     $('#addIngredient').click(function() {
         addIngredientToList(''); // 사용자가 새 원재료를 수동으로 추가할 수 있게 함
@@ -11,7 +10,7 @@ $(document).ready(function() {
     $('#menuPostForm').submit(function(e) {
         e.preventDefault();
         const menuData = {
-            date: $("#postDate").val(),
+            date: postDate,
             mealType: $("#foodType").val(),
             mealTime: $("#foodTime").val(),
             foodName: $("#foodName").val(),
@@ -25,7 +24,7 @@ $(document).ready(function() {
             }
         });
         $.ajax({
-            url: apiUrl + '/menu_health_data/menu?id=' + $("#id").val(),
+            url: apiUrl + '/menu_health_data/menu?id=' +  $("#id").data('id'),
             type: "PUT",
             headers: {
                 'Authorization': sessionStorage.getItem("loginToken"),
@@ -58,8 +57,8 @@ function checkMenuData() {
             $("#foodTime").val(data.mealTime);
             $("#foodName").val(data.foodName);
             $("#foodNotes").val(data.foodNotes);
-
-            // 기존에 추가된 재료 목록을 비우고 새로운 재료 목록을 채웁니다.
+            postDate = data.date;
+            // 기존에 추가된 재료 목록을 비우고 새로운 재료 목록을 할당.
             $('#ingredientsList').empty();
             data.ingredients.forEach(function(ingredient) {
                 addIngredientToList(ingredient.ingredientName); // 이미 정의된 함수를 사용하여 재료 목록에 추가

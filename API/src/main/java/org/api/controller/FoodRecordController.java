@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +54,14 @@ public class FoodRecordController {
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+    }
+
+    @PutMapping(value = "/menu")
+    public ResponseEntity<FoodResponse> putMenuDataById(@RequestParam(name = "id") Long id,
+                                                        @RequestBody MenuDto menuDto,
+                                                        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        foodRecordService.putMenuData(id ,menuDto, authorizationHeader);
+         return ResponseEntity.ok().build();
     }
 
 }
