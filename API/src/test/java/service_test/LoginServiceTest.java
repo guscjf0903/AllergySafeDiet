@@ -19,7 +19,7 @@ import org.api.exception.CustomException;
 import org.api.repository.LoginRepository;
 import org.api.repository.UserRepository;
 import org.api.service.LoginService;
-import org.core.dto.LoginRequest;
+import org.core.request.LoginRequest;
 import org.core.response.LoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

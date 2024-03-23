@@ -1,14 +1,14 @@
 let healthDataExists = false; // 전역 변수 선언
 
-$(document).ready(function() {
+$(document).ready(function () {
     checkHealthData();
     const apiUrl = $('#apiUrl').data('url');
 
-    $('#addPill').click(function() {
+    $('#addPill').click(function () {
         addPillToList('', ''); // 사용자가 새 알약 정보를 수동으로 추가할 수 있게 함
     });
 
-    $('#healthPostForm').submit(function(e) {
+    $('#healthPostForm').submit(function (e) {
         const healthData = {
             date: $("#postDate").val(),
             allergiesStatus: $("#allergiesStatus").val(),
@@ -20,7 +20,7 @@ $(document).ready(function() {
         };
         console.log(healthData);
 
-        $('#pillList .pill-container').each(function() {
+        $('#pillList .pill-container').each(function () {
             const pillName = $(this).find('input[type=text]').val();
             const pillCount = $(this).find('input[type=number]').val();
             if (pillName && pillCount) {
@@ -39,11 +39,11 @@ $(document).ready(function() {
             contentType: 'application/json',
             data: JSON.stringify(healthData),
 
-            success: function() {
+            success: function () {
                 alert('데이터가 성공적으로 저장되었습니다.');
                 window.location.href = '/food_health_data/' + $("#postDate").val();
             },
-            error: function() {
+            error: function () {
                 alert('데이터 저장에 실패했습니다. 다시 시도해주세요.');
                 console.error('데이터 저장에 실패했습니다.');
             }
@@ -85,7 +85,6 @@ function addPillToList(pillName, pillCount) {
 }
 
 
-
 function checkHealthData() {
     // API 호출하여 데이터 존재 여부 확인
     const apiUrl = $('#apiUrl').data('url');
@@ -101,25 +100,25 @@ function checkHealthData() {
         data: {
             date: postDate,
         },
-        complete: function(xhr) {
-            if(xhr.status === 200) {
+        complete: function (xhr) {
+            if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 $('#allergiesStatus').val(response.allergiesStatus);
                 $('#conditionStatus').val(response.conditionStatus);
                 $('#weight').val(response.weight);
                 $('#sleepTime').val(response.sleepTime);
                 $('#healthNotes').val(response.healthNotes);
-                response.pills.forEach(function(pill) {
+                response.pills.forEach(function (pill) {
                     addPillToList(pill.name, pill.count);
                 });
                 healthDataExists = true;
-            } else if(xhr.status === 204) {
+            } else if (xhr.status === 204) {
                 $('#dataStatusMessage').text('해당 날짜에 데이터가 없습니다. 새로운 데이터를 입력해주세요.').show();
                 $('#allergiesStatus, #conditionStatus, #weight, #sleepTime, #healthNotes').val('');
                 healthDataExists = false;
             }
         },
-        error: function(response) {
+        error: function (response) {
             $('#dataStatusMessage').text('데이터를 불러오는데 문제가 발생했습니다.');
             console.error(response);
         }

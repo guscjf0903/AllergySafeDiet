@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.service.HealthRecordService;
-import org.core.dto.HealthRequest;
+import org.core.request.HealthRequest;
 import org.core.response.HealthResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

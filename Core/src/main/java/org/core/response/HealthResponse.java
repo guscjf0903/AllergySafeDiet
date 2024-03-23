@@ -2,7 +2,7 @@ package org.core.response;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.core.dto.PillsRequest;
+import org.core.request.PillsRequest;
 
 
 public record HealthResponse (

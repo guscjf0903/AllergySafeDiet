@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
 import org.api.entity.SupplementEntity;
 import org.api.repository.SupplementRepository;
-import org.core.dto.PillsRequest;
+import org.core.request.PillsRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

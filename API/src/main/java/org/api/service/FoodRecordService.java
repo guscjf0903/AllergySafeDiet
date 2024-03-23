@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.LoginEntity;
 import org.api.entity.FoodEntity;
 import org.api.repository.FoodRepository;
-import org.core.dto.FoodRequest;
+import org.core.request.FoodRequest;
 import org.core.response.FoodResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

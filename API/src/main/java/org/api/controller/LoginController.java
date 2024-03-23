@@ -3,7 +3,7 @@ package org.api.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.api.service.LoginService;
-import org.core.dto.LoginRequest;
+import org.core.request.LoginRequest;
 import org.core.response.LoginResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

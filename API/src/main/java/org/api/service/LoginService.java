@@ -12,7 +12,7 @@ import org.api.entity.UserEntity;
 import org.api.exception.CustomException;
 import org.api.repository.LoginRepository;
 import org.api.repository.UserRepository;
-import org.core.dto.LoginRequest;
+import org.core.request.LoginRequest;
 import org.core.response.LoginResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

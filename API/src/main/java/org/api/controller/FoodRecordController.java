@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.FoodEntity;
 import org.api.service.IngredientService;
 import org.api.service.FoodRecordService;
-import org.core.dto.FoodRequest;
+import org.core.request.FoodRequest;
 import org.core.response.FoodResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

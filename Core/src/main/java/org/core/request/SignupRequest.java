@@ -1,4 +1,4 @@
-package org.core.dto;
+package org.core.request;
 
 
 import jakarta.validation.constraints.Email;

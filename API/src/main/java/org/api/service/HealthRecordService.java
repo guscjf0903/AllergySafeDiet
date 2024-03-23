@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
 import org.api.entity.LoginEntity;
 import org.api.repository.HealthRepository;
-import org.core.dto.HealthRequest;
+import org.core.request.HealthRequest;
 import org.core.response.HealthResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

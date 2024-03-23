@@ -21,8 +21,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.dto.HealthRequest;
-import org.core.dto.PillsRequest;
+import org.core.request.HealthRequest;
+import org.core.request.PillsRequest;
 
 @Entity
 @Table(name = "health_record", schema = "allergysafediet_schema")

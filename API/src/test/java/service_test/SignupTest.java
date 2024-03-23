@@ -15,7 +15,7 @@ import org.api.exception.CustomException;
 import org.api.exception.ErrorCodes;
 import org.api.repository.UserRepository;
 import org.api.service.SignupService;
-import org.core.dto.SignupRequest;
+import org.core.request.SignupRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

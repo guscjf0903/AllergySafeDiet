@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.dto.SignupRequest;
+import org.core.request.SignupRequest;
 
 @Entity
 @Table(name = "user", schema = "allergysafediet_schema")

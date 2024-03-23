@@ -1,4 +1,3 @@
-
 function addIngredientToList(ingredientName) {
     const $ingredientsList = $('#ingredientsList');
     // 원재료 입력 필드 생성 (이미 존재하는 값이 있으면 그 값을 사용)

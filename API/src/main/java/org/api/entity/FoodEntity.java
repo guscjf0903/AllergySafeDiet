@@ -20,8 +20,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.dto.IngredientsRequest;
-import org.core.dto.FoodRequest;
+import org.core.request.IngredientsRequest;
+import org.core.request.FoodRequest;
 
 @Entity
 @Table(name = "food_record", schema = "allergysafediet_schema")

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
 import org.api.exception.CustomException;
 import org.api.repository.UserRepository;
-import org.core.dto.SignupRequest;
+import org.core.request.SignupRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

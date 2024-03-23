@@ -3,7 +3,7 @@ package org.api.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.api.service.VerificationCodeService;
-import org.core.dto.EmailRequest;
+import org.core.request.EmailRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package org.core.dto;
+package org.core.request;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.IngredientEntity;
 import org.api.entity.FoodEntity;
 import org.api.repository.IngredientRepository;
-import org.core.dto.FoodRequest;
+import org.core.request.FoodRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
