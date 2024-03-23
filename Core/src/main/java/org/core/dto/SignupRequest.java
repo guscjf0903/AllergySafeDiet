@@ -7,7 +7,7 @@ import java.util.Date;
 import org.core.valiator.Password;
 
 
-public record SignupDto(
+public record SignupRequest(
         @NotBlank(message = "Please enter a username")
         String userName,
         @Password

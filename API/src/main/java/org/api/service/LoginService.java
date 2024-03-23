@@ -12,7 +12,7 @@ import org.api.entity.UserEntity;
 import org.api.exception.CustomException;
 import org.api.repository.LoginRepository;
 import org.api.repository.UserRepository;
-import org.core.dto.LoginDto;
+import org.core.dto.LoginRequest;
 import org.core.response.LoginResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ public class LoginService {
     private final UserRepository userRepository;
 
     @Transactional
-    public LoginResponse loginUser(LoginDto loginDto) {
-        UserEntity userEntity = userRepository.findByUserName(loginDto.loginId())
+    public LoginResponse loginUser(LoginRequest loginRequest) {
+        UserEntity userEntity = userRepository.findByUserName(loginRequest.loginId())
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-        if (!userEntity.getPassword().equals(loginDto.loginPassword())) {
+        if (!userEntity.getPassword().equals(loginRequest.loginPassword())) {
             throw new CustomException(PASSWORD_DISMATCH);
         } //아이디 비밀번호 검증
 
@@ -55,9 +55,6 @@ public class LoginService {
 
     @Transactional(readOnly = true)
     public LoginEntity validateLoginId(String loginToken) {
-        if (loginToken == null) {
-            throw new CustomException(NOT_FOUND_LOGINID);
-        }
         return loginRepository.findByLoginToken(loginToken)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
     }

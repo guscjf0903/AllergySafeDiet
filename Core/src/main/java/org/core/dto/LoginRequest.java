@@ -3,7 +3,7 @@ package org.core.dto;
 import jakarta.validation.constraints.NotBlank;
 
 
-public record LoginDto(
+public record LoginRequest(
         @NotBlank(message = "Please enter a ID")
         String loginId,
         @NotBlank(message = "Please enter a password")

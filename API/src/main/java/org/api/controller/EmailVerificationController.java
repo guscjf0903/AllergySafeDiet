@@ -3,7 +3,7 @@ package org.api.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.api.service.VerificationCodeService;
-import org.core.dto.EmailDto;
+import org.core.dto.EmailRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +17,8 @@ public class EmailVerificationController {
     private final VerificationCodeService verificationCodeService;
 
     @PostMapping("/email/verification_request")
-    public ResponseEntity<Void> sendVerificationEmail(@Valid @RequestBody EmailDto emailDto) {
-        verificationCodeService.sendCodeToEmail(emailDto.email());
+    public ResponseEntity<Void> sendVerificationEmail(@Valid @RequestBody EmailRequest emailRequest) {
+        verificationCodeService.sendCodeToEmail(emailRequest.email());
 
         return ResponseEntity.ok().build();
     }

@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.dto.IngredientsDto;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash(value = "foodRecipe", timeToLive = 3600)

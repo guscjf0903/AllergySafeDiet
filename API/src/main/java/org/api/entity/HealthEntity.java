@@ -4,7 +4,6 @@ package org.api.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,8 +21,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.dto.HealthDto;
-import org.core.dto.PillsDto;
+import org.core.dto.HealthRequest;
+import org.core.dto.PillsRequest;
 
 @Entity
 @Table(name = "health_record", schema = "allergysafediet_schema")
@@ -91,26 +90,26 @@ public class HealthEntity {
         this.healthNotes = healthNotes;
     }
 
-    public List<PillsDto> getPillsDtoList() {
+    public List<PillsRequest> getPillsDtoList() {
         if (supplements == null) {
             return List.of(); // supplements가 null인 경우, 빈 리스트 반환
         }
         return supplements.stream()
-                .map(supplement -> new PillsDto(supplement.getSupplementName(), supplement.getSupplementCount()))
+                .map(supplement -> new PillsRequest(supplement.getSupplementName(), supplement.getSupplementCount()))
                 .collect(Collectors.toList());
     }
 
-    public static HealthEntity of(UserEntity user, HealthDto healthDto) {
-        return new HealthEntity(user, healthDto.date(), healthDto.allergiesStatus(), healthDto.conditionStatus(),
-                healthDto.weight(), healthDto.sleepTime(), healthDto.healthNotes());
+    public static HealthEntity of(UserEntity user, HealthRequest healthRequest) {
+        return new HealthEntity(user, healthRequest.date(), healthRequest.allergiesStatus(), healthRequest.conditionStatus(),
+                healthRequest.weight(), healthRequest.sleepTime(), healthRequest.healthNotes());
     }
 
-    public void healthEntityUpdate(HealthDto healthDto) {
-        this.allergiesStatus = healthDto.allergiesStatus();
-        this.conditionStatus = healthDto.conditionStatus();
-        this.weight = healthDto.weight();
-        this.sleepTime = healthDto.sleepTime();
-        this.healthNotes = healthDto.healthNotes();
+    public void healthEntityUpdate(HealthRequest healthRequest) {
+        this.allergiesStatus = healthRequest.allergiesStatus();
+        this.conditionStatus = healthRequest.conditionStatus();
+        this.weight = healthRequest.weight();
+        this.sleepTime = healthRequest.sleepTime();
+        this.healthNotes = healthRequest.healthNotes();
     }
 
 }

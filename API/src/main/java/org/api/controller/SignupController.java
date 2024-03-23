@@ -3,7 +3,7 @@ package org.api.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.api.service.SignupService;
-import org.core.dto.SignupDto;
+import org.core.dto.SignupRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +15,8 @@ public class SignupController {
     private final SignupService signupService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody @Valid SignupDto signupDTO) {
-        signupService.registerUser(signupDTO);
+    public ResponseEntity<String> registerUser(@RequestBody @Valid SignupRequest signupRequest) {
+        signupService.registerUser(signupRequest);
         return ResponseEntity.ok("User registered successfully");
     }
 }

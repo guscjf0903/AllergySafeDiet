@@ -1,6 +1,6 @@
 package org.core.dto;
 
-public record PillsDto (
+public record PillsRequest(
         String name,
         int count
 ){}

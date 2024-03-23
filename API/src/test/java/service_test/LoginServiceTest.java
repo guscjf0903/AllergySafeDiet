@@ -19,7 +19,7 @@ import org.api.exception.CustomException;
 import org.api.repository.LoginRepository;
 import org.api.repository.UserRepository;
 import org.api.service.LoginService;
-import org.core.dto.LoginDto;
+import org.core.dto.LoginRequest;
 import org.core.response.LoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 @ExtendWith(MockitoExtension.class)
 public class LoginServiceTest {
@@ -42,14 +41,14 @@ public class LoginServiceTest {
     private LoginService loginService;
 
     private UserEntity mockUser;
-    private LoginDto mockLoginDto;
+    private LoginRequest mockLoginRequest;
     private LoginEntity mockLoginEntity;
 
     @BeforeEach
     void setUp() {
         // 테스트에 사용될 모의 객체를 설정합니다.
         mockUser = new UserEntity(1L, "testUser", "password123", "user@test.com", new Date(), "male", 180, Instant.now().getEpochSecond());
-        mockLoginDto = new LoginDto("testUser", "password123"); // LoginDto 클래스가 있다고 가정합니다.
+        mockLoginRequest = new LoginRequest("testUser", "password123"); // LoginDto 클래스가 있다고 가정합니다.
         mockLoginEntity = new LoginEntity(1L, mockUser, UUID.randomUUID().toString(), LocalDateTime.now().plusHours(1), Instant.now().toEpochMilli());
     }
 
@@ -58,7 +57,7 @@ public class LoginServiceTest {
         when(userRepository.findByUserName(anyString())).thenReturn(Optional.of(mockUser));
         when(loginRepository.save(any(LoginEntity.class))).thenReturn(mockLoginEntity);
 
-        LoginResponse response = loginService.loginUser(mockLoginDto);
+        LoginResponse response = loginService.loginUser(mockLoginRequest);
 
         assertNotNull(response);
         assertNotNull(response.getLoginToken());
@@ -69,7 +68,7 @@ public class LoginServiceTest {
         when(userRepository.findByUserName(anyString())).thenReturn(Optional.empty());
 
         // 로그인 시도 및 예외 검증
-        assertThrows(CustomException.class, () -> loginService.loginUser(mockLoginDto));
+        assertThrows(CustomException.class, () -> loginService.loginUser(mockLoginRequest));
     }
     @Test
     void 로그인토큰_확인테스트() {

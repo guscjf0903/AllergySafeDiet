@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.dto.SignupDto;
+import org.core.dto.SignupRequest;
 
 @Entity
 @Table(name = "user", schema = "allergysafediet_schema")
@@ -62,8 +62,8 @@ public class UserEntity {
         this.height = height;
     }
 
-    public static UserEntity of(SignupDto signupDto) {
-        return new UserEntity(signupDto.userName(), signupDto.password(), signupDto.email(),
-                signupDto.birthDate(), signupDto.gender(), signupDto.height());
+    public static UserEntity of(SignupRequest signupRequest) {
+        return new UserEntity(signupRequest.userName(), signupRequest.password(), signupRequest.email(),
+                signupRequest.birthDate(), signupRequest.gender(), signupRequest.height());
     }
 }

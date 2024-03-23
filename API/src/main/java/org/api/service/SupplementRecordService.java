@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
 import org.api.entity.SupplementEntity;
 import org.api.repository.SupplementRepository;
-import org.core.dto.PillsDto;
+import org.core.dto.PillsRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,22 +15,22 @@ public class SupplementRecordService {
     private final SupplementRepository supplementRepository;
 
     @Transactional
-    public void saveSupplementData(HealthEntity health, List<PillsDto> pillsDto) {
-        if(pillsDto == null || pillsDto.isEmpty()) return;
+    public void saveSupplementData(HealthEntity health, List<PillsRequest> pillsRequest) {
+        if(pillsRequest == null || pillsRequest.isEmpty()) return;
 
-        pillsDto.forEach(pill -> {
-            SupplementEntity supplementEntity = SupplementEntity.of(health, pill.name(), pill.count());
-            supplementRepository.save(supplementEntity);
-        });
+        persistSupplementEntities(health, pillsRequest);
     }
 
     @Transactional
-    public void putSupplementData(HealthEntity health, List<PillsDto> pillsDto) {
-        if(pillsDto == null || pillsDto.isEmpty()) return;
+    public void putSupplementData(HealthEntity health, List<PillsRequest> pillsRequest) {
+        if(pillsRequest == null || pillsRequest.isEmpty()) return;
 
         supplementRepository.deleteByHealthHealthRecordId(health.getHealthRecordId());
+        persistSupplementEntities(health, pillsRequest);
+    }
 
-        pillsDto.forEach(pill -> {
+    private void persistSupplementEntities(HealthEntity health, List<PillsRequest> pillsRequest) {
+        pillsRequest.forEach(pill -> {
             SupplementEntity supplementEntity = SupplementEntity.of(health, pill.name(), pill.count());
             supplementRepository.save(supplementEntity);
         });

@@ -50,41 +50,6 @@ public class FoodRecordService {
         }
     }
 
-//    @Transactional(readOnly = true)
-//    public Optional<FoodResponse> getMenuDataById(Long id, String authorizationHeader) {
-//        LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
-//        Optional<FoodEntity> getFoodEntity = foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id,
-//                loginEntity.getUser().getUserId());
-//
-//        if (getFoodEntity.isEmpty()) {
-//            return Optional.empty();
-//        } else {
-//            FoodEntity foodEntity = getFoodEntity.get();
-//            FoodResponse foodResponse = toFoodResponse(foodEntity);
-//            return Optional.of(foodResponse);
-//        }
-//    }
-
-//    @Transactional(readOnly = true)
-//    public Optional<Object> getMenuDataByDate(LocalDate date, String authorizationHeader) {
-//        LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
-//        Optional<List<FoodEntity>> getFoodEntity = foodRepository.getFoodDataByFoodDateAndUserUserId(date,
-//                loginEntity.getUser().getUserId());
-//
-//        if (getFoodEntity.isEmpty()) {
-//            return Optional.empty();
-//        } else {
-//            List<FoodEntity> foodEntityList = getFoodEntity.get();
-//            List<FoodResponse> foodResponseList = new ArrayList<>();
-//            for(FoodEntity foodEntity : foodEntityList) {
-//                FoodResponse foodResponse = toFoodResponse(foodEntity);
-//                foodResponseList.add(foodResponse);
-//            }
-//
-//            return Optional.of(foodResponseList);
-//        }
-//    }
-
     @Transactional
     public void putFoodData(Long id, FoodRequest foodRequest, String authorizationHeader) {
         foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, getUserIdFromHeader(authorizationHeader))
