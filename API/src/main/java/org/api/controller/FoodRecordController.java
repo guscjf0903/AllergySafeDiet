@@ -30,8 +30,8 @@ public class FoodRecordController {
     @PostMapping("/food")
     public ResponseEntity<?> saveFoodAndIngredientData(@RequestBody @Valid FoodRequest foodRequest,
                                                        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        FoodEntity foodEntity = foodRecordService.saveMenuData(foodRequest, authorizationHeader);
-        ingredientService.saveIngredient(foodEntity, foodRequest);
+        FoodEntity foodEntity = foodRecordService.saveFoodData(foodRequest, authorizationHeader);
+        ingredientService.saveIngredientData(foodEntity, foodRequest);
 
         return ResponseEntity.ok().build();
     }
@@ -39,7 +39,7 @@ public class FoodRecordController {
     @GetMapping(value = "/food", params = "date")
     public ResponseEntity<Object> getFoodDataByDate(@RequestParam(name = "date") LocalDate date,
                                                     @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        Optional<Object> menuResponse = foodRecordService.getMenuDataByDate(date, authorizationHeader);
+        Optional<Object> menuResponse = foodRecordService.getFoodDataByDate(date, authorizationHeader);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))
@@ -49,7 +49,7 @@ public class FoodRecordController {
     @GetMapping(value = "/food", params = "id")
     public ResponseEntity<FoodResponse> getFoodDataById(@RequestParam(name = "id") Long id,
                                                         @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        Optional<FoodResponse> menuResponse = foodRecordService.getMenuDataById(id, authorizationHeader);
+        Optional<FoodResponse> menuResponse = foodRecordService.getFoodDataById(id, authorizationHeader);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))
@@ -60,7 +60,7 @@ public class FoodRecordController {
     public ResponseEntity<FoodResponse> putFoodDataById(@RequestParam(name = "id") Long id,
                                                         @RequestBody FoodRequest foodRequest,
                                                         @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        foodRecordService.putMenuData(id, foodRequest, authorizationHeader);
+        foodRecordService.putFoodData(id, foodRequest, authorizationHeader);
         return ResponseEntity.ok().build();
     }
 

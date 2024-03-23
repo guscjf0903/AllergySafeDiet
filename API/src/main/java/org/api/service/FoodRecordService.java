@@ -21,7 +21,7 @@ public class FoodRecordService {
     private final IngredientService ingredientService;
 
     @Transactional
-    public FoodEntity saveMenuData(FoodRequest foodRequest, String authorizationHeader) {
+    public FoodEntity saveFoodData(FoodRequest foodRequest, String authorizationHeader) {
         LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
         FoodEntity foodEntity = FoodEntity.of(loginEntity.getUser(), foodRequest);
 
@@ -31,13 +31,13 @@ public class FoodRecordService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<FoodResponse> getMenuDataById(Long id, String authorizationHeader) {
+    public Optional<FoodResponse> getFoodDataById(Long id, String authorizationHeader) {
         return foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, getUserIdFromHeader(authorizationHeader))
                 .map(this::toFoodResponse);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Object> getMenuDataByDate(LocalDate date, String authorizationHeader) {
+    public Optional<Object> getFoodDataByDate(LocalDate date, String authorizationHeader) {
         Optional<List<FoodEntity>> getFoodEntity = foodRepository.getFoodDataByFoodDateAndUserUserId(date,
                 getUserIdFromHeader(authorizationHeader));
         if (getFoodEntity.isEmpty()) {
@@ -86,11 +86,11 @@ public class FoodRecordService {
 //    }
 
     @Transactional
-    public void putMenuData(Long id, FoodRequest foodRequest, String authorizationHeader) {
+    public void putFoodData(Long id, FoodRequest foodRequest, String authorizationHeader) {
         foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, getUserIdFromHeader(authorizationHeader))
                 .ifPresent(orgFoodEntity -> {
                     orgFoodEntity.foodEntityUpdate(foodRequest);
-                    ingredientService.putIngredient(orgFoodEntity, id, foodRequest);
+                    ingredientService.putIngredientData(orgFoodEntity, foodRequest);
                 });
     }
 

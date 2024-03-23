@@ -14,29 +14,15 @@ public class IngredientService {
     private final IngredientRepository ingredientRepository;
 
     @Transactional
-    public void saveIngredient(FoodEntity foodEntity, FoodRequest foodRequest) {
-        if (foodRequest.ingredients() == null) {
-            return;
-        }
-
-        for (String ingredient : foodRequest.ingredients()) {
-            IngredientEntity ingredientEntity = IngredientEntity.of(foodEntity, ingredient);
-            ingredientRepository.save(ingredientEntity);
-        }
+    public void saveIngredientData(FoodEntity foodEntity, FoodRequest foodRequest) {
+        foodRequest.ingredients().forEach(ingredient ->
+                ingredientRepository.save(IngredientEntity.of(foodEntity, ingredient))
+        );
     }
 
     @Transactional
-    public void putIngredient(FoodEntity foodEntity, Long foodId, FoodRequest foodRequest) {
-        if (foodRequest.ingredients() == null || foodRequest.ingredients().isEmpty()) {
-            return;
-        }
-
-        ingredientRepository.deleteByFoodFoodRecordId(foodId);
-
-        for (String ingredient : foodRequest.ingredients()) {
-            IngredientEntity ingredientEntity = IngredientEntity.of(foodEntity, ingredient);
-            ingredientRepository.save(ingredientEntity);
-        }
+    public void putIngredientData(FoodEntity foodEntity, FoodRequest foodRequest) {
+        ingredientRepository.deleteByFoodFoodRecordId(foodEntity.getFoodRecordId());
+        saveIngredientData(foodEntity, foodRequest);
     }
-
 }
