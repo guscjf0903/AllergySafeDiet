@@ -1,6 +1,6 @@
-var postDate;
+let postDate;
 $(document).ready(function() {
-    var apiUrl = $('#apiUrl').data('url');
+    const apiUrl = $('#apiUrl').data('url');
     checkMenuData(); // 메뉴 데이터 확인
 
     $('#addIngredient').click(function() {
@@ -18,7 +18,7 @@ $(document).ready(function() {
             notes: $("#foodNotes").val()
         };
         $('#ingredientsList .ingredient-container').each(function() {
-            var ingredientName = $(this).find('input').val();
+            const ingredientName = $(this).find('input').val();
             if (ingredientName) { // 입력값이 있는 경우에만 추가
                 foodData.ingredients.push(ingredientName);
             }
@@ -44,7 +44,7 @@ $(document).ready(function() {
 });
 
 function checkMenuData() {
-    var apiUrl = $('#apiUrl').data('url');
+    const apiUrl = $('#apiUrl').data('url');
 
     $.ajax({
         url: apiUrl + '/food_health_data/food?id=' + $("#id").data('id'),

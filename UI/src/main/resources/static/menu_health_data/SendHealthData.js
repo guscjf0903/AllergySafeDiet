@@ -1,34 +1,34 @@
-var healthDataExists = false; // 전역 변수 선언
+let healthDataExists = false; // 전역 변수 선언
 
 $(document).ready(function() {
     checkHealthData();
-    var apiUrl = $('#apiUrl').data('url');
+    const apiUrl = $('#apiUrl').data('url');
 
     $('#addPill').click(function() {
         addPillToList('', ''); // 사용자가 새 알약 정보를 수동으로 추가할 수 있게 함
     });
 
     $('#healthPostForm').submit(function(e) {
-        var healthData = {
-            date : $("#postDate").val(),
-            allergiesStatus : $("#allergiesStatus").val(),
-            conditionStatus : $("#conditionStatus").val(),
-            weight : $("#weight").val(),
-            sleepTime : $("#sleepTime").val(),
-            healthNotes : $("#healthNotes").val(),
+        const healthData = {
+            date: $("#postDate").val(),
+            allergiesStatus: $("#allergiesStatus").val(),
+            conditionStatus: $("#conditionStatus").val(),
+            weight: $("#weight").val(),
+            sleepTime: $("#sleepTime").val(),
+            healthNotes: $("#healthNotes").val(),
             pills: []
         };
         console.log(healthData);
 
         $('#pillList .pill-container').each(function() {
-            var pillName = $(this).find('input[type=text]').val();
-            var pillCount = $(this).find('input[type=number]').val();
+            const pillName = $(this).find('input[type=text]').val();
+            const pillCount = $(this).find('input[type=number]').val();
             if (pillName && pillCount) {
                 healthData.pills.push({name: pillName, count: parseInt(pillCount)});
             }
         });
 
-        var method = healthDataExists ? 'PUT' : 'POST';
+        const method = healthDataExists ? 'PUT' : 'POST';
         e.preventDefault();
         $.ajax({
             url: apiUrl + '/food_health_data/health', // 실제 API 엔드포인트
@@ -53,9 +53,9 @@ $(document).ready(function() {
 
 
 function addPillToList(pillName, pillCount) {
-    var $pillList = $('#pillList');
+    const $pillList = $('#pillList');
     // 알약 이름 입력 필드 생성
-    var $pillNameField = $('<input>', {
+    const $pillNameField = $('<input>', {
         type: 'text',
         value: pillName,
         placeholder: '알약 이름',
@@ -63,7 +63,7 @@ function addPillToList(pillName, pillCount) {
         required: true
     });
     // 알약 개수 입력 필드 생성
-    var $pillCountField = $('<input>', {
+    const $pillCountField = $('<input>', {
         type: 'number',
         value: pillCount,
         placeholder: '개수',
@@ -71,15 +71,15 @@ function addPillToList(pillName, pillCount) {
         required: true
     });
     // 삭제 버튼 생성
-    var $deleteButton = $('<button>', {
+    const $deleteButton = $('<button>', {
         text: '삭제',
         type: 'button',
         class: 'btn btn-danger btn-sm ml-2'
-    }).click(function() {
+    }).click(function () {
         $(this).parent().remove(); // 해당 알약 정보 컨테이너 삭제
     });
     // 알약 정보 컨테이너 생성
-    var $pillContainer = $('<div>', {class: 'pill-container d-flex align-items-center mt-2'}).append($pillNameField, $pillCountField, $deleteButton);
+    const $pillContainer = $('<div>', {class: 'pill-container d-flex align-items-center mt-2'}).append($pillNameField, $pillCountField, $deleteButton);
     // 전체 리스트에 추가
     $pillList.append($pillContainer);
 }
@@ -88,9 +88,9 @@ function addPillToList(pillName, pillCount) {
 
 function checkHealthData() {
     // API 호출하여 데이터 존재 여부 확인
-    var apiUrl = $('#apiUrl').data('url');
+    const apiUrl = $('#apiUrl').data('url');
 
-    var postDate = $('#postDate').val(); // 날짜 입력 필드에서 날짜 가져오기
+    const postDate = $('#postDate').val(); // 날짜 입력 필드에서 날짜 가져오기
     $.ajax({
         url: apiUrl + '/food_health_data/health', // 실제 API 엔드포인트
         method: 'GET',
@@ -103,7 +103,7 @@ function checkHealthData() {
         },
         complete: function(xhr) {
             if(xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
+                const response = JSON.parse(xhr.responseText);
                 $('#allergiesStatus').val(response.allergiesStatus);
                 $('#conditionStatus').val(response.conditionStatus);
                 $('#weight').val(response.weight);
