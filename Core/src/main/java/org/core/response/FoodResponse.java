@@ -17,4 +17,4 @@ public record FoodResponse (
     public static FoodResponse toResponse(long id,LocalDate date, String mealType, LocalTime mealTime, String foodName, List<IngredientsDto> ingredients, String notes) {
         return new FoodResponse(id, date, mealType, mealTime, foodName, ingredients, notes);
     }
-};
+}

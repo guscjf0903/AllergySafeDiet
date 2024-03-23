@@ -17,20 +17,17 @@ public class EmailVerificationController {
     private final VerificationCodeService verificationCodeService;
 
     @PostMapping("/email/verification_request")
-    public ResponseEntity<?> sendVerificationEmail(@Valid @RequestBody EmailDto emailDto) {
+    public ResponseEntity<Void> sendVerificationEmail(@Valid @RequestBody EmailDto emailDto) {
         verificationCodeService.sendCodeToEmail(emailDto.email());
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/emails/verifications")
-    public ResponseEntity<?> verificationEmail(@RequestParam("email") @Valid String email,
+    public ResponseEntity<Void> verificationEmail(@RequestParam("email") @Valid String email,
                                                @RequestParam("verificationCode") String verificationCode) {
-        boolean result = verificationCodeService.verifyCode(email, verificationCode);
-        if (result) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return verificationCodeService.validateEmailCodeFromRedis(email, verificationCode) ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.badRequest().build();
     }
 }

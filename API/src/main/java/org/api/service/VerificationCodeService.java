@@ -4,14 +4,11 @@ import static org.api.exception.ErrorCodes.DUPLICATE_EMAIL;
 import static org.api.exception.ErrorCodes.ERROR_CREATE_CODE;
 
 import java.security.SecureRandom;
-import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.redis_entity.VerificationMailRedisEntity;
 import org.api.exception.CustomException;
 import org.api.repository.redis_repository.VerificationMailRedisRepository;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -21,17 +18,17 @@ public class VerificationCodeService {
     private final SignupService signupService;
     private final VerificationMailRedisRepository verificationMailRedisRepository;
 
+    private static final String EMAIL_VERIFICATION_SUBJECT = "Email Verification";
     public void sendCodeToEmail(String email) {
         if(signupService.checkDuplicateMail(email)) {
             throw new CustomException(DUPLICATE_EMAIL);
         }
-        String subject = "Email Verification";
         String code = createCode();
-        saveVerificationCode(email, code); // 인증코드 redis에 저장
-        mailService.sendMail(email, subject, code);
+        saveRedisVerificationCode(email, code); // 인증코드 redis에 저장
+        mailService.sendMail(email, EMAIL_VERIFICATION_SUBJECT, code);
     }
 
-    public void saveVerificationCode(String email, String code) {
+    public void saveRedisVerificationCode(String email, String code) {
         VerificationMailRedisEntity verificationMailRedisEntity = new VerificationMailRedisEntity(email, code);
         verificationMailRedisRepository.save(verificationMailRedisEntity);
     }
@@ -50,7 +47,7 @@ public class VerificationCodeService {
         }
     }
 
-    public boolean verifyCode(String email, String submittedCode) {
+    public boolean validateEmailCodeFromRedis(String email, String submittedCode) {
         return verificationMailRedisRepository.findById(email)
                 .filter(entity -> entity.getVerificationCode().equals(submittedCode))
                 .map(entity -> {
