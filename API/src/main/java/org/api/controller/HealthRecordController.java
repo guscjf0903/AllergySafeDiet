@@ -26,7 +26,7 @@ public class HealthRecordController {
 
     @GetMapping("/health")
     public ResponseEntity<HealthResponse> getHealthData(@RequestParam(name = "date") LocalDate date,
-                                           @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+                                                        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         Optional<HealthResponse> healthResponse = healthRecordService.getHealthDataByDate(date, authorizationHeader);
         return healthResponse
                 .map(data -> ResponseEntity.ok().body(data))
@@ -35,14 +35,14 @@ public class HealthRecordController {
 
     @PostMapping("/health")
     public ResponseEntity<Void> postHealthData(@RequestBody HealthRequest healthRequest,
-                                            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+                                               @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         healthRecordService.saveHealthData(healthRequest, authorizationHeader);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/health")
     public ResponseEntity<Void> putHealthData(@RequestBody HealthRequest healthRequest,
-                                           @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+                                              @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         healthRecordService.putHealthData(healthRequest, authorizationHeader);
         return ResponseEntity.ok().build();
     }

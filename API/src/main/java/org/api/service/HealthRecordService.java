@@ -28,7 +28,8 @@ public class HealthRecordService {
 
     @Transactional(readOnly = true)
     public Optional<HealthResponse> getHealthDataByDate(LocalDate date, String authorizationHeader) {
-        return healthRepository.getHealthDataByHealthDateAndUserUserId(date, getUserFromAuthorization(authorizationHeader).getUser().getUserId())
+        return healthRepository.getHealthDataByHealthDateAndUserUserId(date,
+                        getUserFromAuthorization(authorizationHeader).getUser().getUserId())
                 .map(healthEntity -> new HealthResponse(
                         healthEntity.getHealthDate(),
                         healthEntity.getAllergiesStatus(),

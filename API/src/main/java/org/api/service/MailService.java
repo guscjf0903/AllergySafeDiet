@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailService {
     private final JavaMailSender mailSender;
+
     public void sendMail(String email, String subject, String message) {
         SimpleMailMessage mailMessage = createMailMessage(email, subject, message);
         mailSender.send(mailMessage);

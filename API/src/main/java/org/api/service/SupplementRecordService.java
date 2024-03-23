@@ -16,23 +16,28 @@ public class SupplementRecordService {
 
     @Transactional
     public void saveSupplementData(HealthEntity health, List<PillsRequest> pillsRequest) {
-        if(pillsRequest == null || pillsRequest.isEmpty()) return;
-
         persistSupplementEntities(health, pillsRequest);
     }
 
     @Transactional
     public void putSupplementData(HealthEntity health, List<PillsRequest> pillsRequest) {
-        if(pillsRequest == null || pillsRequest.isEmpty()) return;
+        if (pillsRequest == null || pillsRequest.isEmpty()) {
+            return;
+        }
 
         supplementRepository.deleteByHealthHealthRecordId(health.getHealthRecordId());
         persistSupplementEntities(health, pillsRequest);
     }
 
     private void persistSupplementEntities(HealthEntity health, List<PillsRequest> pillsRequest) {
+        if (pillsRequest == null || pillsRequest.isEmpty()) {
+            return;
+        }
         pillsRequest.forEach(pill -> {
             SupplementEntity supplementEntity = SupplementEntity.of(health, pill.name(), pill.count());
             supplementRepository.save(supplementEntity);
         });
     }
+
+
 }
