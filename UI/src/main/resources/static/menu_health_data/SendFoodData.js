@@ -23,7 +23,7 @@ $(document).ready(function() {
         });
         e.preventDefault();
         $.ajax({
-            url: apiUrl + '/menu_health_data/menu',
+            url: apiUrl + '/food_health_data/food',
             type: "POST",
             headers: {
                 'Authorization': sessionStorage.getItem("loginToken"),
@@ -32,7 +32,7 @@ $(document).ready(function() {
             data: JSON.stringify(menuData),
             success: function() {
                 alert("식단을 성공적으로 추가하였습니다.");
-                window.location.href = '/menu_health_data/select_date';
+                window.location.href = '/food_health_data/select_date';
             },
             error: function() {
                 alert("식단 추가에 실패하였습니다.");

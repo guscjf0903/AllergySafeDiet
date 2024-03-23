@@ -20,10 +20,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.dto.HealthDto;
 import org.core.dto.IngredientsDto;
-import org.core.dto.MenuDto;
-import org.core.dto.PillsDto;
+import org.core.dto.FoodRequest;
 
 @Entity
 @Table(name = "food_record", schema = "allergysafediet_schema")
@@ -86,17 +84,17 @@ public class FoodEntity {
         this.foodNotes = foodNotes;
     }
 
-    public static FoodEntity of(UserEntity user, MenuDto menuDto) {
-        return new FoodEntity(user, menuDto.date(), menuDto.mealType(),
-                menuDto.mealTime(), menuDto.foodName(), menuDto.notes());
+    public static FoodEntity of(UserEntity user, FoodRequest foodRequest) {
+        return new FoodEntity(user, foodRequest.date(), foodRequest.mealType(),
+                foodRequest.mealTime(), foodRequest.foodName(), foodRequest.notes());
     }
 
-    public void foodEntityUpdate(MenuDto menuDto) {
-        this.foodDate = menuDto.date();
-        this.mealType = menuDto.mealType();
-        this.mealTime = menuDto.mealTime();
-        this.foodName = menuDto.foodName();
-        this.foodNotes = menuDto.notes();
+    public void foodEntityUpdate(FoodRequest foodRequest) {
+        this.foodDate = foodRequest.date();
+        this.mealType = foodRequest.mealType();
+        this.mealTime = foodRequest.mealTime();
+        this.foodName = foodRequest.foodName();
+        this.foodNotes = foodRequest.notes();
 
     }
 

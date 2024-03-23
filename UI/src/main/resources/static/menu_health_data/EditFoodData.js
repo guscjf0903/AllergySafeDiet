@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     $('#menuPostForm').submit(function(e) {
         e.preventDefault();
-        const menuData = {
+        const foodData = {
             date: postDate,
             mealType: $("#foodType").val(),
             mealTime: $("#foodTime").val(),
@@ -20,20 +20,20 @@ $(document).ready(function() {
         $('#ingredientsList .ingredient-container').each(function() {
             var ingredientName = $(this).find('input').val();
             if (ingredientName) { // 입력값이 있는 경우에만 추가
-                menuData.ingredients.push(ingredientName);
+                foodData.ingredients.push(ingredientName);
             }
         });
         $.ajax({
-            url: apiUrl + '/menu_health_data/menu?id=' +  $("#id").data('id'),
+            url: apiUrl + '/food_health_data/food?id=' +  $("#id").data('id'),
             type: "PUT",
             headers: {
                 'Authorization': sessionStorage.getItem("loginToken"),
             },
             contentType: 'application/json',
-            data: JSON.stringify(menuData),
+            data: JSON.stringify(foodData),
             success: function() {
                 alert("식단을 성공적으로 수정하였습니다.");
-                window.location.href = '/menu_health_data/select_date';
+                window.location.href = '/food_health_data/select_date';
             },
             error: function() {
                 alert("식단 수정에 실패하였습니다.");
@@ -47,7 +47,7 @@ function checkMenuData() {
     var apiUrl = $('#apiUrl').data('url');
 
     $.ajax({
-        url: apiUrl + '/menu_health_data/menu?id=' + $("#id").data('id'),
+        url: apiUrl + '/food_health_data/food?id=' + $("#id").data('id'),
         method: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem("loginToken"),
@@ -66,7 +66,7 @@ function checkMenuData() {
         },
         error: function() {
             alert("해당 식단 데이터가 없습니다.");
-            window.location.href = '/menu_health_data/select_date';
+            window.location.href = '/food_health_data/select_date';
         }
     });
 }

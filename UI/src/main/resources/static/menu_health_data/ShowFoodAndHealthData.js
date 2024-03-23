@@ -9,17 +9,17 @@ $(document).ready(function() {
     });
 
     $('#addMenuBtn').click(function() {
-        window.location.href = '/menu_health_data/menu?date=' + $("#datePicker").val();
+        window.location.href = '/food_health_data/food?date=' + $("#datePicker").val();
     });
 
     $('#editHealthBtn').click(function() {
-        window.location.href = '/menu_health_data/health?date=' + $("#datePicker").val();
+        window.location.href = '/food_health_data/health?date=' + $("#datePicker").val();
     });
 });
 
 function fetchFoodData(date) {
     $.ajax({
-        url: apiUrl + `/menu_health_data/menu?date=${date}`,
+        url: apiUrl + `/food_health_data/food?date=${date}`,
         type: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem("loginToken"),
@@ -35,7 +35,7 @@ function fetchFoodData(date) {
 
 function fetchHealthData(date) {
     $.ajax({
-        url: apiUrl + `/menu_health_data/health?date=${date}`,
+        url: apiUrl + `/food_health_data/health?date=${date}`,
         type: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem("loginToken"),
@@ -59,19 +59,19 @@ function displayFoodData(data) {
 
     let htmlContent = '<div class="table-responsive"><table class="table"><thead><tr><th>날짜</th><th>식사 종류</th><th>식사 시간</th><th>음식 이름</th><th>원재료</th><th>특이사항</th><th>조치</th></tr></thead><tbody>';
 
-    data.forEach(menu => {
-        const ingredientsList = menu.ingredients.map(ingredient => ingredient.ingredientName);
-        console.log(menu.id);
+    data.forEach(food => {
+        const ingredientsList = food.ingredients.map(ingredient => ingredient.ingredientName);
+        console.log(food.id);
         htmlContent += `<tr>
-            <td>${menu.date}</td>
-            <td>${menu.mealType}</td>
-            <td>${menu.mealTime}</td>
-            <td>${menu.foodName}</td>
+            <td>${food.date}</td>
+            <td>${food.mealType}</td>
+            <td>${food.mealTime}</td>
+            <td>${food.foodName}</td>
             <td>${ingredientsList.join(', ')}</td>
-            <td>${menu.foodNotes}</td>
+            <td>${food.foodNotes}</td>
             <td>
-                <button class="btn btn-primary btn-sm edit-menu" data-id="${menu.id}">수정</button>
-                <button class="btn btn-danger btn-sm delete-menu" data-id="${menu.id}">삭제</button>
+                <button class="btn btn-primary btn-sm edit-menu" data-id="${food.id}">수정</button>
+                <button class="btn btn-danger btn-sm delete-menu" data-id="${food.id}">삭제</button>
             </td>
         </tr>`;
     });
@@ -81,7 +81,7 @@ function displayFoodData(data) {
     $('#foodData').html(htmlContent);
 
     $('.edit-menu').click(function() {
-        window.location.href = '/menu_health_data/menu/edit?id=' + $(this).data('id');
+        window.location.href = '/food_health_data/food/edit?id=' + $(this).data('id');
     });
     $('.delete-menu').click(function() {
         const menuId = $(this).data('id');

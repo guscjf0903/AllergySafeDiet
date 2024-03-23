@@ -19,8 +19,9 @@ public class VerificationCodeService {
     private final VerificationMailRedisRepository verificationMailRedisRepository;
 
     private static final String EMAIL_VERIFICATION_SUBJECT = "Email Verification";
+
     public void sendCodeToEmail(String email) {
-        if(signupService.checkDuplicateMail(email)) {
+        if (signupService.checkDuplicateMail(email)) {
             throw new CustomException(DUPLICATE_EMAIL);
         }
         String code = createCode();
@@ -38,7 +39,7 @@ public class VerificationCodeService {
         try {
             Random random = SecureRandom.getInstanceStrong();
             StringBuilder builder = new StringBuilder();
-            for(int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++) {
                 builder.append(random.nextInt(10));
             }
             return builder.toString();

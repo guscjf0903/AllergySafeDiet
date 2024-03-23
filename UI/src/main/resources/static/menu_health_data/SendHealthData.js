@@ -31,7 +31,7 @@ $(document).ready(function() {
         var method = healthDataExists ? 'PUT' : 'POST';
         e.preventDefault();
         $.ajax({
-            url: apiUrl + '/menu_health_data/health', // 실제 API 엔드포인트
+            url: apiUrl + '/food_health_data/health', // 실제 API 엔드포인트
             method: method,
             headers: {
                 'Authorization': sessionStorage.getItem("loginToken"),
@@ -41,7 +41,7 @@ $(document).ready(function() {
 
             success: function() {
                 alert('데이터가 성공적으로 저장되었습니다.');
-                window.location.href = '/menu_health_data/' + $("#postDate").val();
+                window.location.href = '/food_health_data/' + $("#postDate").val();
             },
             error: function() {
                 alert('데이터 저장에 실패했습니다. 다시 시도해주세요.');
@@ -92,7 +92,7 @@ function checkHealthData() {
 
     var postDate = $('#postDate').val(); // 날짜 입력 필드에서 날짜 가져오기
     $.ajax({
-        url: apiUrl + '/menu_health_data/health', // 실제 API 엔드포인트
+        url: apiUrl + '/food_health_data/health', // 실제 API 엔드포인트
         method: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem("loginToken"),

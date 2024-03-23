@@ -1,7 +1,6 @@
 package org.api.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.LoginEntity;
 import org.api.entity.FoodEntity;
 import org.api.repository.FoodRepository;
-import org.core.dto.HealthDto;
-import org.core.dto.MenuDto;
+import org.core.dto.FoodRequest;
 import org.core.response.FoodResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +21,9 @@ public class FoodRecordService {
     private final IngredientService ingredientService;
 
     @Transactional
-    public FoodEntity saveMenuData(MenuDto menuDto, String authorizationHeader) {
+    public FoodEntity saveMenuData(FoodRequest foodRequest, String authorizationHeader) {
         LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
-        FoodEntity foodEntity = FoodEntity.of(loginEntity.getUser(), menuDto);
+        FoodEntity foodEntity = FoodEntity.of(loginEntity.getUser(), foodRequest);
 
         foodRepository.save(foodEntity);
 
@@ -37,9 +35,11 @@ public class FoodRecordService {
         return foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, getUserIdFromHeader(authorizationHeader))
                 .map(this::toFoodResponse);
     }
+
     @Transactional(readOnly = true)
     public Optional<Object> getMenuDataByDate(LocalDate date, String authorizationHeader) {
-        Optional<List<FoodEntity>> getFoodEntity = foodRepository.getFoodDataByFoodDateAndUserUserId(date, getUserIdFromHeader(authorizationHeader));
+        Optional<List<FoodEntity>> getFoodEntity = foodRepository.getFoodDataByFoodDateAndUserUserId(date,
+                getUserIdFromHeader(authorizationHeader));
         if (getFoodEntity.isEmpty()) {
             return Optional.empty();
         } else {
@@ -86,11 +86,11 @@ public class FoodRecordService {
 //    }
 
     @Transactional
-    public void putMenuData(Long id, MenuDto menuDto, String authorizationHeader) {
+    public void putMenuData(Long id, FoodRequest foodRequest, String authorizationHeader) {
         foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, getUserIdFromHeader(authorizationHeader))
                 .ifPresent(orgFoodEntity -> {
-                    orgFoodEntity.foodEntityUpdate(menuDto);
-                    ingredientService.putIngredient(orgFoodEntity, id, menuDto);
+                    orgFoodEntity.foodEntityUpdate(foodRequest);
+                    ingredientService.putIngredient(orgFoodEntity, id, foodRequest);
                 });
     }
 
@@ -101,6 +101,7 @@ public class FoodRecordService {
     private FoodResponse toFoodResponse(FoodEntity foodEntity) {
         return FoodResponse.toResponse(
                 foodEntity.getFoodRecordId(), foodEntity.getFoodDate(), foodEntity.getMealType(),
-                foodEntity.getMealTime(), foodEntity.getFoodName(), foodEntity.getIngredientsDtoList(), foodEntity.getFoodNotes());
+                foodEntity.getMealTime(), foodEntity.getFoodName(), foodEntity.getIngredientsDtoList(),
+                foodEntity.getFoodNotes());
     }
 }

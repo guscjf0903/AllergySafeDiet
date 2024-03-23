@@ -23,7 +23,7 @@ public class SignupService {
     }
 
     private void checkVerificationMail(boolean checkVerificationEmail) { //이메일 인증 확인
-        if(!checkVerificationEmail) {
+        if (!checkVerificationEmail) {
             throw new CustomException(INVALID_EMAIL);
         }
     }

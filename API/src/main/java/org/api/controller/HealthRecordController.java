@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/menu_health_data")
+@RequestMapping("/food_health_data")
 @RequiredArgsConstructor
 public class HealthRecordController {
     private final HealthRecordService healthRecordService;

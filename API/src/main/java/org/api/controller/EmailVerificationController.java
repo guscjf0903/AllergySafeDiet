@@ -25,7 +25,7 @@ public class EmailVerificationController {
 
     @GetMapping("/emails/verifications")
     public ResponseEntity<Void> verificationEmail(@RequestParam("email") @Valid String email,
-                                               @RequestParam("verificationCode") String verificationCode) {
+                                                  @RequestParam("verificationCode") String verificationCode) {
         return verificationCodeService.validateEmailCodeFromRedis(email, verificationCode) ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.badRequest().build();

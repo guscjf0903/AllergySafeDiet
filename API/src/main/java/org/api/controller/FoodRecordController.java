@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.FoodEntity;
 import org.api.service.IngredientService;
 import org.api.service.FoodRecordService;
-import org.core.dto.MenuDto;
+import org.core.dto.FoodRequest;
 import org.core.response.FoodResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,24 +21,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/menu_health_data")
+@RequestMapping("/food_health_data")
 @RequiredArgsConstructor
 public class FoodRecordController {
     private final FoodRecordService foodRecordService;
     private final IngredientService ingredientService;
 
-    @PostMapping("/menu")
-    public ResponseEntity<?> postMenuData(@RequestBody @Valid MenuDto menuDto,
-                                          @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        FoodEntity foodEntity = foodRecordService.saveMenuData(menuDto, authorizationHeader);
-        ingredientService.saveIngredient(foodEntity, menuDto);
+    @PostMapping("/food")
+    public ResponseEntity<?> saveFoodAndIngredientData(@RequestBody @Valid FoodRequest foodRequest,
+                                                       @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        FoodEntity foodEntity = foodRecordService.saveMenuData(foodRequest, authorizationHeader);
+        ingredientService.saveIngredient(foodEntity, foodRequest);
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/menu", params = "date")
-    public ResponseEntity<Object> getMenuData(@RequestParam(name = "date") LocalDate date,
-                                              @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    @GetMapping(value = "/food", params = "date")
+    public ResponseEntity<Object> getFoodDataByDate(@RequestParam(name = "date") LocalDate date,
+                                                    @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         Optional<Object> menuResponse = foodRecordService.getMenuDataByDate(date, authorizationHeader);
 
         return menuResponse
@@ -46,9 +46,9 @@ public class FoodRecordController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
 
-    @GetMapping(value = "/menu", params = "id")
-    public ResponseEntity<FoodResponse> getMenuDataById(@RequestParam(name = "id") Long id,
-                                                  @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    @GetMapping(value = "/food", params = "id")
+    public ResponseEntity<FoodResponse> getFoodDataById(@RequestParam(name = "id") Long id,
+                                                        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         Optional<FoodResponse> menuResponse = foodRecordService.getMenuDataById(id, authorizationHeader);
 
         return menuResponse
@@ -56,12 +56,12 @@ public class FoodRecordController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
 
-    @PutMapping(value = "/menu")
-    public ResponseEntity<FoodResponse> putMenuDataById(@RequestParam(name = "id") Long id,
-                                                        @RequestBody MenuDto menuDto,
+    @PutMapping(value = "/food")
+    public ResponseEntity<FoodResponse> putFoodDataById(@RequestParam(name = "id") Long id,
+                                                        @RequestBody FoodRequest foodRequest,
                                                         @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        foodRecordService.putMenuData(id ,menuDto, authorizationHeader);
-         return ResponseEntity.ok().build();
+        foodRecordService.putMenuData(id, foodRequest, authorizationHeader);
+        return ResponseEntity.ok().build();
     }
 
 }
