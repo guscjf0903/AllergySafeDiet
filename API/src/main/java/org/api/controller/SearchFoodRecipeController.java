@@ -17,7 +17,7 @@ public class SearchFoodRecipeController {
     private final SearchFoodRecipeService searchFoodRecipeService;
 
     @GetMapping("/recipes")
-    public ResponseEntity<List<IngredientsRequest>> getFoodRecipes(@RequestParam(name = "foodName") String foodName) throws IOException {
+    public ResponseEntity<List<IngredientsRequest>> getFoodRecipes(@RequestParam(name = "foodName") String foodName) {
         List<String> searchFoodIngredient = searchFoodRecipeService.getFoodRecipes(foodName);
 
         return ResponseEntity.ok(searchFoodIngredient.stream()

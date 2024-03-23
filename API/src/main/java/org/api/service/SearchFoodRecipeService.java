@@ -17,11 +17,10 @@ public class SearchFoodRecipeService {
         try {
             // foodName을 이용하여 레시피 ID를 조회합니다.
             int recipeId = recipeApiClient.getRecipeIdByName(foodName);
-            // 레시피 ID를 이용하여 재료 목록을 조회합니다.
 
+            // 레시피 ID를 이용하여 재료 목록을 조회합니다.
             return recipeApiClient.getIngredientsByRecipeId(recipeId);
         } catch (IOException e) {
-            // 예외 처리: API 호출이 실패한 경우
             throw new RuntimeException("Error fetching recipe data for " + foodName, e);
         }
     }
