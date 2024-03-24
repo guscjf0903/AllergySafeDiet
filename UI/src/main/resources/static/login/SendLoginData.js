@@ -17,6 +17,7 @@ $(document).ready(function() {
             success: function(response) {
                 saveLoginIdToSessionStorage(response.loginToken);
                 alert('로그인이 완료되었습니다.');
+                window.location.href = 'main_menu/select';
             },
             error: function(error) {
                 console.error('request failed', error);

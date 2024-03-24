@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 화면</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div id="uiUrl" th:ui-url="${uiUrl}"></div>
+    <div class="row">
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="button-box">
+                <a class="btn btn-primary btn-lg btn-block menu-button">메뉴, 건강데이터 기록</a>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="button-box">
+                <a class="btn btn-secondary btn-lg btn-block health-analysis-button">건강분석</a>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="button-box">
+                <a class="btn btn-success btn-lg btn-block community-button">커뮤니티</a>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="button-box">
+                <a class="btn btn-warning btn-lg btn-block allergy-info-button">알러지 정보</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="/css/MainMenuButton.css"></script>
+<script src="/main_menu/MainMenuUrl.js"></script>
+
+</body>
+</html>
