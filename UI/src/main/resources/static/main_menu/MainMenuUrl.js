@@ -12,6 +12,6 @@ $(document).ready(function() {
     });
 
     $('.allergy-info-button').on('click', function() {
-        window.location.href = '/allergy-info';
+        window.location.href = '/allergy_info';
     });
 });

@@ -4,17 +4,23 @@ import static org.api.exception.ErrorCodes.DUPLICATE_EMAIL;
 import static org.api.exception.ErrorCodes.ERROR_CREATE_CODE;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
+import org.api.entity.UserEntity;
 import org.api.entity.redis_entity.VerificationMailRedisEntity;
 import org.api.exception.CustomException;
+import org.api.repository.UserRepository;
 import org.api.repository.redis_repository.VerificationMailRedisRepository;
+import org.core.request.VerifyCodeRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class VerificationCodeService {
     private final MailService mailService;
+    private final UserRepository userRepository;
     private final SignupService signupService;
     private final VerificationMailRedisRepository verificationMailRedisRepository;
 
@@ -48,11 +54,14 @@ public class VerificationCodeService {
         }
     }
 
-    public boolean validateEmailCodeFromRedis(String email, String submittedCode) {
-        return verificationMailRedisRepository.findById(email)
-                .filter(entity -> entity.getVerificationCode().equals(submittedCode))
-                .map(entity -> {
-                    verificationMailRedisRepository.deleteById(email);
+    @Transactional
+    public boolean validateEmailCodeFromRedis(VerifyCodeRequest verifyCodeRequest) {
+        return verificationMailRedisRepository.findById(verifyCodeRequest.email())
+                .filter(verificationMailRedisEntity -> verificationMailRedisEntity.getVerificationCode().equals(verifyCodeRequest.verificationCode()))
+                .map(verificationMailRedisEntity -> {
+                    userRepository.findByUserId(verifyCodeRequest.userPk())
+                            .ifPresent(userEntity -> userEntity.emailUpdate(verifyCodeRequest.email()));
+                    verificationMailRedisRepository.deleteById(verifyCodeRequest.email());
                     return true;
                 })
                 .orElse(false);

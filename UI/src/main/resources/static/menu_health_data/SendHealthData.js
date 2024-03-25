@@ -41,7 +41,7 @@ $(document).ready(function () {
 
             success: function () {
                 alert('데이터가 성공적으로 저장되었습니다.');
-                window.location.href = '/food_health_data/' + $("#postDate").val();
+                window.location.href = '/food_health_data/select_date';
             },
             error: function () {
                 alert('데이터 저장에 실패했습니다. 다시 시도해주세요.');

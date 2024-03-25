@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.api.service.VerificationCodeService;
 import org.core.request.EmailRequest;
+import org.core.request.VerifyCodeRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,9 @@ public class EmailVerificationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/emails/verifications")
-    public ResponseEntity<Void> verificationEmail(@RequestParam("email") @Valid String email,
-                                                  @RequestParam("verificationCode") String verificationCode) {
-        return verificationCodeService.validateEmailCodeFromRedis(email, verificationCode) ?
+    @PostMapping("/emails/verifications")
+    public ResponseEntity<Void> verificationEmail(@RequestBody VerifyCodeRequest verifyCodeRequest) {
+        return verificationCodeService.validateEmailCodeFromRedis(verifyCodeRequest) ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.badRequest().build();
     }

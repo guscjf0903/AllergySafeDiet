@@ -66,8 +66,6 @@ public class FoodRecordServiceTest {
         lenient().when(foodRepository.save(any(FoodEntity.class))).thenReturn(testFoodEntity);
         lenient().when(foodRepository.findById(anyLong())).thenReturn(Optional.of(testFoodEntity));
         lenient().when(foodRepository.getFoodDataByFoodRecordIdAndUserUserId(1L, 1L)).thenReturn(Optional.of(testFoodEntity));
-
-
     }
 
     @Test

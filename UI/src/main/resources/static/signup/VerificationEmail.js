@@ -3,8 +3,8 @@ $(document).ready(function() {
 
     // 이메일 인증 버튼 클릭 이벤트
     $('#verifyEmailBtn').click(function(e) {
-        e.preventDefault(); // 페이지 리로드를 막기 위해 기본 동작 방지
-        var email = $('#email').val();
+        e.preventDefault();
+        var email = $("#email").val();
         var data = {
             email: email
         };
@@ -37,23 +37,36 @@ $(document).ready(function() {
     // 인증 코드 제출 버튼 클릭 이벤트
     $('#submitVerificationCodeBtn').click(function(e) {
         e.preventDefault(); // 페이지 리로드를 막기 위해 기본 동작 방지
-
+        var apiUrl = $('#apiUrl').data('url');
         var email = $('#email').val();
+        var userPk = $('#userPk').val();
+        console.log(apiUrl);
+        console.log(userPk);
         var verificationCode = $('#verificationCode').val();
+        const data = {
+            email: email,
+            userPk: userPk,
+            verificationCode: verificationCode
+        };
+
         // API 호출로 이메일 및 인증 코드 데이터 전송
         $.ajax({
             url: apiUrl + '/emails/verifications',
-            type: 'GET',
-            data: {
-                email: email,
-                verificationCode: verificationCode
-            },
+            type: 'POST',
+            contentType: "application/json",
+            data: JSON.stringify(data),
             success: function(response) {
-                $('#checkVerificationEmail').val('true');
-                $('#verificationStatus').text("Email verification successful!").css('color', 'green');
+                Swal.fire( // 성공 알림
+                    'Done!',
+                    'Email verify successful.',
+                    'success'
+                ).then((result) => {
+                    if (result.value) {
+                        window.location.href = '/login';
+                    }
+                });
             },
             error: function() {
-                $('#checkVerificationEmail').val('false');
                 $('#verificationStatus').text("Email verification failed. Please try again.").css('color', 'red');
             }
         });

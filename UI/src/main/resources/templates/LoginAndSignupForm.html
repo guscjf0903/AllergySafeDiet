@@ -34,27 +34,6 @@
                             <input type="password" id="password" name="password" minlength="8" maxlength="20" required autocomplete="off"/>
                         </div>
                     </div>
-                    <div class="field-wrap email-verify-wrap">
-                        <label>
-                            Email Address<span class="req">*</span>
-                        </label>
-                        <input type="email" id="email" name="email" required autocomplete="off"/>
-                        <input type="hidden" id="checkVerificationEmail" name="checkVerificationEmail">
-                        <button id="verifyEmailBtn" class="button button-small">Verify Email</button>
-                    </div>
-
-                    <div id="verificationCodeSection" class="field-wrap code-verify-wrap" style="display:none;">
-                        <div class="field-wrap">
-                            <label>
-                                Verification Code<span class="req">*</span>
-                            </label>
-                            <input type="text" id="verificationCode" name="verificationCode" autocomplete="off"/>
-                        </div>
-                        <button id="submitVerificationCodeBtn" class="button button-small" type="button">Submit Code</button>
-                        <button id="resendVerificationEmailBtn" class="button button-small" type="button">Resend Email</button>
-                        <div id="verificationStatus" class="verification-status"></div>
-                    </div>
-
 
                     <div class="BirthDate">
                         <label>
@@ -110,10 +89,11 @@
     </form>
 </div>
 
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/signup/SignupTap.js"></script>
-<script src="/signup/VerificationEmail.js"></script>
 <script src="/signup/SendSignupData.js"></script>
 <script src="/login/SendLoginData.js"></script>
 
