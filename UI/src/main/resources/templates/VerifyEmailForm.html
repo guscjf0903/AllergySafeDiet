@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<input type="hidden" id="userPk" name="userPk">
+<div id="apiUrl" th:data-url="${apiUrl}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="email">Email Address<span class="text-danger">*</span></label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <button id="verifyEmailBtn" class="btn btn-primary">Verify Email</button>
+            </div>
+
+            <div class="form-group">
+                <label for="verificationCode">Verification Code<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="verificationCode" name="verificationCode">
+            </div>
+
+            <button id="submitVerificationCodeBtn" class="btn btn-success" type="button">Submit Code</button>
+            <button id="resendVerificationEmailBtn" class="btn btn-secondary" type="button">Resend Email</button>
+
+            <div id="verificationStatus" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap and jQuery scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/signup/VerificationEmail.js"></script>
+</body>
+</html>
