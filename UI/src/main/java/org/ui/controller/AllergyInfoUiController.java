@@ -16,6 +16,4 @@ public class AllergyInfoUiController {
         model.addAttribute("apiUrl", apiUrl);
         return "AllergyInfoForm";
     }
-
-
 }

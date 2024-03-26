@@ -35,10 +35,11 @@ public class VerificationCodeService {
         mailService.sendMail(email, EMAIL_VERIFICATION_SUBJECT, code);
     }
 
+
     public void saveRedisVerificationCode(String email, String code) {
         VerificationMailRedisEntity verificationMailRedisEntity = new VerificationMailRedisEntity(email, code);
         verificationMailRedisRepository.save(verificationMailRedisEntity);
-    }
+    } // Entity와 repository를 사용하여 redis에 저장.
 
     private String createCode() {
         int length = 6;

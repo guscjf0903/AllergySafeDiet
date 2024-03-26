@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.api.config.RecipeApiClient;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,10 +16,8 @@ public class SearchFoodRecipeService {
     @Cacheable(value = "recipes", key = "#foodName")
     public List<String> getFoodRecipes(String foodName) {
         try {
-            // foodName을 이용하여 레시피 ID를 조회합니다.
             int recipeId = recipeApiClient.getRecipeIdByName(foodName);
 
-            // 레시피 ID를 이용하여 재료 목록을 조회합니다.
             return recipeApiClient.getIngredientsByRecipeId(recipeId);
         } catch (IOException e) {
             throw new RuntimeException("Error fetching recipe data for " + foodName, e);

@@ -16,7 +16,8 @@ public class OpenApiClient {
 
     public String callRecipeApi(String pathSegment, String queryParamKey, Object queryParamValue) {
         URI requestUrl = UriComponentsBuilder.fromHttpUrl(openApiProperties.getBaseUrl())
-                .pathSegment(openApiProperties.getServiceKey(), ApiConstants.JSON_FORMAT, pathSegment, ApiConstants.DEFAULT_PAGE, ApiConstants.DEFAULT_SIZE)
+                .pathSegment(openApiProperties.getServiceKey(), ApiConstants.JSON_FORMAT, pathSegment,
+                        ApiConstants.DEFAULT_PAGE, ApiConstants.DEFAULT_SIZE)
                 .queryParam(queryParamKey, queryParamValue)
                 .encode()
                 .build()

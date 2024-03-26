@@ -7,3 +7,6 @@ EXPOSE 7777
 ENV SPRING_PROFILES_ACTIVE=prod
 
 CMD ["java", "-jar", "api.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
+
+
+

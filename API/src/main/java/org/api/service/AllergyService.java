@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.AllergyEntity;
 import org.api.entity.LoginEntity;
 import org.api.repository.AllergicRepository;
-import org.api.repository.UserRepository;
 import org.core.request.AllergyRequest;
 import org.core.response.AllergyResponse;
 import org.springframework.stereotype.Service;
