@@ -1,5 +1,7 @@
 $(document).ready(function() {
     var apiUrl = $('#apiUrl').data('url');
+    var userPk = $('#userPk').data('user');
+
 
     // 이메일 인증 버튼 클릭 이벤트
     $('#verifyEmailBtn').click(function(e) {
@@ -37,11 +39,8 @@ $(document).ready(function() {
     // 인증 코드 제출 버튼 클릭 이벤트
     $('#submitVerificationCodeBtn').click(function(e) {
         e.preventDefault(); // 페이지 리로드를 막기 위해 기본 동작 방지
-        var apiUrl = $('#apiUrl').data('url');
         var email = $('#email').val();
-        var userPk = $('#userPk').val();
-        console.log(apiUrl);
-        console.log(userPk);
+
         var verificationCode = $('#verificationCode').val();
         const data = {
             email: email,

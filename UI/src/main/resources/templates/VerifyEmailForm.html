@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<input type="hidden" id="userPk" name="userPk">
+<div id="userPk" th:data-user="${userPk}"></div>
 <div id="apiUrl" th:data-url="${apiUrl}"></div>
 
 <div class="container mt-5">

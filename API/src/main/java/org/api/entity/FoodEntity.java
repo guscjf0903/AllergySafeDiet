@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.core.request.IngredientsRequest;
+import org.core.response.IngredientsResponse;
 import org.core.request.FoodRequest;
 
 @Entity
@@ -65,12 +65,12 @@ public class FoodEntity {
         createdAt = Instant.now().getEpochSecond();
     }
 
-    public List<IngredientsRequest> getIngredientsDtoList() {
+    public List<IngredientsResponse> getIngredientsDtoList() {
         if (ingredientEntities == null) {
             return List.of(); // supplements가 null인 경우, 빈 리스트 반환
         }
         return ingredientEntities.stream()
-                .map(ingredient -> new IngredientsRequest(ingredient.getIngredientName()))
+                .map(ingredient -> new IngredientsResponse(ingredient.getIngredientName()))
                 .collect(Collectors.toList());
     }
 
