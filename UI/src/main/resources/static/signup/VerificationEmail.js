@@ -6,6 +6,7 @@ $(document).ready(function() {
     // 이메일 인증 버튼 클릭 이벤트
     $('#verifyEmailBtn').click(function(e) {
         e.preventDefault();
+        $('#verificationStatus').text(null);
         var email = $("#email").val();
         var data = {
             email: email
@@ -26,12 +27,12 @@ $(document).ready(function() {
                     'success'
                 );
             },
-            error: function() {
-                Swal.fire( // 오류 알림
-                    'Error!',
-                    'Failed to send verification email. Please try again.',
-                    'error'
-                );
+            error: function(jqXHR) { // `jqXHR` 객체를 통해 에러 정보 접근
+                let errorMessage = "Email verification failed. Please try again."; // 기본 에러 메시지
+                if (jqXHR.status === 400) {
+                    errorMessage = "이미 등록된 이메일입니다.";
+                }
+                $('#verificationStatus').text(errorMessage).css('color', 'red');
             }
         });
     });
@@ -39,8 +40,8 @@ $(document).ready(function() {
     // 인증 코드 제출 버튼 클릭 이벤트
     $('#submitVerificationCodeBtn').click(function(e) {
         e.preventDefault(); // 페이지 리로드를 막기 위해 기본 동작 방지
+        $('#verificationStatus').text(null);
         var email = $('#email').val();
-
         var verificationCode = $('#verificationCode').val();
         const data = {
             email: email,
@@ -65,8 +66,20 @@ $(document).ready(function() {
                     }
                 });
             },
-            error: function() {
-                $('#verificationStatus').text("Email verification failed. Please try again.").css('color', 'red');
+            error: function(jqXHR) { // `jqXHR` 객체를 통해 에러 정보 접근
+                let errorMessage = "Email verification failed. Please try again."; // 기본 에러 메시지
+                if (jqXHR.status === 409) {
+                    Swal.fire( // 성공 알림
+                        'Error!',
+                        '이미 인증된 계정입니다..',
+                        'error'
+                    ).then((result) => {
+                        if (result.value) {
+                            window.location.href = '/login';
+                        }
+                    });
+                }
+                $('#verificationStatus').text(errorMessage).css('color', 'red');
             }
         });
     });

@@ -1,10 +1,12 @@
 package org.api.service;
 
+import static org.api.exception.ErrorCodes.ALREADY_EMAIL;
 import static org.api.exception.ErrorCodes.DUPLICATE_EMAIL;
 import static org.api.exception.ErrorCodes.ERROR_CREATE_CODE;
 
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.api.exception.CustomException;
@@ -17,6 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.api.entity.UserEntity;
 
 @RequiredArgsConstructor
 @Service
@@ -60,15 +63,22 @@ public class VerificationCodeService {
     @Transactional
     public boolean validateEmailCodeFromRedis(VerifyCodeRequest verifyCodeRequest) {
         String storedCode = stringRedisTemplate.opsForValue().get(verifyCodeRequest.email());
+        Optional<UserEntity> userOptional = userRepository.findByUserId(verifyCodeRequest.userPk());
+
+        userOptional.filter(UserEntity::isEmailVerified)
+                .ifPresent(userEntity -> {
+                    throw new CustomException(ALREADY_EMAIL);
+                });
 
         if (storedCode != null && storedCode.equals(verifyCodeRequest.verificationCode())) {
-            // 인증 코드가 일치하는 경우, 사용자 정보를 업데이트하고 인증 코드를 Redis에서 삭제
-            userRepository.findByUserId(verifyCodeRequest.userPk())
-                    .ifPresent(userEntity -> userEntity.emailUpdate(verifyCodeRequest.email()));
-            stringRedisTemplate.delete(verifyCodeRequest.email()); // 인증 코드 삭제
+            userOptional.ifPresent(userEntity -> {
+                userEntity.emailUpdate(verifyCodeRequest.email());
+            });
+            stringRedisTemplate.delete(verifyCodeRequest.email());
             return true;
-        } else {
-            return false;
         }
+
+        return false;
+
     }
 }

@@ -32,7 +32,6 @@ public class RecipeApiClient {
     public int getRecipeIdByName(String foodName) throws IOException {
         String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO", foodName);
         RecipeResponse response = objectMapper.readValue(jsonString, RecipeResponse.class);
-        System.out.println(response.getRecipeId());
 
         return response.getRecipeId();
     }
