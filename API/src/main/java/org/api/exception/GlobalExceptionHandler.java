@@ -16,8 +16,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({CustomException.class})
     protected ResponseEntity<?> handleCustomException(CustomException ex, HttpServletRequest request) {
         String instance = request.getRequestURL().toString();
-        ErrorDto errorDto = new ErrorDto(ex.getErrorCode(), null, instance);
-
+        ErrorDto errorDto;
+        if (ex.getAdditionalData() != null) {
+            errorDto = new ErrorDto(ex.getErrorCode(), null, instance, ex.getAdditionalData());
+        } else {
+            errorDto = new ErrorDto(ex.getErrorCode(), null, instance);
+        }
         log.error(ex.getErrorCode().getDetail());
         return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorDto);
     }

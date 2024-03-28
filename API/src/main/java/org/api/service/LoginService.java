@@ -1,10 +1,13 @@
 package org.api.service;
 
+import static org.api.exception.ErrorCodes.INVALID_EMAIL;
 import static org.api.exception.ErrorCodes.NOT_FOUND_LOGINID;
 import static org.api.exception.ErrorCodes.NOT_FOUND_USER;
 import static org.api.exception.ErrorCodes.PASSWORD_DISMATCH;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.LoginEntity;
@@ -30,7 +33,11 @@ public class LoginService {
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
         if (!userEntity.getPassword().equals(loginRequest.loginPassword())) {
             throw new CustomException(PASSWORD_DISMATCH);
-        } //아이디 비밀번호 검증
+        } else if(!userEntity.isEmailVerified()) {
+            Map<String, Long> userPkData = new HashMap<>();
+            userPkData.put("userPk", userEntity.getUserId());
+            throw new CustomException(INVALID_EMAIL, userPkData);
+        }
 
         loginRepository.deleteByUserUserId(userEntity.getUserId()); //기존 로그인 정보가 있으면 삭제
         LoginEntity loginEntity = onSuccessfulLogin(userEntity);

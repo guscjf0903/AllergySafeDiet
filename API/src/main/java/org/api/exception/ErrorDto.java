@@ -18,12 +18,19 @@ public class ErrorDto {
     private String title;
     @Nullable
     private String instance;
+    @Nullable
+    private Object additionalData;
 
+    public ErrorDto(ErrorCodes errorCode, URI type, String instance) {
+        this(errorCode, type, instance, null);
+    }
 
-    public ErrorDto(ErrorCodes errorCode, @Nullable URI type, @Nullable String instance) {
+    public ErrorDto(ErrorCodes errorCode, @Nullable URI type, @Nullable String instance, @Nullable Object additionalData) {
         this.title = errorCode.toString();
-        this.type = type;
+        this.type = (type != null) ? type : BLANK_TYPE;
         this.detail = errorCode.getDetail();
         this.instance = instance;
+        this.additionalData = additionalData;
     }
+
 }

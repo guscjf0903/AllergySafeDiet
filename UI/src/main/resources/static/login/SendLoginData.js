@@ -16,12 +16,39 @@ $(document).ready(function() {
             data: JSON.stringify(data),
             success: function(response) {
                 saveLoginIdToSessionStorage(response.loginToken);
-                alert('로그인이 완료되었습니다.');
-                window.location.href = 'main_menu/select';
+                Swal.fire( // 성공 알림
+                    'Done!',
+                    '로그인이 완료되었습니다.',
+                    'success'
+                ).then((result) => {
+                    if (result.value) {
+                        window.location.href = 'main_menu/select';
+                    }
+                });
             },
-            error: function(error) {
-                console.error('request failed', error);
-                alert('로그인에 실패하였습니다.');
+            error: function(jqXHR) { // `jqXHR` 객체를 통해 에러 정보 접근
+                if (jqXHR.status === 400) {
+                    Swal.fire( // 성공 알림
+                        'Error!',
+                        '없는 사용자이거나 비밀번호가 일치하지 않습니다',
+                        'error'
+                    );
+                } else if (jqXHR.status === 409) {
+                    var userPk = jqXHR.responseJSON && jqXHR.responseJSON.additionalData ? jqXHR.responseJSON.additionalData.userPk : null;
+                    if(userPk !== null) {
+                        Swal.fire(
+                            'Error!',
+                            '이메일이 인증되지 않았습니다.',
+                            'error'
+                        ).then((result) => {
+                            if (result.value) {
+                                window.location.href = '/verify_email?userPk=' + userPk;
+                            }
+                        });
+                    } else {
+                        console.log("User PK not found in the response.");
+                    }
+                }
             }
         });
 
