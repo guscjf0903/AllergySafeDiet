@@ -19,18 +19,12 @@ public class SignupService {
 
     @Transactional
     public Optional<SignupResponse> registerUser(SignupRequest signupRequest) {
-        //checkVerificationMail(signupRequest.checkVerificationEmail());
         UserEntity user = UserEntity.of(signupRequest);
         SignupResponse signupResponse = SignupResponse.toResponse(userRepository.save(user).getUserId());
 
         return Optional.of(signupResponse);
     }
 
-//    private void checkVerificationMail(boolean checkVerificationEmail) { //이메일 인증 확인
-//        if (!checkVerificationEmail) {
-//            throw new CustomException(INVALID_EMAIL);
-//        }
-//    }
 
 
     @Transactional(readOnly = true)
