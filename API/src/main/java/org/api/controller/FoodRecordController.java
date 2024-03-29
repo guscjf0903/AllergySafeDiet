@@ -33,7 +33,6 @@ public class FoodRecordController {
     @PostMapping("/food")
     public ResponseEntity<?> saveFoodAndIngredientData(@RequestBody @Valid FoodRequest foodRequest,
                                                        @AuthenticationPrincipal UserEntity currentUser) {
-        System.out.println(currentUser.getUserId());
         FoodEntity foodEntity = foodRecordService.saveFoodData(foodRequest, currentUser);
         ingredientService.saveIngredientData(foodEntity, foodRequest);
 
@@ -42,8 +41,8 @@ public class FoodRecordController {
 
     @GetMapping(value = "/food", params = "date")
     public ResponseEntity<Object> getFoodDataByDate(@RequestParam(name = "date") LocalDate date,
-                                                    @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        Optional<Object> menuResponse = foodRecordService.getFoodDataByDate(date, authorizationHeader);
+                                                    @AuthenticationPrincipal UserEntity currentUser) {
+        Optional<Object> menuResponse = foodRecordService.getFoodDataByDate(date, currentUser);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))
@@ -52,8 +51,8 @@ public class FoodRecordController {
 
     @GetMapping(value = "/food", params = "id")
     public ResponseEntity<FoodResponse> getFoodDataById(@RequestParam(name = "id") Long id,
-                                                        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        Optional<FoodResponse> menuResponse = foodRecordService.getFoodDataById(id, authorizationHeader);
+                                                        @AuthenticationPrincipal UserEntity currentUser) {
+        Optional<FoodResponse> menuResponse = foodRecordService.getFoodDataById(id, currentUser);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))
@@ -63,8 +62,8 @@ public class FoodRecordController {
     @PutMapping(value = "/food")
     public ResponseEntity<FoodResponse> putFoodDataById(@RequestParam(name = "id") Long id,
                                                         @RequestBody FoodRequest foodRequest,
-                                                        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        foodRecordService.putFoodData(id, foodRequest, authorizationHeader);
+                                                        @AuthenticationPrincipal UserEntity currentUser) {
+        foodRecordService.putFoodData(id, foodRequest, currentUser);
         return ResponseEntity.ok().build();
     }
 

@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class FoodRecordService {
-    private final LoginService loginService;
     private final FoodRepository foodRepository;
     private final IngredientService ingredientService;
 
@@ -31,15 +30,15 @@ public class FoodRecordService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<FoodResponse> getFoodDataById(Long id, String authorizationHeader) {
-        return foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, getUserIdFromHeader(authorizationHeader))
+    public Optional<FoodResponse> getFoodDataById(Long id, UserEntity userEntity) {
+        return foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, userEntity.getUserId())
                 .map(this::toFoodResponse);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Object> getFoodDataByDate(LocalDate date, String authorizationHeader) {
+    public Optional<Object> getFoodDataByDate(LocalDate date, UserEntity userEntity) {
         Optional<List<FoodEntity>> getFoodEntity = foodRepository.getFoodDataByFoodDateAndUserUserId(date,
-                getUserIdFromHeader(authorizationHeader));
+               userEntity.getUserId());
         if (getFoodEntity.isEmpty()) {
             return Optional.empty();
         } else {
@@ -51,16 +50,12 @@ public class FoodRecordService {
     }
 
     @Transactional
-    public void putFoodData(Long id, FoodRequest foodRequest, String authorizationHeader) {
-        foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, getUserIdFromHeader(authorizationHeader))
+    public void putFoodData(Long id, FoodRequest foodRequest, UserEntity userEntity) {
+        foodRepository.getFoodDataByFoodRecordIdAndUserUserId(id, userEntity.getUserId())
                 .ifPresent(orgFoodEntity -> {
                     orgFoodEntity.foodEntityUpdate(foodRequest);
                     ingredientService.putIngredientData(orgFoodEntity, foodRequest);
                 });
-    }
-
-    private Long getUserIdFromHeader(String authorizationHeader) {
-        return loginService.validateLoginId(authorizationHeader).getUser().getUserId();
     }
 
     private FoodResponse toFoodResponse(FoodEntity foodEntity) {
