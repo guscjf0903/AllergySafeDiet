@@ -16,7 +16,8 @@ public enum ErrorCodes {
     DUPLICATE_EMAIL(400, "이미 등록된 이메일입니다."),
     ERROR_CREATE_CODE(500, "인증코드 생성에 실패하였습니다."),
     INVALID_EMAIL(409, "이메일이 인증되지 않았습니다."),
-    ALREADY_EMAIL(409, "이미 인증된 계정입니다.");
+    ALREADY_EMAIL(409, "이미 인증된 계정입니다."),
+    NOT_TOKEN(400, "존재하지않는 토큰입니다.");
 
 
     private final int status;

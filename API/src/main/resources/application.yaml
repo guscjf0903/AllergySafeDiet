@@ -1,5 +1,9 @@
 server:
   port: 7777
+
+jwt:
+  secret-key: "3okpDDRf6HCajVusuiLSVWaAbqHdV/V7V44LIRAZeaBtSGoSi+vDK1uewFHYSmnIs6+vzq0+3ZxV4OdztVCj+g==
+"
 ---
 spring:
   devtools:
@@ -10,6 +14,9 @@ spring:
       hibernate:
     open-in-view: false
     show-sql: true
+  h2:
+    console:
+      enabled: true
 
 
   profiles:

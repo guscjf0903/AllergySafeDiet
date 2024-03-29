@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.LoginEntity;
 import org.api.entity.FoodEntity;
+import org.api.entity.UserEntity;
 import org.api.repository.FoodRepository;
 import org.core.request.FoodRequest;
 import org.core.response.FoodResponse;
@@ -21,9 +22,8 @@ public class FoodRecordService {
     private final IngredientService ingredientService;
 
     @Transactional
-    public FoodEntity saveFoodData(FoodRequest foodRequest, String authorizationHeader) {
-        LoginEntity loginEntity = loginService.validateLoginId(authorizationHeader);
-        FoodEntity foodEntity = FoodEntity.of(loginEntity.getUser(), foodRequest);
+    public FoodEntity saveFoodData(FoodRequest foodRequest, UserEntity user) {
+        FoodEntity foodEntity = FoodEntity.of(user, foodRequest);
 
         foodRepository.save(foodEntity);
 

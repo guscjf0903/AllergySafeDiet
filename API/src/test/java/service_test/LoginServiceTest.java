@@ -60,7 +60,7 @@ public class LoginServiceTest {
         LoginResponse response = loginService.loginUser(mockLoginRequest);
 
         assertNotNull(response);
-        assertNotNull(response.getLoginToken());
+        assertNotNull(response.loginToken());
     }
 
     @Test

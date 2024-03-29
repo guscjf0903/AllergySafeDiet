@@ -1,16 +1,19 @@
 package org.api.controller;
 
 import jakarta.validation.Valid;
+import java.nio.file.attribute.UserPrincipal;
 import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.FoodEntity;
+import org.api.entity.UserEntity;
 import org.api.service.IngredientService;
 import org.api.service.FoodRecordService;
 import org.core.request.FoodRequest;
 import org.core.response.FoodResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,8 +32,9 @@ public class FoodRecordController {
 
     @PostMapping("/food")
     public ResponseEntity<?> saveFoodAndIngredientData(@RequestBody @Valid FoodRequest foodRequest,
-                                                       @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        FoodEntity foodEntity = foodRecordService.saveFoodData(foodRequest, authorizationHeader);
+                                                       @AuthenticationPrincipal UserEntity currentUser) {
+        System.out.println(currentUser.getUserId());
+        FoodEntity foodEntity = foodRecordService.saveFoodData(foodRequest, currentUser);
         ingredientService.saveIngredientData(foodEntity, foodRequest);
 
         return ResponseEntity.ok().build();
