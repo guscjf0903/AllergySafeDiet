@@ -44,7 +44,6 @@ public class JwtConfig {
 
 
     public String generateToken(Long userId) {
-        System.out.println(secretKey);
         return Jwts.builder()
                 .setSubject(Long.toString(userId))
                 .setIssuedAt(new Date())

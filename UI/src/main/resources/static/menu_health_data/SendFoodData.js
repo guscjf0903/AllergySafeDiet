@@ -26,7 +26,7 @@ $(document).ready(function () {
             url: apiUrl + '/food_health_data/food',
             type: "POST",
             headers: {
-                'Authorization': "Bearer " + sessionStorage.getItem("loginToken"),
+                'Authorization': sessionStorage.getItem("loginToken"),
             },
             contentType: 'application/json',
             data: JSON.stringify(menuData),

@@ -6,6 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.AllergyEntity;
 import org.api.entity.LoginEntity;
+import org.api.entity.UserEntity;
 import org.api.repository.AllergicRepository;
 import org.core.request.AllergyRequest;
 import org.core.response.AllergyResponse;
@@ -15,18 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AllergyService {
-    private final LoginService loginService;
     private final AllergicRepository allergicRepository;
-    @Transactional(readOnly = true)
-    public Optional<AllergyResponse> getAllergyData(String authorizationHeader) {
-        LoginEntity loginEntity = getUserIdFromHeader(authorizationHeader);
-        List<String> allergiesList = new ArrayList<>();
-        List<AllergyEntity> allergyEntities = loginEntity.getUser().getAllergyEntities();
 
-        if(allergyEntities.isEmpty()) {
+    @Transactional(readOnly = true)
+    public Optional<AllergyResponse> getAllergyData(UserEntity userEntity) {
+        List<String> allergiesList = new ArrayList<>();
+        List<AllergyEntity> allergyEntities = userEntity.getAllergyEntities();
+
+        if (allergyEntities.isEmpty()) {
             return Optional.empty();
         } else {
-            for(AllergyEntity allergy : allergyEntities) {
+            for (AllergyEntity allergy : allergyEntities) {
                 allergiesList.add(allergy.getAllergen());
             }
             AllergyResponse allergyResponse = AllergyResponse.toResponse(allergiesList);
@@ -35,24 +35,17 @@ public class AllergyService {
     }
 
     @Transactional
-    public void saveAllergyData(AllergyRequest allergyRequest, String authorizationHeader) {
-        LoginEntity loginEntity = getUserIdFromHeader(authorizationHeader);
-
-        for(String allergen : allergyRequest.allergy()) {
-            AllergyEntity allergyEntity = AllergyEntity.of(loginEntity.getUser(), allergen);
+    public void saveAllergyData(AllergyRequest allergyRequest, UserEntity userEntity) {
+        for (String allergen : allergyRequest.allergy()) {
+            AllergyEntity allergyEntity = AllergyEntity.of(userEntity, allergen);
             allergicRepository.save(allergyEntity);
         }
     }
 
     @Transactional
-    public void putAllergyData(AllergyRequest allergyRequest, String authorizationHeader) {
-        LoginEntity loginEntity = getUserIdFromHeader(authorizationHeader);
-
-        allergicRepository.deleteByUserUserId(loginEntity.getUser().getUserId());
-        saveAllergyData(allergyRequest, authorizationHeader);
+    public void putAllergyData(AllergyRequest allergyRequest, UserEntity userEntity) {
+        allergicRepository.deleteByUserUserId(userEntity.getUserId());
+        saveAllergyData(allergyRequest, userEntity);
     }
 
-    private LoginEntity getUserIdFromHeader(String authorizationHeader) {
-        return loginService.validateLoginId(authorizationHeader);
-    }
 }
