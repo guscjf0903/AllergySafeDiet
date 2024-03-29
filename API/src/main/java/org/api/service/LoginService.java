@@ -53,7 +53,6 @@ public class LoginService {
         UserEntity userEntity = userRepository.findByUserName(loginRequest.loginId())
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
-        // BCryptPasswordEncoder를 사용하여 비밀번호 확인
         if (!bCryptPasswordEncoder.matches(loginRequest.loginPassword(), userEntity.getPassword())) {
             throw new CustomException(PASSWORD_DISMATCH);
         } else if (!userEntity.isEmailVerified()) {

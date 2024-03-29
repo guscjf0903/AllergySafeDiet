@@ -61,7 +61,6 @@ function displayFoodData(data) {
 
     data.forEach(food => {
         const ingredientsList = food.ingredients.map(ingredient => ingredient.ingredientName);
-        console.log(food.id);
         htmlContent += `<tr>
             <td>${food.date}</td>
             <td>${food.mealType}</td>

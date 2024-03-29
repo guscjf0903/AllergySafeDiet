@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
 import org.api.entity.LoginEntity;
+import org.api.entity.UserEntity;
 import org.api.repository.HealthRepository;
 import org.core.request.HealthRequest;
 import org.core.response.HealthResponse;
@@ -15,21 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class HealthRecordService {
     private final HealthRepository healthRepository;
-    private final LoginService loginService;
     private final SupplementRecordService supplementRecordService;
 
     @Transactional
-    public void saveHealthData(HealthRequest healthRequest, String authorizationHeader) {
-        LoginEntity loginEntity = getUserFromAuthorization(authorizationHeader);
-        HealthEntity healthEntity = HealthEntity.of(loginEntity.getUser(), healthRequest);
+    public void saveHealthData(HealthRequest healthRequest, UserEntity userEntity) {
+        HealthEntity healthEntity = HealthEntity.of(userEntity, healthRequest);
         HealthEntity savedHealth = healthRepository.save(healthEntity);
         supplementRecordService.saveSupplementData(savedHealth, healthRequest.pills());
     }
 
     @Transactional(readOnly = true)
-    public Optional<HealthResponse> getHealthDataByDate(LocalDate date, String authorizationHeader) {
+    public Optional<HealthResponse> getHealthDataByDate(LocalDate date, UserEntity userEntity) {
         return healthRepository.getHealthDataByHealthDateAndUserUserId(date,
-                        getUserFromAuthorization(authorizationHeader).getUser().getUserId())
+                        userEntity.getUserId())
                 .map(healthEntity -> new HealthResponse(
                         healthEntity.getHealthDate(),
                         healthEntity.getAllergiesStatus(),
@@ -42,16 +41,11 @@ public class HealthRecordService {
     }
 
     @Transactional
-    public void putHealthData(HealthRequest healthRequest, String authorizationHeader) {
-        LoginEntity loginEntity = getUserFromAuthorization(authorizationHeader);
-        healthRepository.getHealthDataByHealthDateAndUserUserId(healthRequest.date(), loginEntity.getUser().getUserId())
+    public void putHealthData(HealthRequest healthRequest, UserEntity userEntity) {
+        healthRepository.getHealthDataByHealthDateAndUserUserId(healthRequest.date(), userEntity.getUserId())
                 .ifPresent(orgHealthEntity -> {
                     orgHealthEntity.healthEntityUpdate(healthRequest);
                     supplementRecordService.putSupplementData(orgHealthEntity, healthRequest.pills());
                 });
-    }
-
-    private LoginEntity getUserFromAuthorization(String authorizationHeader) {
-        return loginService.validateLoginId(authorizationHeader);
     }
 }

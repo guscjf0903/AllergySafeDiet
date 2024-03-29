@@ -4,11 +4,13 @@ package org.api.controller;
 import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.api.entity.UserEntity;
 import org.api.service.HealthRecordService;
 import org.core.request.HealthRequest;
 import org.core.response.HealthResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,8 +28,8 @@ public class HealthRecordController {
 
     @GetMapping("/health")
     public ResponseEntity<HealthResponse> getHealthData(@RequestParam(name = "date") LocalDate date,
-                                                        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        Optional<HealthResponse> healthResponse = healthRecordService.getHealthDataByDate(date, authorizationHeader);
+                                                        @AuthenticationPrincipal UserEntity currentUser) {
+        Optional<HealthResponse> healthResponse = healthRecordService.getHealthDataByDate(date, currentUser);
         return healthResponse
                 .map(data -> ResponseEntity.ok().body(data))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
@@ -35,15 +37,15 @@ public class HealthRecordController {
 
     @PostMapping("/health")
     public ResponseEntity<Void> postHealthData(@RequestBody HealthRequest healthRequest,
-                                               @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        healthRecordService.saveHealthData(healthRequest, authorizationHeader);
+                                               @AuthenticationPrincipal UserEntity currentUser) {
+        healthRecordService.saveHealthData(healthRequest, currentUser);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/health")
     public ResponseEntity<Void> putHealthData(@RequestBody HealthRequest healthRequest,
-                                              @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        healthRecordService.putHealthData(healthRequest, authorizationHeader);
+                                              @AuthenticationPrincipal UserEntity currentUser) {
+        healthRecordService.putHealthData(healthRequest, currentUser);
         return ResponseEntity.ok().build();
     }
 
