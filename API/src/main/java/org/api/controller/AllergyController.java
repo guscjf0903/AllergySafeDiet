@@ -2,12 +2,13 @@ package org.api.controller;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.api.entity.UserEntity;
 import org.api.service.AllergyService;
+import org.api.service.UserService;
 import org.core.request.AllergyRequest;
 import org.core.response.AllergyResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AllergyController {
     private final AllergyService allergyService;
+    private final UserService userService;
 
     @GetMapping("/allergy")
     public ResponseEntity<AllergyResponse> getAllergyData(
-            @AuthenticationPrincipal UserEntity currentUser) {
-        Optional<AllergyResponse> allergyDataOptional = allergyService.getAllergyData(currentUser);
+            Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        Optional<AllergyResponse> allergyDataOptional = allergyService.getAllergyData(user);
 
         return allergyDataOptional.map(data -> ResponseEntity.ok().body(data))
                 .orElseGet(() -> ResponseEntity.noContent().build());
@@ -31,16 +35,20 @@ public class AllergyController {
 
     @PostMapping("/allergy")
     public ResponseEntity<Void> postAllergyData(@RequestBody AllergyRequest allergyRequest,
-                                                @AuthenticationPrincipal UserEntity currentUser) {
-        allergyService.saveAllergyData(allergyRequest, currentUser);
+                                                Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        allergyService.saveAllergyData(allergyRequest, user);
 
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/allergy")
     public ResponseEntity<Void> putAllergyData(@RequestBody AllergyRequest allergyRequest,
-                                               @AuthenticationPrincipal UserEntity currentUser) {
-        allergyService.putAllergyData(allergyRequest, currentUser);
+                                               Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        allergyService.putAllergyData(allergyRequest, user);
 
         return ResponseEntity.ok().build();
     }

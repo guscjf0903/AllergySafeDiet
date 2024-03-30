@@ -9,10 +9,12 @@ import org.api.entity.FoodEntity;
 import org.api.entity.UserEntity;
 import org.api.service.IngredientService;
 import org.api.service.FoodRecordService;
+import org.api.service.UserService;
 import org.core.request.FoodRequest;
 import org.core.response.FoodResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,11 +31,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class FoodRecordController {
     private final FoodRecordService foodRecordService;
     private final IngredientService ingredientService;
+    private final UserService userService;
+
 
     @PostMapping("/food")
     public ResponseEntity<?> saveFoodAndIngredientData(@RequestBody @Valid FoodRequest foodRequest,
-                                                       @AuthenticationPrincipal UserEntity currentUser) {
-        FoodEntity foodEntity = foodRecordService.saveFoodData(foodRequest, currentUser);
+                                                       Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        FoodEntity foodEntity = foodRecordService.saveFoodData(foodRequest, user);
         ingredientService.saveIngredientData(foodEntity, foodRequest);
 
         return ResponseEntity.ok().build();
@@ -41,8 +47,10 @@ public class FoodRecordController {
 
     @GetMapping(value = "/food", params = "date")
     public ResponseEntity<Object> getFoodDataByDate(@RequestParam(name = "date") LocalDate date,
-                                                    @AuthenticationPrincipal UserEntity currentUser) {
-        Optional<Object> menuResponse = foodRecordService.getFoodDataByDate(date, currentUser);
+                                                    Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        Optional<Object> menuResponse = foodRecordService.getFoodDataByDate(date, user);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))
@@ -51,8 +59,10 @@ public class FoodRecordController {
 
     @GetMapping(value = "/food", params = "id")
     public ResponseEntity<FoodResponse> getFoodDataById(@RequestParam(name = "id") Long id,
-                                                        @AuthenticationPrincipal UserEntity currentUser) {
-        Optional<FoodResponse> menuResponse = foodRecordService.getFoodDataById(id, currentUser);
+                                                        Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        Optional<FoodResponse> menuResponse = foodRecordService.getFoodDataById(id, user);
 
         return menuResponse
                 .map(data -> ResponseEntity.ok().body(data))
@@ -62,8 +72,10 @@ public class FoodRecordController {
     @PutMapping(value = "/food")
     public ResponseEntity<FoodResponse> putFoodDataById(@RequestParam(name = "id") Long id,
                                                         @RequestBody FoodRequest foodRequest,
-                                                        @AuthenticationPrincipal UserEntity currentUser) {
-        foodRecordService.putFoodData(id, foodRequest, currentUser);
+                                                        Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        foodRecordService.putFoodData(id, foodRequest, user);
         return ResponseEntity.ok().build();
     }
 

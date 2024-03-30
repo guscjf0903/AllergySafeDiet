@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class LoginService {
-    private final LoginRepository loginRepository;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtConfig jwtConfig;
@@ -78,11 +77,10 @@ public class LoginService {
 //    public void cleanExpiredLogin() {
 //        loginRepository.deleteAllByTokenExpirationTimeBefore(LocalDateTime.now());
 //    }
-
-    @Transactional(readOnly = true)
-    public LoginEntity validateLoginId(String loginToken) {
-        return loginRepository.findByLoginToken(loginToken)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
-    }
+//    @Transactional(readOnly = true)
+//    public LoginEntity validateLoginId(String loginToken) {
+//        return loginRepository.findByLoginToken(loginToken)
+//                .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
+//    }
 
 }

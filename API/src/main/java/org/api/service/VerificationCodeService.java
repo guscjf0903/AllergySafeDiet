@@ -11,11 +11,8 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.api.exception.CustomException;
 import org.api.repository.UserRepository;
-import org.api.repository.redis_repository.VerificationMailRedisRepository;
 import org.core.request.VerifyCodeRequest;
-import org.springframework.cache.annotation.CachePut;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +23,14 @@ import org.api.entity.UserEntity;
 public class VerificationCodeService {
     private final MailService mailService;
     private final UserRepository userRepository;
-    private final SignupService signupService;
+    private final UserService userService;
     private final StringRedisTemplate stringRedisTemplate;
 
 
     private static final String EMAIL_VERIFICATION_SUBJECT = "Email Verification";
 
     public void sendCodeToEmail(String email) {
-        if (signupService.checkDuplicateMail(email)) {
+        if (userService.checkDuplicateMail(email)) {
             throw new CustomException(DUPLICATE_EMAIL);
         }
         String code = createCodeAndSaveRedis(email);

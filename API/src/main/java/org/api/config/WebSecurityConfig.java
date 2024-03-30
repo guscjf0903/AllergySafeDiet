@@ -1,7 +1,6 @@
 package org.api.config;
 
 import lombok.RequiredArgsConstructor;
-import org.api.service.UserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,14 +24,14 @@ public class WebSecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,JwtConfig jwtConfig, UserDetailService userDetailService) throws Exception {
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtConfig, userDetailService);
+    public SecurityFilterChain filterChain(HttpSecurity http,JwtConfig jwtConfig) throws Exception {
+        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtConfig);
 
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/login", "/signup","/email/verification_request","/emails/verifications").permitAll()
+                        .requestMatchers("/login", "/signup","/email/verification_request","/emails/verifications","/recipes").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

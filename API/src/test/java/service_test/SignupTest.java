@@ -14,7 +14,7 @@ import org.api.entity.UserEntity;
 import org.api.exception.CustomException;
 import org.api.exception.ErrorCodes;
 import org.api.repository.UserRepository;
-import org.api.service.SignupService;
+import org.api.service.UserService;
 import org.core.request.SignupRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ public class SignupTest {
     @Mock
     private UserRepository userRepository;
     @InjectMocks
-    private SignupService signupService;
+    private UserService userService;
 
     private SignupRequest validSignupRequest;
     private SignupRequest invalidEmailSignupRequest;
@@ -50,7 +50,7 @@ public class SignupTest {
     public void testRegisterUserWithValidData() {
         // SignupService의 registerUser 메소드를 유효한 데이터와 함께 호출하며,
         // 이 과정에서 예외가 발생하지 않는 것을 확인.
-        assertDoesNotThrow(() -> signupService.registerUser(validSignupRequest));
+        assertDoesNotThrow(() -> userService.registerUser(validSignupRequest));
 
         // UserRepository의 save 메소드가 정확히 한 번 호출되었는지 검증.
         verify(userRepository, times(1)).save(any(UserEntity.class));
@@ -63,7 +63,7 @@ public class SignupTest {
         // SignupService의 registerUser 메소드를 유효하지 않은 데이터와 함께 호출하며,
         // CustomException이 발생하는지 확인.
         CustomException exception = assertThrows(CustomException.class, () -> {
-            signupService.registerUser(invalidEmailSignupRequest);
+            userService.registerUser(invalidEmailSignupRequest);
         });
 
         // 발생한 예외의 메시지가 예상한 값(INVALID_EMAIL)과 일치하는지 검증합니다.
@@ -76,7 +76,7 @@ public class SignupTest {
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
 
         assertThrows(CustomException.class, () -> {
-            signupService.registerUser(invalidPasswordSignupRequest);
+            userService.registerUser(invalidPasswordSignupRequest);
         });
     }
 

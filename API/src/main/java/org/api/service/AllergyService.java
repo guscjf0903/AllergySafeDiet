@@ -8,8 +8,10 @@ import org.api.entity.AllergyEntity;
 import org.api.entity.LoginEntity;
 import org.api.entity.UserEntity;
 import org.api.repository.AllergicRepository;
+import org.api.repository.UserRepository;
 import org.core.request.AllergyRequest;
 import org.core.response.AllergyResponse;
+import org.h2.engine.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AllergyService {
     private final AllergicRepository allergicRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public Optional<AllergyResponse> getAllergyData(UserEntity userEntity) {
+        Optional<UserEntity> user = userRepository.findByUserId(userEntity.getUserId());
         List<String> allergiesList = new ArrayList<>();
-        List<AllergyEntity> allergyEntities = userEntity.getAllergyEntities();
 
-        if (allergyEntities.isEmpty()) {
+        if (user.isEmpty()) {
             return Optional.empty();
         } else {
+            UserEntity orgUser = user.get();
+            List<AllergyEntity> allergyEntities = orgUser.getAllergyEntities();
             for (AllergyEntity allergy : allergyEntities) {
                 allergiesList.add(allergy.getAllergen());
             }
@@ -33,6 +38,8 @@ public class AllergyService {
             return Optional.of(allergyResponse);
         }
     }
+
+
 
     @Transactional
     public void saveAllergyData(AllergyRequest allergyRequest, UserEntity userEntity) {

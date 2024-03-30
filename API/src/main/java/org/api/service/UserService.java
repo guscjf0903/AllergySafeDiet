@@ -1,6 +1,6 @@
 package org.api.service;
 
-import static org.api.exception.ErrorCodes.INVALID_EMAIL;
+import static org.api.exception.ErrorCodes.NOT_FOUND_LOGINID;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -9,23 +9,16 @@ import org.api.exception.CustomException;
 import org.api.repository.UserRepository;
 import org.core.request.SignupRequest;
 import org.core.response.SignupResponse;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class SignupService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-//    @Transactional
-//    public Optional<SignupResponse> registerUser(SignupRequest signupRequest) {
-//        UserEntity user = UserEntity.of(signupRequest);
-//        SignupResponse signupResponse = SignupResponse.toResponse(userRepository.save(user).getUserId());
-//
-//        return Optional.of(signupResponse);
-//    }
 
     @Transactional
     public Optional<SignupResponse> registerUser(SignupRequest signupRequest){
@@ -44,11 +37,22 @@ public class SignupService {
         return Optional.of(signupResponse);
     }
 
-
-
     @Transactional(readOnly = true)
     public boolean checkDuplicateMail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserEntity loadUserByUsername(String userName) {
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
+    }
+
+    @Transactional(readOnly = true)
+    public UserEntity loadUserById(Long userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
     }
 }
 
