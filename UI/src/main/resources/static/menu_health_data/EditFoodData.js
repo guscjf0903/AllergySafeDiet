@@ -35,7 +35,18 @@ $(document).ready(function () {
                 alert("식단을 성공적으로 수정하였습니다.");
                 window.location.href = '/food_health_data/select_date';
             },
-            error: function () {
+            error: function (jqXHR) {
+                if (jqXHR.status === 401) {
+                    Swal.fire(
+                        'Error!',
+                        '로그인이 되지 않았습니다.',
+                        'error'
+                    ).then((result) => {
+                        if (result.value) {
+                            window.location.href = '/login';
+                        }
+                    });
+                }
                 alert("식단 수정에 실패하였습니다.");
             }
         });

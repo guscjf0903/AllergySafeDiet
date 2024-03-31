@@ -33,9 +33,20 @@ $(document).ready(function() {
                 alert("성공적으로 저장하였습니다.");
 
             },
-            error: function (response) {
+            error: function (jqXHR) {
+                if (jqXHR.status === 401) {
+                    Swal.fire(
+                        'Error!',
+                        '로그인이 되지 않았습니다.',
+                        'error'
+                    ).then((result) => {
+                        if (result.value) {
+                            window.location.href = '/login';
+                        }
+                    });
+                }
                 alert("저장하는 과정에 문제가 발생했습니다.");
-                console.error(response);
+                console.error(jqXHR);
             }
         });
     });

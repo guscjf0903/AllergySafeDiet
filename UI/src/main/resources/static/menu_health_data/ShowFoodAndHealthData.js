@@ -27,7 +27,18 @@ function fetchFoodData(date) {
         success: function(response) {
             displayFoodData(response);
         },
-        error: function() {
+        error: function(jqXHR) {
+            if (jqXHR.status === 401) {
+                Swal.fire(
+                    'Error!',
+                    '로그인이 되지 않았습니다.',
+                    'error'
+                ).then((result) => {
+                    if (result.value) {
+                        window.location.href = '/login';
+                    }
+                });
+            }
             $('#foodData').html('<p>음식관련 데이터가 없습니다. 추가해주세요.</p>');
         }
     });
@@ -43,7 +54,18 @@ function fetchHealthData(date) {
         success: function(data) {
             displayHealthData(data);
         },
-        error: function() {
+        error: function(jqXHR) {
+            if (jqXHR.status === 401) {
+                Swal.fire(
+                    'Error!',
+                    '로그인이 되지 않았습니다.',
+                    'error'
+                ).then((result) => {
+                    if (result.value) {
+                        window.location.href = '/login';
+                    }
+                });
+            }
             $('#healthData').html('<p>건강관련 데이터가 없습니다. 추가해주세요.</p>');
             $('#editHealthBtn').text('건강 데이터 추가');
         }

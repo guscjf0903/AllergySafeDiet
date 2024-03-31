@@ -5,9 +5,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import org.api.exception.CustomException;
+import org.api.exception.ErrorCodes;
+import org.api.exception.JwtValidationException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,14 +24,22 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String jwt = getJwtFromRequest(httpRequest);
-        if (jwt != null && jwtConfig.validateToken(jwt)) {
-            Long userId = jwtConfig.getUserIdFromJwtToken(jwt);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+            String jwt = getJwtFromRequest(httpRequest);
+            if (jwt != null && !jwtConfig.validateToken(jwt)) {
+                Long userId = jwtConfig.getUserIdFromJwtToken(jwt);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId,
+                        null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            chain.doFilter(request, response);
+        } catch (JwtValidationException e) {
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResponse.setContentType("application/json");
+            httpResponse.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
         }
-        chain.doFilter(request, response);
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {

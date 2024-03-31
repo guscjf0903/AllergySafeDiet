@@ -43,7 +43,18 @@ $(document).ready(function () {
                 alert('데이터가 성공적으로 저장되었습니다.');
                 window.location.href = '/food_health_data/select_date';
             },
-            error: function () {
+            error: function (jqXHR) {
+                if (jqXHR.status === 401) {
+                    Swal.fire(
+                        'Error!',
+                        '로그인이 되지 않았습니다.',
+                        'error'
+                    ).then((result) => {
+                        if (result.value) {
+                            window.location.href = '/login';
+                        }
+                    });
+                }
                 alert('데이터 저장에 실패했습니다. 다시 시도해주세요.');
                 console.error('데이터 저장에 실패했습니다.');
             }
@@ -118,9 +129,20 @@ function checkHealthData() {
                 healthDataExists = false;
             }
         },
-        error: function (response) {
+        error: function (jqXHR) {
+            if (jqXHR.status === 401) {
+                    Swal.fire(
+                        'Error!',
+                        '로그인이 되지 않았습니다.',
+                        'error'
+                    ).then((result) => {
+                        if (result.value) {
+                            window.location.href = '/login';
+                        }
+                    });
+            }
             $('#dataStatusMessage').text('데이터를 불러오는데 문제가 발생했습니다.');
-            console.error(response);
+            console.error(jqXHR);
         }
     });
 }

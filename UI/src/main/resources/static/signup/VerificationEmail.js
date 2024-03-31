@@ -71,7 +71,7 @@ $(document).ready(function() {
                 if (jqXHR.status === 409) {
                     Swal.fire( // 성공 알림
                         'Error!',
-                        '이미 인증된 계정입니다..',
+                        '이미 인증된 계정입니다.',
                         'error'
                     ).then((result) => {
                         if (result.value) {
