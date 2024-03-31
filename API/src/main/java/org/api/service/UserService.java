@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
 import org.api.exception.CustomException;
 import org.api.repository.UserRepository;
+import org.api.util.EncryptionUtil;
 import org.core.request.SignupRequest;
 import org.core.response.SignupResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final EncryptionUtil encryptionUtil;
 
     @Transactional
     public Optional<SignupResponse> registerUser(SignupRequest signupRequest){
@@ -26,13 +28,16 @@ public class UserService implements UserDetailsService {
 
         UserEntity user = UserEntity.builder()
                 .userName(signupRequest.userName())
-                .password(encodedPassword) // 암호화된 비밀번호 사용
+                .password(encodedPassword)
                 .birthDate(signupRequest.birthDate())
                 .gender(signupRequest.gender())
                 .height(signupRequest.height())
                 .build();
 
-        SignupResponse signupResponse = SignupResponse.toResponse(userRepository.save(user).getUserId());
+        String encryptUserPk = encryptionUtil.encrypt(userRepository.save(user).getUserId().toString());
+        SignupResponse signupResponse = SignupResponse.toResponse(encryptUserPk);
+
+        System.out.println("Test : " + encryptionUtil.decrypt(encryptUserPk));
 
         return Optional.of(signupResponse);
     }

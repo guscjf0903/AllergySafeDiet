@@ -1,9 +1,9 @@
 package org.core.response;
 
 public record SignupResponse(
-        Long userPk
+        String userPk
 ) {
-    public static SignupResponse toResponse(Long userPk) {
+    public static SignupResponse toResponse(String userPk) {
         return new SignupResponse(userPk);
     }
 

@@ -11,6 +11,7 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.api.exception.CustomException;
 import org.api.repository.UserRepository;
+import org.api.util.EncryptionUtil;
 import org.core.request.VerifyCodeRequest;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -25,6 +26,7 @@ public class VerificationCodeService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final StringRedisTemplate stringRedisTemplate;
+    private final EncryptionUtil encryptionUtil;
 
 
     private static final String EMAIL_VERIFICATION_SUBJECT = "Email Verification";
@@ -60,7 +62,10 @@ public class VerificationCodeService {
     @Transactional
     public boolean validateEmailCodeFromRedis(VerifyCodeRequest verifyCodeRequest) {
         String storedCode = stringRedisTemplate.opsForValue().get(verifyCodeRequest.email());
-        Optional<UserEntity> userOptional = userRepository.findByUserId(verifyCodeRequest.userPk());
+        String stringUserPk = encryptionUtil.decrypt(verifyCodeRequest.userPk());
+        Long userPk = Long.parseLong(stringUserPk);
+
+        Optional<UserEntity> userOptional = userRepository.findByUserId(userPk);
 
         userOptional.filter(UserEntity::isEmailVerified)
                 .ifPresent(userEntity -> {

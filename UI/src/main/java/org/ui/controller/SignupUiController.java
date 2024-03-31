@@ -21,7 +21,7 @@ public class SignupUiController {
     }
 
     @GetMapping("/verify_email")
-    public String showVerifyEmailForm(@RequestParam(name = "userPk") Long userPk, Model model) {
+    public String showVerifyEmailForm(@RequestParam(name = "userPk") String userPk, Model model) {
         model.addAttribute("userPk", userPk);
         model.addAttribute("apiUrl", apiUrl);
         return "VerifyEmailForm";
