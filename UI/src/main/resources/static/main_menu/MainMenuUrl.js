@@ -14,4 +14,20 @@ $(document).ready(function() {
     $('.allergy-info-button').on('click', function() {
         window.location.href = '/allergy_info';
     });
+
+    var logoutButton = document.getElementById('logoutButton');
+
+    logoutButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        sessionStorage.removeItem('loginToken');
+        Swal.fire( // 성공 알림
+            'Logout!',
+            'success logout.',
+            'success'
+        ).then((result) => {
+            if (result.value) {
+                window.location.href = '/login';
+            }
+        });
+    });
 });

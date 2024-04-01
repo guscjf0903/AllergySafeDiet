@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.api.entity.LoginEntity;
 import org.api.entity.FoodEntity;
 import org.api.entity.UserEntity;
 import org.api.exception.CustomException;

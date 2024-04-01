@@ -9,3 +9,14 @@
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+.logout-button-fixed {
+    position: fixed;
+    right: 20px;
+    z-index: 1000; /* 다른 컨텐츠 위에 나타나도록 설정 */
+    background-color: red; /* 빨간색 배경 */
+    color: white; /* 글자 색상은 흰색 */
+    padding: 10px 20px; /* 상하좌우 패딩 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    text-decoration: none; /* 밑줄 없앰 */
+    font-weight: bold; /* 글자 굵게 */
+}
