@@ -8,6 +8,10 @@ $(document).ready(function () {
         addPillToList('', ''); // 사용자가 새 알약 정보를 수동으로 추가할 수 있게 함
     });
 
+    $('.delete-menu').click(function() {
+        deleteHealthData();
+    });
+
     $('#healthPostForm').submit(function (e) {
         const healthData = {
             date: $("#postDate").val(),
@@ -18,7 +22,6 @@ $(document).ready(function () {
             healthNotes: $("#healthNotes").val(),
             pills: []
         };
-        console.log(healthData);
 
         $('#pillList .pill-container').each(function () {
             const pillName = $(this).find('input[type=text]').val();
@@ -143,6 +146,38 @@ function checkHealthData() {
             }
             $('#dataStatusMessage').text('데이터를 불러오는데 문제가 발생했습니다.');
             console.error(jqXHR);
+        }
+    });
+}
+
+function deleteHealthData() {
+    const postDate = $('#postDate').val(); // 날짜 입력 필드에서 날짜 가져오기
+    const apiUrl = $('#apiUrl').data('url');
+    $.ajax({
+        url: apiUrl + '/food_health_data/health?date=' + postDate,
+        type: "DELETE",
+        headers: {
+            'Authorization': sessionStorage.getItem("loginToken"),
+        },
+        contentType: 'application/json',
+        success: function () {
+            alert("건강데이터를 성공적으로 삭제하였습니다.");
+            window.location.href = '/food_health_data/select_date';
+        },
+        error: function (jqXHR) {
+            if (jqXHR.status === 401) {
+                Swal.fire(
+                    'Error!',
+                    '로그인이 되지 않았습니다.',
+                    'error'
+                ).then((result) => {
+                    if (result.value) {
+                        window.location.href = '/login';
+                    }
+                });
+            }
+            alert("건강데이터 삭제에 실패하였습니다.");
+            console.error('서버 요청 실패');
         }
     });
 }

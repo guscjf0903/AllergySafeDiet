@@ -1,11 +1,15 @@
 package org.api.service;
 
+import static org.api.exception.ErrorCodes.DELETE_FOOD_DATA_FAILED;
+import static org.api.exception.ErrorCodes.DELETE_HEALTH_DATA_FAILED;
+
 import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.HealthEntity;
 import org.api.entity.LoginEntity;
 import org.api.entity.UserEntity;
+import org.api.exception.CustomException;
 import org.api.repository.HealthRepository;
 import org.core.request.HealthRequest;
 import org.core.response.HealthResponse;
@@ -48,4 +52,14 @@ public class HealthRecordService {
                     supplementRecordService.putSupplementData(orgHealthEntity, healthRequest.pills());
                 });
     }
+
+    @Transactional
+    public void deleteHealthDataByDate(LocalDate date, UserEntity userEntity) {
+        try {
+            healthRepository.deleteHealthDataByHealthDateAndUserUserId(date, userEntity.getUserId());
+        } catch (Exception e) {
+            throw new CustomException(DELETE_HEALTH_DATA_FAILED);
+        }
+    }
+
 }

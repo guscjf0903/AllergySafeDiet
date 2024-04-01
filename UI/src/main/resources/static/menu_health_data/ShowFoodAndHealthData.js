@@ -106,7 +106,7 @@ function displayFoodData(data) {
     });
     $('.delete-menu').click(function() {
         const menuId = $(this).data('id');
-        // 메뉴 삭제 로직 실행
+        deleteFoodData(menuId);
     });
 }
 
@@ -137,4 +137,34 @@ function displayHealthData(data) {
 
     $('#healthData').html(htmlContent);
     $('#editHealthBtn').text('건강 데이터 수정'); // 데이터가 존재하므로 버튼 텍스트를 '수정'으로 변경
+}
+
+function deleteFoodData(menuId) {
+    $.ajax({
+        url: apiUrl + '/food_health_data/food?id=' + menuId,
+        type: "DELETE",
+        headers: {
+            'Authorization': sessionStorage.getItem("loginToken"),
+        },
+        contentType: 'application/json',
+        success: function () {
+            alert("식단을 성공적으로 삭제하였습니다.");
+            window.location.href = '/food_health_data/select_date';
+        },
+        error: function (jqXHR) {
+            if (jqXHR.status === 401) {
+                Swal.fire(
+                    'Error!',
+                    '로그인이 되지 않았습니다.',
+                    'error'
+                ).then((result) => {
+                    if (result.value) {
+                        window.location.href = '/login';
+                    }
+                });
+            }
+            alert("식단 삭제에 실패하였습니다.");
+            console.error('서버 요청 실패');
+        }
+    });
 }

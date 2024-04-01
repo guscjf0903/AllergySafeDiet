@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
-import org.api.exception.CustomException;
-import org.api.exception.ErrorCodes;
 import org.api.exception.JwtValidationException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
@@ -27,7 +25,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         try {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             String jwt = getJwtFromRequest(httpRequest);
-            if (jwt != null && !jwtConfig.validateToken(jwt)) {
+            if (jwt != null && jwtConfig.validateToken(jwt)) {
                 Long userId = jwtConfig.getUserIdFromJwtToken(jwt);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId,
                         null, Collections.emptyList());

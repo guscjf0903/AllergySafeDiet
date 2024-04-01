@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HealthRepository extends JpaRepository<HealthEntity, Long> {
     Optional<HealthEntity> getHealthDataByHealthDateAndUserUserId(LocalDate date, Long userId);
+    void deleteHealthDataByHealthDateAndUserUserId(LocalDate date, Long userId);
 }
 

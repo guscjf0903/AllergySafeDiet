@@ -1,10 +1,7 @@
 package org.api.config;
 
-import static org.api.exception.ErrorCodes.NOT_TOKEN;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -12,7 +9,6 @@ import java.util.function.Function;
 import org.api.exception.JwtValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.api.exception.CustomException;
 import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration

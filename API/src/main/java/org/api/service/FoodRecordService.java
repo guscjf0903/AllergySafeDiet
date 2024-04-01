@@ -1,5 +1,7 @@
 package org.api.service;
 
+import static org.api.exception.ErrorCodes.DELETE_FOOD_DATA_FAILED;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.api.entity.LoginEntity;
 import org.api.entity.FoodEntity;
 import org.api.entity.UserEntity;
+import org.api.exception.CustomException;
 import org.api.repository.FoodRepository;
 import org.core.request.FoodRequest;
 import org.core.response.FoodResponse;
@@ -23,7 +26,6 @@ public class FoodRecordService {
     @Transactional
     public FoodEntity saveFoodData(FoodRequest foodRequest, UserEntity user) {
         FoodEntity foodEntity = FoodEntity.of(user, foodRequest);
-
         foodRepository.save(foodEntity);
 
         return foodEntity;
@@ -56,6 +58,15 @@ public class FoodRecordService {
                     orgFoodEntity.foodEntityUpdate(foodRequest);
                     ingredientService.putIngredientData(orgFoodEntity, foodRequest);
                 });
+    }
+
+    @Transactional
+    public void deleteFoodData(Long id) {
+        try {
+            foodRepository.deleteByFoodRecordId(id);
+        } catch (Exception e) {
+            throw new CustomException(DELETE_FOOD_DATA_FAILED);
+        }
     }
 
     private FoodResponse toFoodResponse(FoodEntity foodEntity) {

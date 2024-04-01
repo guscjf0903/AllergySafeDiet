@@ -1,6 +1,7 @@
 package org.api.controller;
 
 import jakarta.validation.Valid;
+import java.awt.desktop.SystemSleepEvent;
 import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.core.response.FoodResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,7 +37,6 @@ public class FoodRecordController {
     public ResponseEntity<?> saveFoodAndIngredientData(@RequestBody @Valid FoodRequest foodRequest,
                                                        Authentication authentication) {
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
-
         FoodEntity foodEntity = foodRecordService.saveFoodData(foodRequest, user);
         ingredientService.saveIngredientData(foodEntity, foodRequest);
 
@@ -73,6 +74,14 @@ public class FoodRecordController {
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
 
         foodRecordService.putFoodData(id, foodRequest, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping(value = "/food")
+    public ResponseEntity<Void> deleteFoodDataById(@RequestParam(name = "id") Long id,
+                                                   Authentication authentication) {
+        foodRecordService.deleteFoodData(id);
+
         return ResponseEntity.ok().build();
     }
 
