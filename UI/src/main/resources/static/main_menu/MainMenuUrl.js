@@ -8,7 +8,7 @@ $(document).ready(function() {
     });
 
     $('.community-button').on('click', function() {
-        window.location.href = '/community';
+        window.location.href = '/post/list';
     });
 
     $('.allergy-info-button').on('click', function() {
