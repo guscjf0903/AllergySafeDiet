@@ -17,10 +17,19 @@
             <label for="postTitle" class="form-label">제목</label>
             <input type="text" class="form-control" id="postTitle" required>
         </div>
+
         <div class="mb-3">
             <label for="postContent" class="form-label">게시글</label>
             <textarea class="form-control" id="postContent" rows="3" required></textarea>
         </div>
+
+        <div class="mb-3">
+            <label for="postImages" class="form-label">사진</label>
+            <input type="file" class="form-control" id="postImages" accept="image/*" multiple>
+        </div>
+        <div id="imagePreviewContainer" class="d-flex flex-wrap"></div> <!-- 이미지 미리보기를 위한 컨테이너 -->
+
+
         <div class="mb-3">
             <label for="datePicker" class="form-label">날짜 선택</label>
             <input type="date" class="form-control" id="datePicker">

@@ -14,6 +14,27 @@ $(document).ready(function () {
         fetchDataForDate(selectedDate);
     });
 
+    $('#postImages').change(function(event){
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewHtml = `
+                    <div class="preview-wrapper me-2 position-relative" style="width: 35%; margin-top: 20px;">
+                        <img src="${e.target.result}" class="img-fluid" alt="Image Preview">
+                        <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close"></button>
+                    </div>
+                `;
+                $('#imagePreviewContainer').append(previewHtml);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    $('#imagePreviewContainer').on('click', '.btn-close', function(){
+        $(this).parent('.preview-wrapper').remove();
+    });
+
     $('#submitPost').click(function () {
         const postData = {
             title: $('#postTitle').val(),
