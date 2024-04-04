@@ -125,8 +125,7 @@ function displayHealthData(data) {
     }
 
     let htmlContent = `
-        <div>
-            <h3>건강 데이터 (${data.date})</h3>
+        <div데이터 (${data.date})</h3>
             <p><strong>알러지 수치:</strong> ${data.allergiesStatus}</p>
             <p><strong>컨디션 수치:</strong> ${data.conditionStatus}</p>
             <p><strong>몸무게:</strong> ${data.weight} kg</p>

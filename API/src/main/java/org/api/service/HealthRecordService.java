@@ -34,6 +34,7 @@ public class HealthRecordService {
         return healthRepository.getHealthDataByHealthDateAndUserUserId(date,
                         userEntity.getUserId())
                 .map(healthEntity -> new HealthResponse(
+                        healthEntity.getHealthRecordId(),
                         healthEntity.getHealthDate(),
                         healthEntity.getAllergiesStatus(),
                         healthEntity.getConditionStatus(),
