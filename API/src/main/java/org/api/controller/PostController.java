@@ -26,7 +26,7 @@ public class PostController {
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
         postService.saveUploadDetail(postRequest, user);
 
-
+        return ResponseEntity.ok().build();
     }
 
 }

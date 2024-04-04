@@ -4,8 +4,10 @@ import static org.api.exception.ErrorCodes.DELETE_FOOD_DATA_FAILED;
 import static org.api.exception.ErrorCodes.DELETE_HEALTH_DATA_FAILED;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.api.entity.FoodEntity;
 import org.api.entity.HealthEntity;
 import org.api.entity.LoginEntity;
 import org.api.entity.UserEntity;
@@ -43,6 +45,12 @@ public class HealthRecordService {
                         healthEntity.getHealthNotes(),
                         healthEntity.getPillsDtoList()
                 ));
+    }
+    @Transactional(readOnly = true)
+    public List<HealthEntity> getHealthDataByIds(List<Long> ids) {
+        Optional<List<HealthEntity>> getHealthEntities = healthRepository.findByHealthRecordIdIn(ids);
+        return getHealthEntities.orElse(null);
+
     }
 
     @Transactional

@@ -42,12 +42,12 @@ public class FoodRecordService {
                userEntity.getUserId());
         if (getFoodEntity.isEmpty()) {
             return Optional.empty();
-        } else {
-            List<FoodResponse> foodResponseList = getFoodEntity.get().stream()
-                    .map(this::toFoodResponse)
-                    .collect(Collectors.toList());
-            return Optional.of(foodResponseList);
         }
+        List<FoodResponse> foodResponseList = getFoodEntity.get().stream()
+                .map(this::toFoodResponse)
+                .collect(Collectors.toList());
+        return Optional.of(foodResponseList);
+
     }
 
     @Transactional
@@ -68,10 +68,17 @@ public class FoodRecordService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<FoodEntity> getFoodDataByIds(List<Long> ids) {
+        Optional<List<FoodEntity>> getFoodEntities = foodRepository.findByFoodRecordIdIn(ids);
+        return getFoodEntities.orElse(null);
+    }
+
     private FoodResponse toFoodResponse(FoodEntity foodEntity) {
         return FoodResponse.toResponse(
                 foodEntity.getFoodRecordId(), foodEntity.getFoodDate(), foodEntity.getMealType(),
                 foodEntity.getMealTime(), foodEntity.getFoodName(), foodEntity.getIngredientsDtoList(),
                 foodEntity.getFoodNotes());
     }
+
 }

@@ -31,6 +31,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(postData),
             success: function(data) {
+                console.log("title: " + postData.title + "content: " + postData.content +
+                    "foodIds: " + postData.foodIds + "healthIds: " + postData.healthId);
                 alert("게시물을 업로드 하였습니다.");
                 window.location.href = '/post/list';
             },

@@ -35,13 +35,12 @@ public class PostHealthEntity {
     @JoinColumn(name = "health_id", nullable = false)
     private HealthEntity health;
 
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private Long createdAt;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = Instant.now().toEpochMilli();
+        createdAt = Instant.now().toEpochMilli();
     }
 
     public PostHealthEntity(PostEntity post, HealthEntity health) {

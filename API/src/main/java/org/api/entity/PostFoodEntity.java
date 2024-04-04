@@ -35,14 +35,11 @@ public class PostFoodEntity {
     @JoinColumn(name = "food_id", nullable = false)
     private FoodEntity food;
 
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private Long createdAt;
 
     @PrePersist
-    protected void onCreate() {
-        this.createdAt = Instant.now().toEpochMilli();
-    }
+    protected void onCreate() { createdAt = Instant.now().toEpochMilli(); }
 
     public PostFoodEntity(PostEntity post, FoodEntity food) {
         this.post = post;

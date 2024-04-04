@@ -13,4 +13,6 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
 
     void deleteByFoodRecordId(Long id);
 
+    Optional<List<FoodEntity>> findByFoodRecordIdIn(List<Long> ids);
+
 }
