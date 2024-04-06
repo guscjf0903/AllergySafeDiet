@@ -27,12 +27,15 @@ spring:
         - openApi
         - gmail
         - redis
+        - s3
       prod:
         - db-prod
         - openinview-prod
         - gmail
         - openApi
         - redis
+        - s3
+
 
     include:
       - db

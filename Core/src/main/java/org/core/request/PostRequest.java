@@ -10,7 +10,7 @@ public record PostRequest(
         @NotNull
         String content,
         List<Long> foodIds,
-        List<Long>healthId,
+        List<Long> healthIds,
         List<MultipartFile> images
 
 ){}

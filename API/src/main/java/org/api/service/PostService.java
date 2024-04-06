@@ -55,7 +55,7 @@ public class PostService {
     }
 
     private void savePostHealth(PostEntity postEntity, PostRequest postRequest) {
-        List<HealthEntity> healthEntities = healthRecordService.getHealthDataByIds(postRequest.healthId());
+        List<HealthEntity> healthEntities = healthRecordService.getHealthDataByIds(postRequest.healthIds());
         if(healthEntities.isEmpty()) {
             return;
         }

@@ -37,14 +37,20 @@ $(document).ready(function () {
 
     $('#submitPost').click(function () {
         const formData = new FormData();
-        formData.append('title', $('#postTitile'.val()))
+        formData.append('title', $('#postTitle').val());
         formData.append('content', $('#postContent').val());
-        formData.append('foodIds', JSON.stringify(selectedData.food.map(food => food.id)));
-        formData.append('healthId', JSON.stringify(selectedData.health.map(health => health.id)));
+        const foodIds = selectedData.food.map(food => food.id);
+        foodIds.forEach(id => {
+            formData.append('foodIds', id);
+        });
+        const healthIds = selectedData.health.map(health => health.id);
+        healthIds.forEach(id => {
+            formData.append('healthIds', id);
+        });
 
         const images = $('#postImages')[0].files;
         for (let i = 0; i < images.length; i++) {
-            formData.append('images[]', images[i]);
+            formData.append('images', images[i]);
         }
 
         $.ajax({
@@ -56,7 +62,7 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             data: formData,
-            success: function(data) {
+            success: function() {
                 alert("게시물을 업로드 하였습니다.");
                 window.location.href = '/post/list';
             },

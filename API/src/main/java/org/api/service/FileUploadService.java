@@ -3,10 +3,8 @@ package org.api.service;
 import static org.api.exception.ErrorCodes.AWS_S3_UPLOAD_FAILED;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +23,8 @@ public class FileUploadService {
     private String bucketName;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
+        System.out.println(files);
+
         if (files == null || files.isEmpty() || files.stream().allMatch(MultipartFile::isEmpty)) {
             return Collections.emptyList();
         }
