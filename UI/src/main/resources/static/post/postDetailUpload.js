@@ -36,12 +36,16 @@ $(document).ready(function () {
     });
 
     $('#submitPost').click(function () {
-        const postData = {
-            title: $('#postTitle').val(),
-            content: $('#postContent').val(),
-            foodIds: selectedData.food.map(food => food.id),
-            healthId: selectedData.health.map(health => health.id),
-        };
+        const formData = new FormData();
+        formData.append('title', $('#postTitile'.val()))
+        formData.append('content', $('#postContent').val());
+        formData.append('foodIds', JSON.stringify(selectedData.food.map(food => food.id)));
+        formData.append('healthId', JSON.stringify(selectedData.health.map(health => health.id)));
+
+        const images = $('#postImages')[0].files;
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images[]', images[i]);
+        }
 
         $.ajax({
             url: apiUrl + "/post/upload",
@@ -49,11 +53,10 @@ $(document).ready(function () {
             headers: {
                 'Authorization': sessionStorage.getItem("loginToken"),
             },
-            contentType: 'application/json',
-            data: JSON.stringify(postData),
+            processData: false,
+            contentType: false,
+            data: formData,
             success: function(data) {
-                console.log("title: " + postData.title + "content: " + postData.content +
-                    "foodIds: " + postData.foodIds + "healthIds: " + postData.healthId);
                 alert("게시물을 업로드 하였습니다.");
                 window.location.href = '/post/list';
             },
@@ -61,7 +64,6 @@ $(document).ready(function () {
                 handleAjaxError(jqXHR);
             }
         });
-        console.log("제목:", title, "내용:", content, "선택된 데이터 Ids:", dataIds);
     });
 });
 

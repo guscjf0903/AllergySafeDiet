@@ -22,7 +22,8 @@ public enum ErrorCodes {
     NOT_TOKEN(403, "존재하지않는 토큰입니다."),
     ENCRYPTION_ERROR(500, "암호화 코드 생성에 실패하였습니다."),
     DECRYPTION_ERROR(500, "암호화 코드 해석에 실패하였습니다."),
-    POST_UPLOAD_FAILED(500, "게시글 업로드 중 문제가 발생하였습니다.");
+    POST_UPLOAD_FAILED(500, "게시글 업로드 중 문제가 발생하였습니다."),
+    AWS_S3_UPLOAD_FAILED(500, "이미지 업로드 중 문제가 발생하였습니다.");
 
 
 
