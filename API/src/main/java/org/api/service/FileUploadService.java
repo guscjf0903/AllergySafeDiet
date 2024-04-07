@@ -23,16 +23,15 @@ public class FileUploadService {
     private String bucketName;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
-        System.out.println(files);
-
-        if (files == null || files.isEmpty() || files.stream().allMatch(MultipartFile::isEmpty)) {
+        if (files == null || files.isEmpty()) {
             return Collections.emptyList();
         }
         try{
             List<String> fileUrls = new ArrayList<>();
 
             for (MultipartFile file : files) {
-                String fileKey = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+                System.out.println("client file test : " + file);
+                String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentLength(file.getSize());
                 amazonS3Client.putObject(new PutObjectRequest(bucketName, fileKey, file.getInputStream(), metadata));
