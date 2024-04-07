@@ -1,6 +1,7 @@
 package org.api.controller;
 
 import jakarta.validation.Valid;
+import java.net.ServerSocket;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
@@ -11,10 +12,10 @@ import org.core.request.PostRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,8 +26,14 @@ public class PostController {
     private final FileUploadService fileUploadService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Void> saveUploadDetail(@ModelAttribute PostRequest postRequest,
-                                           Authentication authentication) {
+    public ResponseEntity<Void> saveUploadDetail(@RequestParam("title") String title,
+                                                 @RequestParam("content") String content,
+                                                 @RequestParam(value = "foodIds", required = false) List<Long> foodIds,
+                                                 @RequestParam(value = "healthIds", required = false) List<Long> healthIds,
+                                                 @RequestParam(value = "images", required = false) List<MultipartFile> images,
+                                                 Authentication authentication) {
+        PostRequest postRequest = new PostRequest(title, content, foodIds, healthIds, images);
+
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
         List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
         postService.saveUploadDetail(postRequest, user, fileUrls);
