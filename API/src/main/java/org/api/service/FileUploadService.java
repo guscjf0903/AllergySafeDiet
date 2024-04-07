@@ -3,6 +3,7 @@ package org.api.service;
 import static org.api.exception.ErrorCodes.AWS_S3_UPLOAD_FAILED;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.util.ArrayList;
@@ -30,11 +31,13 @@ public class FileUploadService {
             List<String> fileUrls = new ArrayList<>();
 
             for (MultipartFile file : files) {
-                System.out.println("client file test : " + file);
                 String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentLength(file.getSize());
-                amazonS3Client.putObject(new PutObjectRequest(bucketName, fileKey, file.getInputStream(), metadata));
+                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(), metadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead);
+
+                amazonS3Client.putObject(putObjectRequest);
                 String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
                 fileUrls.add(fileUrl);
             }

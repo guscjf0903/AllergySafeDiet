@@ -1,7 +1,5 @@
 package org.api.controller;
 
-import jakarta.validation.Valid;
-import java.net.ServerSocket;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
