@@ -34,10 +34,11 @@ public class RecipeApiClient {
 //    }
 
     public int getRecipeIdByName(String foodName) throws IOException {
-        String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO", foodName);
+        String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO",
+                foodName);
         RecipeResponse response = objectMapper.readValue(jsonString, RecipeResponse.class);
 
-        if(response.getRecipeId() == 0) {
+        if (response.getRecipeId() == 0) {
             throw new CustomException(NOT_FOUND_RECIPE);
         }
 
@@ -45,13 +46,13 @@ public class RecipeApiClient {
     }
 
     public List<String> getIngredientsByRecipeId(int recipeId) throws IOException {
-        String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID", recipeId);
+        String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID",
+                recipeId);
         ObjectMapper objectMapper = new ObjectMapper();
         IngredientResponse response = objectMapper.readValue(jsonString, IngredientResponse.class);
 
         return response.getIngredientNames();
     }
-
 
 //    public int getRecipeIdByName(String foodName) throws IOException {
 //        String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO", foodName);

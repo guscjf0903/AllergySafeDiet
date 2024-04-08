@@ -14,11 +14,11 @@ public class IngredientResponse {
 
     @SuppressWarnings("unchecked")
     @JsonProperty("Grid_20150827000000000227_1")
-    private void unpackNested(Map<String,Object> grid) {
-        List<Map<String,Object>> rows = (List<Map<String,Object>>)grid.get("row");
+    private void unpackNested(Map<String, Object> grid) {
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) grid.get("row");
         if (rows != null) {
             for (Map<String, Object> row : rows) {
-                String ingredientName = (String)row.get("IRDNT_NM");
+                String ingredientName = (String) row.get("IRDNT_NM");
                 ingredientNames.add(ingredientName);
             }
         }

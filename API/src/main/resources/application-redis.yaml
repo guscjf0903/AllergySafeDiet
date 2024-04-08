@@ -14,5 +14,5 @@ spring:
       on-profile: prod
   data:
     redis:
-      host:
+      host: 172.16.72.131
       port: 6379

@@ -10,13 +10,14 @@ import lombok.Setter;
 @Setter
 public class RecipeResponse {
     private int recipeId;
+
     @SuppressWarnings("unchecked")
     @JsonProperty("Grid_20150827000000000226_1")
-    private void unpackNested(Map<String,Object> grid) {
-        List<Map<String,Object>> rows = (List<Map<String,Object>>)grid.get("row");
+    private void unpackNested(Map<String, Object> grid) {
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) grid.get("row");
         if (!rows.isEmpty()) {
             Map<String, Object> firstRow = rows.get(0);
-            this.recipeId = (Integer)firstRow.get("RECIPE_ID");
+            this.recipeId = (Integer) firstRow.get("RECIPE_ID");
         }
     }
 }
