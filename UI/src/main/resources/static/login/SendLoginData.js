@@ -26,9 +26,9 @@ $(document).ready(function() {
                     }
                 });
             },
-            error: function(jqXHR) { // `jqXHR` 객체를 통해 에러 정보 접근
+            error: function(jqXHR) {
                 if (jqXHR.status === 400) {
-                    Swal.fire( // 성공 알림
+                    Swal.fire(
                         'Error!',
                         '없는 사용자이거나 비밀번호가 일치하지 않습니다',
                         'error'

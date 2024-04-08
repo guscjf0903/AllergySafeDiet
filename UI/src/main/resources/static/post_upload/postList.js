@@ -24,7 +24,8 @@ function fetchPosts() {
         error: function(err) {
             console.error('Error fetching posts:', err);
         }
-    });}
+    });
+}
 
 function displayPosts(posts) {
     var postList = $('#postList');

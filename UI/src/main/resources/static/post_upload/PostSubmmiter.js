@@ -36,7 +36,7 @@ class PostSubmitter {
             data: formData,
             success: () => {
                 alert("게시물을 업로드 하였습니다.");
-                window.location.href = '/post/list';
+                window.location.href = '/list';
             },
             error: (jqXHR) => {
                 handleAjaxError(jqXHR);

@@ -27,14 +27,15 @@ public class FileUploadService {
         if (files == null || files.isEmpty()) {
             return Collections.emptyList();
         }
-        try{
+        try {
             List<String> fileUrls = new ArrayList<>();
 
             for (MultipartFile file : files) {
                 String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentLength(file.getSize());
-                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(), metadata)
+                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(),
+                        metadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead);
 
                 amazonS3Client.putObject(putObjectRequest);

@@ -1,0 +1,8 @@
+.back-to-list a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.back-to-list a:hover {
+    text-decoration: underline;
+}
