@@ -7,6 +7,7 @@ import org.api.service.FileUploadService;
 import org.api.service.PostService;
 import org.api.service.UserService;
 import org.core.request.PostRequest;
+import org.core.response.PostDetailResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -41,8 +42,10 @@ public class PostController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<?> getPostDetailData(@RequestParam("postId") Long postId) {
-        void;
+    public ResponseEntity<PostDetailResponse> getPostDetailData(@RequestParam("postId") Long postId) {
+        PostDetailResponse postDetailResponse = postService.getPostDetail(postId);
+
+        return ResponseEntity.ok().body(postDetailResponse);
     }
 
 
