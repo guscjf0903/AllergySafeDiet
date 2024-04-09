@@ -26,4 +26,8 @@ spring:
   config:
     activate:
       on-profile: profile2
+api:
+  url: http://localhost:7777
 
+ui:
+  url: http://localhost:8888
