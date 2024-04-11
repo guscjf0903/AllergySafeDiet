@@ -48,14 +48,14 @@ function fetchPostDetails(postId) {
         url: `https://your-api-endpoint.com/posts/${postId}`, // 실제 API 엔드포인트로 대체해야 합니다.
         method: 'GET',
         success: function(data) {
-            displayPostDetails(data);
+            //displayPostDetails(data);
         },
         error: function(err) {
             console.error(`Error fetching post details for post ${postId}:`, err);
         }
     });}
 
-function displayPostDetails(post) {
-    // 게시물 상세 정보를 표시하는 코드...
-    // 예: 모달 팝업, 새 페이지, 페이지 내 세부 섹션 등
-}
+// function displayPostDetails(post) {
+//     // 게시물 상세 정보를 표시하는 코드...
+//     // 예: 모달 팝업, 새 페이지, 페이지 내 세부 섹션 등
+// }

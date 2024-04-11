@@ -18,12 +18,6 @@ class PostSubmitter {
         selectedFiles.forEach((file, index) => {
             formData.append(`images`, file);
         });
-        console.log(selectedFiles.length);
-        const allImages = formData.getAll('images[0]');
-        const allImages2 = formData.getAll('images[1]');
-
-        console.log(allImages);
-        console.log(allImages2);
 
         $.ajax({
             url: this.apiUrl + "/post/upload",
