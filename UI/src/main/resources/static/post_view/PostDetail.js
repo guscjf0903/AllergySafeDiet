@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
     var postId = getPostIdFromUrl();
     fetchPostDetails(postId);
 });
@@ -8,16 +8,20 @@ function getPostIdFromUrl() {
 }
 
 function fetchPostDetails(postId) {
+    var apiUrl = $('#apiUrl').data('url');
     $.ajax({
-        url: apiUrl + "?postId=" + postId,
+        url: apiUrl + "/post/detail?postId=" + postId,
         method: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem("loginToken"),
         },
-        success: function(data) {
+        xhrFields: {
+            withCredentials: true // 클라이언트와 서버가 통신할때 쿠키 값을 공유하겠다는 설정
+        },
+        success: function (data) {
             displayPostDetails(data);
         },
-        error: function(error) {
+        error: function (error) {
             Swal.fire(
                 'Error!',
                 '게시물이 존재하지 않습니다.',
@@ -29,23 +33,25 @@ function fetchPostDetails(postId) {
 }
 
 function displayPostDetails(data) {
-    // 제목과 내용 채우기
     $('#postTitle').text(data.title);
     $('#postContent').text(data.content);
+    $('#postAuthor').text(data.author);
+    $('#postDate').text(data.date);
+    $('#postViews').text(data.views);
 
-    // 이미지 채우기
     if (data.images && data.images.length > 0) {
         let carouselInner = $('<div class="carousel-inner"></div>');
         data.images.forEach((image, index) => {
             let itemClass = (index === 0) ? 'carousel-item active' : 'carousel-item';
+            let imgUrl = image;
             let carouselItem = $(`
                 <div class="${itemClass}">
-                    <img src="${image.url}" class="d-block w-100" alt="...">
+                    <img src="${imgUrl}" class="d-block w-100" alt="Image" style="max-width: 50%; height: auto;">
                 </div>
             `);
             carouselInner.append(carouselItem);
         });
-        $('#postImages').append(carouselInner);
+        $('#postImages').empty().append(carouselInner);
         $('#postImages').append(`
             <a class="carousel-control-prev" href="#postImages" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -58,46 +64,71 @@ function displayPostDetails(data) {
         `);
     }
 
-    // 건강 데이터 테이블 채우기
-    if (data.healthData && data.healthData.length > 0) {
-        let healthTableRows = data.healthData.map(health => `
+    if (data.healthDataList && data.healthDataList.length > 0) {
+        let healthTableRows = data.healthDataList.map(health => {
+            let pillsList = health.pills.map(pill =>
+                `<li>${pill.name} - (${pill.count}개)</li>`
+            ).join('');
+            pillsList = `<ul>${pillsList}</ul>`;
+
+            return `
             <tr>
                 <td>${health.date}</td>
+                <td>${health.allergiesStatus}</td>
+                <td>${health.conditionStatus}</td>
                 <td>${health.weight}kg</td>
                 <td>${health.sleepTime}시간</td>
                 <td>${health.healthNotes}</td>
+                <td>${pillsList}</td> 
             </tr>
-        `).join('');
+        `;
+        }).join('');
+
         $('#healthData').html(`
-            <thead>
-                <tr>
-                    <th>날짜</th>
-                    <th>체중</th>
-                    <th>수면 시간</th>
-                    <th>메모</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${healthTableRows}
-            </tbody>
-        `);
+        <thead>
+            <tr>
+                <th>날짜</th>
+                <th>알러지 상태</th>
+                <th>건강 상태</th>
+                <th>체중</th>
+                <th>수면 시간</th>
+                <th>특이사항</th>
+                <th>알약 정보</th> 
+            </tr>
+        </thead>
+        <tbody>
+            ${healthTableRows}
+        </tbody>
+    `);
     }
 
-    // 음식 데이터 테이블 채우기
-    if (data.foodData && data.foodData.length > 0) {
-        let foodTableRows = data.foodData.map(food => `
+    if (data.foodDataList && data.foodDataList.length > 0) {
+        let foodTableRows = data.foodDataList.map(food => {
+            let ingredientsList = food.ingredients.map(
+                ingredient => ingredient.ingredientName).join(', ');
+
+            ingredientsList = `<ul>${ingredientsList}</ul>`;
+            return`
             <tr>
                 <td>${food.date}</td>
                 <td>${food.mealType}</td>
+                <td>${food.mealTime}</td>
                 <td>${food.foodName}</td>
+                <td>${ingredientsList}</td>                
+                <td>${food.foodNotes}</td>
             </tr>
-        `).join('');
+        `;
+        }).join('');
+
         $('#foodData').html(`
             <thead>
                 <tr>
                     <th>날짜</th>
-                    <th>식사 유형</th>
-                    <th>음식명</th>
+                    <th>식사 종류</th>
+                    <th>식사 시간</th>
+                    <th>음식 이름</th>
+                    <th>원재료</th>
+                    <th>특이사항</th>
                 </tr>
             </thead>
             <tbody>

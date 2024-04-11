@@ -24,7 +24,7 @@ import lombok.Setter;
 public class PostImageUrlEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_imageUrl_id")
+    @Column(name = "post_image_id")
     private Long postImageUrlId;
 
     @ManyToOne

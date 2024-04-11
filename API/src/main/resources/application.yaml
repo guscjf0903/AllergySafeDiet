@@ -13,7 +13,7 @@ spring:
     properties:
       hibernate:
     open-in-view: false
-    show-sql: true
+    show-sql: false
   h2:
     console:
       enabled: true

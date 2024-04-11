@@ -1,5 +1,7 @@
 package org.api.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
@@ -42,8 +44,8 @@ public class PostController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<PostDetailResponse> getPostDetailData(@RequestParam("postId") Long postId) {
-        PostDetailResponse postDetailResponse = postService.getPostDetail(postId);
+    public ResponseEntity<PostDetailResponse> getPostDetailData(@RequestParam("postId") Long postId, HttpServletRequest request, HttpServletResponse response) {
+        PostDetailResponse postDetailResponse = postService.getPostDetail(postId,request, response);
 
         return ResponseEntity.ok().body(postDetailResponse);
     }
