@@ -63,12 +63,15 @@ public class PostService {
             throw new CustomException(POST_UPLOAD_FAILED);
         }
     }
+    @Transactional(readOnly = true)
+    public PostEntity getPostEntityFindById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
+    }
 
     @Transactional
     public PostDetailResponse getPostDetail(Long postId, HttpServletRequest request, HttpServletResponse response) {
-        PostEntity postEntity = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
-
+        PostEntity postEntity = getPostEntityFindById(postId);
 
         List<FoodEntity> foodEntities = getPostFoodDetailData(postId);
         List<HealthEntity> healthEntities = getPostHealthDetailData(postId);

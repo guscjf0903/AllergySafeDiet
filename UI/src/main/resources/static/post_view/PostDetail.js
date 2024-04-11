@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var postId = getPostIdFromUrl();
     fetchPostDetails(postId);
+    fetchComments(postId);
 });
 
 function getPostIdFromUrl() {

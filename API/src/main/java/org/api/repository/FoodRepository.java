@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.api.entity.FoodEntity;
 import org.api.entity.HealthEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
     Optional<List<FoodEntity>> getFoodDataByFoodDateAndUserUserId(LocalDate date, Long userId);
     Optional<FoodEntity> getFoodDataByFoodRecordIdAndUserUserId(Long id, Long userId);
