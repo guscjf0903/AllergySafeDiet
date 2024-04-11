@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
 import org.api.service.FileUploadService;
-import org.api.service.PostService;
+import org.api.service.post.PostService;
 import org.api.service.UserService;
 import org.core.request.PostRequest;
 import org.core.response.PostDetailResponse;
@@ -37,8 +37,7 @@ public class PostController {
         PostRequest postRequest = new PostRequest(title, content, foodIds, healthIds, images);
 
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
-        List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
-        postService.saveUploadDetail(postRequest, user, fileUrls);
+        postService.saveUploadDetail(postRequest, user);
 
         return ResponseEntity.ok().build();
     }
