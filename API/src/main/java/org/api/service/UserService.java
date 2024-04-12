@@ -37,7 +37,6 @@ public class UserService implements UserDetailsService {
         String encryptUserPk = encryptionUtil.encrypt(userRepository.save(user).getUserId().toString());
         SignupResponse signupResponse = SignupResponse.toResponse(encryptUserPk);
 
-        System.out.println("Test : " + encryptionUtil.decrypt(encryptUserPk));
 
         return Optional.of(signupResponse);
     }
