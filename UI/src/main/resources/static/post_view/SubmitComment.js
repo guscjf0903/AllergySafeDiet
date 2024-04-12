@@ -14,10 +14,11 @@ $('#submitComment').click(function() {
         headers: {
             'Authorization': sessionStorage.getItem("loginToken"),
         },
-        data: {
+        contentType: 'application/json',
+        data: JSON.stringify({
             postId: postId,
-            text: commentText
-        },
+            commentText: commentText
+        }),
         success: function() {
             fetchComments(postId);
             $('#commentText').val(''); // 입력 필드를 비우기
