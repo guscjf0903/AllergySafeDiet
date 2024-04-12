@@ -36,7 +36,6 @@ public class VerificationCodeService {
             throw new CustomException(DUPLICATE_EMAIL);
         }
         String code = createCodeAndSaveRedis(email);
-        System.out.println(code);
         mailService.sendMail(email, EMAIL_VERIFICATION_SUBJECT, code);
     }
 

@@ -8,9 +8,9 @@ public record CommentResponse(
         String author,
         String text,
         boolean isAuthor,
-        List<replyResponse> replies
+        List<ReplyResponse> replies
 ) {
-    public static CommentResponse toResponse(long id, String author, String text, boolean isAuthor, List<replyResponse> replies) {
+    public static CommentResponse toResponse(long id, String author, String text, boolean isAuthor, List<ReplyResponse> replies) {
         return new CommentResponse(id, author, text, isAuthor, replies);
     }
 }

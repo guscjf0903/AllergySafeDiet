@@ -6,6 +6,7 @@ import org.api.entity.UserEntity;
 import org.api.service.CommentService;
 import org.api.service.UserService;
 import org.core.request.CommentRequest;
+import org.core.request.ReplyRequest;
 import org.core.response.CommentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,15 @@ public class CommentController {
         List<CommentResponse> comments = commentService.getCommentAndReplyByPostId(postId);
 
         return ResponseEntity.ok(comments);
+    }
+
+    @PostMapping("/reply")
+    public ResponseEntity<Void> postReply(@RequestBody ReplyRequest replyRequest,
+                                            Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+        commentService.postReply(replyRequest ,user);
+
+        return ResponseEntity.ok().build();
     }
 
 }
