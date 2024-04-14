@@ -48,7 +48,6 @@ public class RecipeApiClient {
     public List<String> getIngredientsByRecipeId(int recipeId) throws IOException {
         String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID",
                 recipeId);
-        ObjectMapper objectMapper = new ObjectMapper();
         IngredientResponse response = objectMapper.readValue(jsonString, IngredientResponse.class);
 
         return response.getIngredientNames();
