@@ -2,21 +2,17 @@ package org.api.config;
 
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.CacheManager;
+import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -31,38 +27,46 @@ public class CacheConfig {
     private int port;
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                .entryTtl(Duration.ofHours(1));
+    public RedisCacheConfiguration redisCacheConfiguration() {
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
 
-        // 'recipes' 캐시의 TTL을 2시간으로 설정
-        RedisCacheConfiguration recipesCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                .entryTtl(Duration.ofHours(1));
-
-        Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put("recipes", recipesCacheConfiguration);
-
-        return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(defaultCacheConfig)
-                .withInitialCacheConfigurations(cacheConfigurations)
-                .build();
+        return RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(60))
+                .disableCachingNullValues()
+                .serializeKeysWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
+                )
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(serializer)
+                );
     }
 
-
-
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+    public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
 
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
-        return template;
+        return (builder) -> builder
+                .withCacheConfiguration("recipes",
+                        RedisCacheConfiguration.defaultCacheConfig()
+                                .computePrefixWith(cacheName -> "prefix::" + cacheName + "::")
+                                .entryTtl(Duration.ofHours(2))
+                                .disableCachingNullValues()
+                                .serializeKeysWith(
+                                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
+                                )
+                                .serializeValuesWith(
+                                        RedisSerializationContext.SerializationPair.fromSerializer(serializer)
+                                ))
+                .withCacheConfiguration("verificationCode",
+                        RedisCacheConfiguration.defaultCacheConfig()
+                                .entryTtl(Duration.ofSeconds(360))
+                                .disableCachingNullValues()
+                                .serializeKeysWith(
+                                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
+                                )
+                                .serializeValuesWith(
+                                        RedisSerializationContext.SerializationPair.fromSerializer(serializer)
+                                ));
     }
 
     @Bean
