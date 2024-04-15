@@ -38,7 +38,7 @@ spring:
         - gmail
         - openApi
         - redis
-        - s3
+        - s3-prod
 
 
     include:

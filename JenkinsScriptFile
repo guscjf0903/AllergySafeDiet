@@ -20,10 +20,10 @@ pipeline {
         }
         stage('S3Credential') {
                 steps {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials']]) {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                         sh '''
                         echo "Access key: $AWS_ACCESS_KEY_ID"
-                        echo "Secret key: $AWS_SECRET_ACCESS_SECRET"
+                        echo "Secret key: $AWS_SECRET_ACCESS_KEY"
                         '''
                 }
             }
@@ -58,7 +58,7 @@ pipeline {
                 echo 'Build Docker UI'
                 dir('UI') {
                     script {
-                        dockerImageUI = docker.build("${repository}:UI")
+                        dockerImageUI = docker.build("${repository}:UI --build-arg AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}")
                     }
                 }
             }

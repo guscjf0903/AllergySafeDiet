@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.api.exception.CustomException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileUploadService {
     private final AmazonS3Client amazonS3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
 
     public List<String> uploadFiles(List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
@@ -31,8 +35,7 @@ public class FileUploadService {
                 String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentLength(file.getSize());
-                //@Value("${cloud.aws.s3.bucket}")
-                String bucketName = "allergysafe-bucket";
+
                 PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(),
                         metadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead);
