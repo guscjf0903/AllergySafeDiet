@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
-import org.api.service.FileUploadService;
+//import org.api.service.FileUploadService;
 import org.api.service.post.PostService;
 import org.api.service.UserService;
 import org.core.request.PostRequest;
@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
-    private final FileUploadService fileUploadService;
+    //private final FileUploadService fileUploadService;
 
     @PostMapping("/upload")
     public ResponseEntity<Void> saveUploadDetail(@RequestParam("title") String title,

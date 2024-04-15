@@ -23,7 +23,6 @@ import org.api.repository.PostFoodRepository;
 import org.api.repository.PostHealthRepository;
 import org.api.repository.PostImageUrlRepository;
 import org.api.repository.PostRepository;
-import org.api.service.FileUploadService;
 import org.api.service.FoodRecordService;
 import org.api.service.HealthRecordService;
 import org.api.service.SaveS3UrlService;
@@ -44,7 +43,7 @@ public class PostService {
     private final PostImageUrlRepository postImageUrlRepository;
     private final PostFoodService postFoodService;
     private final PostHealthService postHealthService;
-    private final FileUploadService fileUploadService;
+    //private final FileUploadService fileUploadService;
     private final SaveS3UrlService s3UrlService;
 
 

@@ -16,39 +16,39 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
-@RequiredArgsConstructor
-public class FileUploadService {
-    private final AmazonS3Client amazonS3Client;
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucketName;
-
-    public List<String> uploadFiles(List<MultipartFile> files) {
-        if (files == null || files.isEmpty()) {
-            return Collections.emptyList();
-        }
-        try {
-            List<String> fileUrls = new ArrayList<>();
-
-            for (MultipartFile file : files) {
-                String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
-                ObjectMetadata metadata = new ObjectMetadata();
-                metadata.setContentLength(file.getSize());
-
-                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(),
-                        metadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead);
-
-                amazonS3Client.putObject(putObjectRequest);
-                String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
-                fileUrls.add(fileUrl);
-            }
-
-            return fileUrls;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new CustomException(AWS_S3_UPLOAD_FAILED);
-        }
-    }
-}
+//@Service
+//@RequiredArgsConstructor
+//public class FileUploadService {
+//    private final AmazonS3Client amazonS3Client;
+//
+//    @Value("${cloud.aws.s3.bucket}")
+//    private String bucketName;
+//
+//    public List<String> uploadFiles(List<MultipartFile> files) {
+//        if (files == null || files.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//        try {
+//            List<String> fileUrls = new ArrayList<>();
+//
+//            for (MultipartFile file : files) {
+//                String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
+//                ObjectMetadata metadata = new ObjectMetadata();
+//                metadata.setContentLength(file.getSize());
+//
+//                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(),
+//                        metadata)
+//                        .withCannedAcl(CannedAccessControlList.PublicRead);
+//
+//                amazonS3Client.putObject(putObjectRequest);
+//                String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
+//                fileUrls.add(fileUrl);
+//            }
+//
+//            return fileUrls;
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            throw new CustomException(AWS_S3_UPLOAD_FAILED);
+//        }
+//    }
+//}
