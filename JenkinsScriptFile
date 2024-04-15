@@ -85,7 +85,7 @@ pipeline {
                 }
             }
         }
-        }
+
 
         stage('Push Docker UI') {
             steps {
