@@ -1,19 +1,8 @@
 pipeline {
     environment {
         repository = "majanada2/allergesafediet_app"
-        AWS_ACCESS_KEY_ID = credentials('AWS_S3_Credentials')[0]
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_S3_Credentials')[1]
     }
-    stages {
-        stage('Deploy') {
-            steps {
-                script {
-                    sh 'echo $AWS_ACCESS_KEY_ID'
-                    sh 'echo $AWS_SECRET_ACCESS_KEY'
-                }
-            }
-        }
-    }
+
     agent any
     stages {
         stage('Checkout') {
@@ -26,6 +15,18 @@ pipeline {
                 }
                 failure {
                     error 'This pipeline stops here...'
+                }
+            }
+        }
+        stages {
+            stage('S3Credential') {
+                steps {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials']]) {
+                        sh '''
+                        echo "Access key: $AWS_ACCESS_KEY_ID"
+                        echo "Secret key: $AWS_SECRET_ACCESS_SECRET"
+                        '''
+                    }
                 }
             }
         }
