@@ -58,7 +58,7 @@ pipeline {
                 echo 'Build Docker UI'
                 dir('UI') {
                     script {
-                        dockerImageUI = docker.build("${repository}:UI --build-arg AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}")
+                        dockerImageUI = docker.build("${repository}:UI")
                     }
                 }
             }
@@ -81,7 +81,7 @@ pipeline {
                 echo 'API'
                 dir('API') {
                     script {
-                        dockerImageAPI = docker.build("${repository}:API")
+                        dockerImageAPI = docker.build("${repository}:API --build-arg AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}")
                     }
                 }
             }
