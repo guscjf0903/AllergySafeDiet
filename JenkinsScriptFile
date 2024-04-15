@@ -18,16 +18,6 @@ pipeline {
                 }
             }
         }
-        stage('S3Credential') {
-                steps {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        sh '''
-                        echo "Access key: $AWS_ACCESS_KEY_ID"
-                        echo "Secret key: $AWS_SECRET_ACCESS_KEY"
-                        '''
-                }
-            }
-        }
 
         stage('Build gradle') {
             steps {
@@ -93,6 +83,7 @@ pipeline {
                     error 'This pipeline stops here...'
                 }
             }
+        }
         }
 
         stage('Push Docker UI') {
