@@ -56,9 +56,9 @@ public class PostService {
 
             postFoodService.savePostFood(postEntity, postRequest);
             postHealthService.savePostHealth(postEntity, postRequest);
-            List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
+            //List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
 
-            s3UrlService.savePostImageUrl(postEntity, fileUrls);
+            //s3UrlService.savePostImageUrl(postEntity, fileUrls);
         } catch (Exception e) {
             throw new CustomException(POST_UPLOAD_FAILED);
         }

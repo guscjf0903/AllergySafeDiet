@@ -42,21 +42,21 @@ public class S3Config {
     @Profile("prod")
     @RequiredArgsConstructor
     public static class ProdS3Config {
-        @Value("${AWS_ACCESS_KEY_ID}")
-        private String accessKey;
-
-        @Value("${AWS_SECRET_ACCESS_KEY}")
-        private String secretKey;
-
-        @Bean
-        public AmazonS3Client amazonS3Client() {
-            BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKey, secretKey);
-            String region = "ap-northeast-2";
-            return (AmazonS3Client) AmazonS3ClientBuilder.standard()
-                    .withRegion(region)
-                    .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
-                    .build();
-        }
+//        @Value("${AWS_ACCESS_KEY_ID}")
+//        private String accessKey;
+//
+//        @Value("${AWS_SECRET_ACCESS_KEY}")
+//        private String secretKey;
+//
+//        @Bean
+//        public AmazonS3Client amazonS3Client() {
+//            BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKey, secretKey);
+//            String region = "ap-northeast-2";
+//            return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+//                    .withRegion(region)
+//                    .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
+//                    .build();
+//        }
     }
 
 
