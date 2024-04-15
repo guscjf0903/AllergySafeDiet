@@ -23,6 +23,7 @@ import org.api.repository.PostFoodRepository;
 import org.api.repository.PostHealthRepository;
 import org.api.repository.PostImageUrlRepository;
 import org.api.repository.PostRepository;
+//import org.api.service.FileUploadService;
 import org.api.service.FoodRecordService;
 import org.api.service.HealthRecordService;
 import org.api.service.SaveS3UrlService;
@@ -43,7 +44,7 @@ public class PostService {
     private final PostImageUrlRepository postImageUrlRepository;
     private final PostFoodService postFoodService;
     private final PostHealthService postHealthService;
-    //private final FileUploadService fileUploadService;
+//    private final FileUploadService fileUploadService;
     private final SaveS3UrlService s3UrlService;
 
 
@@ -55,9 +56,9 @@ public class PostService {
 
             postFoodService.savePostFood(postEntity, postRequest);
             postHealthService.savePostHealth(postEntity, postRequest);
-            //List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
-
-            //s3UrlService.savePostImageUrl(postEntity, fileUrls);
+//            List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
+//
+//            s3UrlService.savePostImageUrl(postEntity, fileUrls);
         } catch (Exception e) {
             throw new CustomException(POST_UPLOAD_FAILED);
         }
