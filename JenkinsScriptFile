@@ -68,17 +68,23 @@ pipeline {
 
         stage('Build Docker API') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    echo "Access key: $AWS_ACCESS_KEY_ID"
-                    echo "Secret key: $AWS_SECRET_ACCESS_KEY"
-                    // 환경 변수를 사용하여 Docker 이미지 빌드
-                    def dockerTag = "${repository}:API"
-                    if (dockerTag.length() > 128) {
-                        error "Docker tag is too long. Please reduce the length."
+                    echo 'API'
+                    dir('API') {
+                        script {
+                            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                                echo "Access key: $AWS_ACCESS_KEY_ID"
+                                echo "Secret key: $AWS_SECRET_ACCESS_KEY"
+
+                                // Docker 태그와 빌드 로직을 script 블록 내에 포함
+                                def dockerTag = "${repository}:API"
+                                if (dockerTag.length() > 128) {
+                                    error "Docker tag is too long. Please reduce the length."
+                                }
+                                dockerImageAPI = docker.build(dockerTag, "--build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY")
+                            }
+                        }
                     }
-                    dockerImageAPI = docker.build(dockerTag, "--build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY")
                 }
-            }
             post {
                 failure {
                     error 'This pipeline stops here...'
