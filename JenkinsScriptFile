@@ -18,15 +18,13 @@ pipeline {
                 }
             }
         }
-        stages {
-            stage('S3Credential') {
+        stage('S3Credential') {
                 steps {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials']]) {
                         sh '''
                         echo "Access key: $AWS_ACCESS_KEY_ID"
                         echo "Secret key: $AWS_SECRET_ACCESS_SECRET"
                         '''
-                    }
                 }
             }
         }
