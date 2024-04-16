@@ -72,12 +72,8 @@ pipeline {
                 dir('API') {
                     script {
                         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_S3_Credentials', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                            echo "Access key: $AWS_ACCESS_KEY_ID"
-                            echo "Secret key: $AWS_SECRET_ACCESS_KEY"
-
                             def dockerTag = "${repository}:API"
-
-                            dockerImageAPI = docker.build(dockerTag, "--build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY")
+                            dockerImageAPI = docker.build(dockerTag, "--build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY .")
                         }
                     }
                 }
