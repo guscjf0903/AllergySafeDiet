@@ -14,6 +14,7 @@ import org.api.repository.UserRepository;
 import org.api.util.EncryptionUtil;
 import org.core.request.VerifyCodeRequest;
 
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +41,7 @@ public class VerificationCodeService {
     }
 
 
-    //@CachePut(value = "verificationCode", key = "#email") //스프링 캐시를 사용하여 이메일 인증코드 저장. (동일한 키값 생성시 덮어 씌움)
+//    @CachePut(value = "verificationCode", key = "#email") //스프링 캐시를 사용하여 이메일 인증코드 저장. (동일한 키값 생성시 덮어 씌움)
     public String createCodeAndSaveRedis(String email) {
         int length = 6;
         try {

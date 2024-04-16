@@ -39,7 +39,7 @@ public class FoodRecordService {
     @Transactional(readOnly = true)
     public Optional<Object> getFoodDataByDate(LocalDate date, UserEntity userEntity) {
         Optional<List<FoodEntity>> getFoodEntity = foodRepository.getFoodDataByFoodDateAndUserUserId(date,
-               userEntity.getUserId());
+                userEntity.getUserId());
         if (getFoodEntity.isEmpty()) {
             return Optional.empty();
         }

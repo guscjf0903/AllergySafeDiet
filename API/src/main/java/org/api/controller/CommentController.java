@@ -23,9 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
     private final UserService userService;
     private final CommentService commentService;
+
     @PostMapping("/create")
     public ResponseEntity<Void> postComment(@RequestBody CommentRequest commentRequest,
-                                              Authentication authentication) {
+                                            Authentication authentication) {
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
         commentService.postComment(commentRequest, user);
 
@@ -41,9 +42,9 @@ public class CommentController {
 
     @PostMapping("/reply")
     public ResponseEntity<Void> postReply(@RequestBody ReplyRequest replyRequest,
-                                            Authentication authentication) {
+                                          Authentication authentication) {
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
-        commentService.postReply(replyRequest ,user);
+        commentService.postReply(replyRequest, user);
 
         return ResponseEntity.ok().build();
     }

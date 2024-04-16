@@ -7,7 +7,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +22,12 @@ import org.api.repository.PostFoodRepository;
 import org.api.repository.PostHealthRepository;
 import org.api.repository.PostImageUrlRepository;
 import org.api.repository.PostRepository;
-//import org.api.service.FileUploadService;
-import org.api.service.FoodRecordService;
-import org.api.service.HealthRecordService;
+import org.api.service.FileUploadService;
 import org.api.service.SaveS3UrlService;
 import org.core.request.PostRequest;
 import org.core.response.FoodResponse;
 import org.core.response.HealthResponse;
 import org.core.response.PostDetailResponse;
-import org.hibernate.dialect.SybaseASEDialect;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +40,7 @@ public class PostService {
     private final PostImageUrlRepository postImageUrlRepository;
     private final PostFoodService postFoodService;
     private final PostHealthService postHealthService;
-    //private final FileUploadService fileUploadService;
+    private final FileUploadService fileUploadService;
     private final SaveS3UrlService s3UrlService;
 
 
@@ -56,13 +52,14 @@ public class PostService {
 
             postFoodService.savePostFood(postEntity, postRequest);
             postHealthService.savePostHealth(postEntity, postRequest);
-            //List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
+            List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
 
-            //s3UrlService.savePostImageUrl(postEntity, fileUrls);
+            s3UrlService.savePostImageUrl(postEntity, fileUrls);
         } catch (Exception e) {
             throw new CustomException(POST_UPLOAD_FAILED);
         }
     }
+
     @Transactional(readOnly = true)
     public PostEntity getPostEntityFindById(Long postId) {
         return postRepository.findById(postId)

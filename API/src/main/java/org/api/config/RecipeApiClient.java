@@ -37,7 +37,7 @@ public class RecipeApiClient {
         String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeInfoPath(), "RECIPE_NM_KO",
                 foodName);
         RecipeResponse response = objectMapper.readValue(jsonString, RecipeResponse.class);
-
+        System.out.println(jsonString);
         if (response.getRecipeId() == 0) {
             throw new CustomException(NOT_FOUND_RECIPE);
         }
@@ -49,6 +49,7 @@ public class RecipeApiClient {
         String jsonString = openApiClient.callRecipeApi(openApiProperties.getRecipeDetailsPath(), "RECIPE_ID",
                 recipeId);
         IngredientResponse response = objectMapper.readValue(jsonString, IngredientResponse.class);
+        System.out.println(jsonString);
 
         return response.getIngredientNames();
     }
