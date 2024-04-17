@@ -41,7 +41,6 @@ public class VerificationCodeService {
     }
 
 
-//    @CachePut(value = "verificationCode", key = "#email") //스프링 캐시를 사용하여 이메일 인증코드 저장. (동일한 키값 생성시 덮어 씌움)
     public String createCodeAndSaveRedis(String email) {
         int length = 6;
         try {

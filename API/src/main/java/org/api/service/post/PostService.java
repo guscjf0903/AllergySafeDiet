@@ -3,11 +3,12 @@ package org.api.service.post;
 import static org.api.exception.ErrorCodes.POST_NOT_FOUND;
 import static org.api.exception.ErrorCodes.POST_UPLOAD_FAILED;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.HashSet;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.FoodEntity;
@@ -42,6 +43,7 @@ public class PostService {
     private final PostHealthService postHealthService;
     private final FileUploadService fileUploadService;
     private final SaveS3UrlService s3UrlService;
+    private final VisitCacheService visitCacheService;
 
 
     @Transactional
@@ -67,7 +69,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDetailResponse getPostDetail(Long postId, HttpServletRequest request, HttpServletResponse response) {
+    public PostDetailResponse getPostDetail(Long postId, UserEntity visitor) {
         PostEntity postEntity = getPostEntityFindById(postId);
 
         List<FoodEntity> foodEntities = getPostFoodDetailData(postId);
@@ -76,7 +78,7 @@ public class PostService {
                 .map(PostImageUrlEntity::getImageUrl)
                 .collect(Collectors.toList());
 
-        return makePostDetailResponse(postEntity, foodEntities, healthEntities, imageUrls, request, response);
+        return makePostDetailResponse(postEntity, foodEntities, healthEntities, imageUrls, visitor);
     }
 
     private List<FoodEntity> getPostFoodDetailData(Long postId) {
@@ -93,7 +95,7 @@ public class PostService {
 
     private PostDetailResponse makePostDetailResponse(PostEntity postEntity, List<FoodEntity> foodEntities,
                                                       List<HealthEntity> healthEntities, List<String> imageUrls,
-                                                      HttpServletRequest request, HttpServletResponse response) {
+                                                      UserEntity visitor) {
         List<FoodResponse> foodResponseList = foodEntities.stream()
                 .map(foodEntity -> FoodResponse.toResponse(
                         foodEntity.getFoodRecordId(), foodEntity.getFoodDate(), foodEntity.getMealType(),
@@ -112,48 +114,11 @@ public class PostService {
         String userName = postEntity.getUser().getUsername();
         LocalDateTime postDateTime = postEntity.getCreatedAtDate();
 
-        if (!hasViewedPost(postEntity.getPostId(), request)) {// 조회수, 쿠키 업데이트 로직을 여기서 호출
-            postRepository.updateViews(postEntity.getPostId());
-            updatePostViewCookie(postEntity.getPostId(), request, response);
-        }
+        visitCacheService.addVisitedRedis(visitor, postEntity);
 
         return PostDetailResponse.toResponse(postEntity.getTitle(), postEntity.getContent(),
                 healthResponseList, userName, postEntity.getViews(), postDateTime, foodResponseList, imageUrls);
     }
 
 
-    private boolean hasViewedPost(Long postId, HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("postView") && cookie.getValue().contains("[" + postId.toString() + "]")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void updatePostViewCookie(Long postId, HttpServletRequest request, HttpServletResponse response) {
-        Cookie oldCookie = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("postView")) {
-                    oldCookie = cookie;
-                }
-            }
-        }
-        if (oldCookie != null && !oldCookie.getValue().contains("[" + postId.toString() + "]")) {
-            oldCookie.setValue(oldCookie.getValue() + "_[" + postId + "]");
-            oldCookie.setPath("/");
-            oldCookie.setMaxAge(60 * 60 * 24);
-            response.addCookie(oldCookie);
-        } else if (oldCookie == null) {
-            Cookie newCookie = new Cookie("postView", "[" + postId + "]");
-            newCookie.setPath("/");
-            newCookie.setMaxAge(60 * 60 * 24);
-            response.addCookie(newCookie);
-        }
-    }
 }

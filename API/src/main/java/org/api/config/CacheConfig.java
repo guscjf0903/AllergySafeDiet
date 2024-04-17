@@ -48,18 +48,8 @@ public class CacheConfig {
         return (builder) -> builder
                 .withCacheConfiguration("recipes",
                         RedisCacheConfiguration.defaultCacheConfig()
-                                .computePrefixWith(cacheName -> "prefix::" + cacheName + "::")
+                                .computePrefixWith(cacheName -> "prefix:" + cacheName + ":")
                                 .entryTtl(Duration.ofHours(2))
-                                .disableCachingNullValues()
-                                .serializeKeysWith(
-                                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
-                                )
-                                .serializeValuesWith(
-                                        RedisSerializationContext.SerializationPair.fromSerializer(serializer)
-                                ))
-                .withCacheConfiguration("verificationCode",
-                        RedisCacheConfiguration.defaultCacheConfig()
-                                .entryTtl(Duration.ofSeconds(360))
                                 .disableCachingNullValues()
                                 .serializeKeysWith(
                                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())

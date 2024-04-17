@@ -41,8 +41,9 @@ public class PostController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<PostDetailResponse> getPostDetailData(@RequestParam("postId") Long postId, HttpServletRequest request, HttpServletResponse response) {
-        PostDetailResponse postDetailResponse = postService.getPostDetail(postId,request, response);
+    public ResponseEntity<PostDetailResponse> getPostDetailData(@RequestParam("postId") Long postId, Authentication authentication) {
+        UserEntity visitor = userService.loadUserById((Long) authentication.getPrincipal());
+        PostDetailResponse postDetailResponse = postService.getPostDetail(postId, visitor);
 
         return ResponseEntity.ok().body(postDetailResponse);
     }
