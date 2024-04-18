@@ -30,13 +30,13 @@ public class CommentService {
         commentRepository.save(commentEntity);
     }
 
-    public List<CommentResponse> getCommentAndReplyByPostId(Long postId) {
+    public List<CommentResponse> getCommentAndReplyByPostId(Long postId, UserEntity user) {
         List<CommentEntity> commentEntities = commentRepository.findByPostPostId(postId);
 
-        return createCommentResponse(commentEntities);
+        return createCommentResponse(commentEntities, user);
     }
 
-    private List<CommentResponse> createCommentResponse(List<CommentEntity> commentEntities) {
+    private List<CommentResponse> createCommentResponse(List<CommentEntity> commentEntities, UserEntity user) {
         List<CommentResponse> commentResponseList = new ArrayList<>();
 
         for (CommentEntity commentEntity : commentEntities) {
@@ -46,20 +46,25 @@ public class CommentService {
                     commentEntity.getCommentId());
 
             for (ReplyEntity replyEntity : replyEntities) {
-                boolean isReplyAuthor = commentEntity.getPost().getUser().getUsername()
-                        .equals(replyEntity.getUser().getUsername());
-                ReplyResponse replyResponse = ReplyResponse.toResponse(replyEntity.getReplyText(),
-                        replyEntity.getUser().getUsername(), isReplyAuthor);
+                boolean isReplyPostAuthor = commentEntity.getPost().getUser().getUserId()
+                        .equals(replyEntity.getUser().getUserId()); //대댓글이 게시글 작성자와 동일한지 확인
 
+                boolean isOwnReply = replyEntity.getUser().getUserId()
+                        .equals(user.getUserId()); //해당 게시글을 보는 사용자가 대댓글 작성자인지 확인
+
+                ReplyResponse replyResponse = ReplyResponse.toResponse(replyEntity.getReplyId() ,replyEntity.getReplyText(),
+                        replyEntity.getUser().getUsername(), isReplyPostAuthor, isOwnReply);
                 replyResponseList.add(replyResponse);
             }
 
-            boolean isCommentAuthor = commentEntity.getPost().getUser().getUsername()
-                    .equals(commentEntity.getUser().getUsername());
+            boolean isCommentPostAuthor = commentEntity.getPost().getUser().getUserId()
+                    .equals(commentEntity.getUser().getUserId()); // 댓글이 게시글 작성자와 동일한지 확인
+            boolean isOwnComment = commentEntity.getUser().getUserId()
+                    .equals(user.getUserId()); //해당 게시글을 보는 사용자가 댓글 작성자인지 확인
 
             CommentResponse commentResponse = CommentResponse.toResponse(commentEntity.getCommentId(),
-                    commentEntity.getUser().getUsername(), commentEntity.getContent(), isCommentAuthor,
-                    replyResponseList);
+                    commentEntity.getUser().getUsername(), commentEntity.getContent(), isCommentPostAuthor,
+                    isOwnComment, replyResponseList);
 
             commentResponseList.add(commentResponse);
         }

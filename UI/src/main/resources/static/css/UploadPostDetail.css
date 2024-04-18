@@ -22,3 +22,11 @@
     content: '❯'; /* 다음 버튼 아이콘 */
 }
 
+.comment-delete-button {
+    text-align: right; /* 우측 정렬 */
+    margin-top: 10px; /* 위치 조정 */
+}
+.delete-comment, .delete-reply {
+    font-size: 0.8rem; /* 버튼의 폰트 크기 조정 */
+    padding: 0.25rem 0.5rem; /* 패딩을 줄여서 전체 크기를 감소 */
+}

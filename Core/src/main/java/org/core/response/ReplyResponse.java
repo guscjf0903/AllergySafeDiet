@@ -1,13 +1,16 @@
 package org.core.response;
 
-import java.util.List;
-
 public record ReplyResponse(
+   Long id,
    String replyText,
    String replyAuthor,
-   boolean isAuthor
+   boolean isPostReplyAuthor,
+   boolean isOwnReply
+
 ) {
-    public static ReplyResponse toResponse(String replyText, String replyAuthor, boolean isAuthor) {
-        return new ReplyResponse(replyText, replyAuthor, isAuthor);
+    public static ReplyResponse toResponse(Long id,String replyText, String replyAuthor, boolean isPostReplyAuthor, boolean isOwnReply) {
+        return new ReplyResponse(id, replyText, replyAuthor, isPostReplyAuthor, isOwnReply);
+
+
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class VisitCacheService {
+public class VisitRedisService {
     private static final String VISITED_POSTS_KEY_PREFIX = "userVisitedPosts:";
     private final RedisTemplate<String, Object> redisTemplate;
     private final PostRepository postRepository;

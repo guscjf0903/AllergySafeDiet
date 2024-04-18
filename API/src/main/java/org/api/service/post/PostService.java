@@ -3,12 +3,8 @@ package org.api.service.post;
 import static org.api.exception.ErrorCodes.POST_NOT_FOUND;
 import static org.api.exception.ErrorCodes.POST_UPLOAD_FAILED;
 
-import java.util.HashSet;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.FoodEntity;
@@ -43,7 +39,7 @@ public class PostService {
     private final PostHealthService postHealthService;
     private final FileUploadService fileUploadService;
     private final SaveS3UrlService s3UrlService;
-    private final VisitCacheService visitCacheService;
+    private final VisitRedisService visitRedisService;
 
 
     @Transactional
@@ -114,7 +110,7 @@ public class PostService {
         String userName = postEntity.getUser().getUsername();
         LocalDateTime postDateTime = postEntity.getCreatedAtDate();
 
-        visitCacheService.addVisitedRedis(visitor, postEntity);
+        visitRedisService.addVisitedRedis(visitor, postEntity);
 
         return PostDetailResponse.toResponse(postEntity.getTitle(), postEntity.getContent(),
                 healthResponseList, userName, postEntity.getViews(), postDateTime, foodResponseList, imageUrls);

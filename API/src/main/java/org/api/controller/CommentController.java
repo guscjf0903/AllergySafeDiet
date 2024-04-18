@@ -34,8 +34,10 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponse>> getCommentsByPostId(@RequestParam("postId") Long postId) {
-        List<CommentResponse> comments = commentService.getCommentAndReplyByPostId(postId);
+    public ResponseEntity<List<CommentResponse>> getCommentsByPostId(@RequestParam("postId") Long postId, Authentication authentication) {
+        UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
+
+        List<CommentResponse> comments = commentService.getCommentAndReplyByPostId(postId, user);
 
         return ResponseEntity.ok(comments);
     }
