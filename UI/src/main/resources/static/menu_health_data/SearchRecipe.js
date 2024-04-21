@@ -2,17 +2,16 @@ $(document).ready(function () {
     const apiUrl = $('#apiUrl').data('url');
 
     $('#searchRecipe').click(function () {
-        const foodName = $('#foodName').val(); // 음식 이름 값 가져오기
+        const foodName = $('#foodName').val();
         if (foodName) { // 음식 이름이 비어있지 않은 경우
-            $.ajax({
-                url: apiUrl + '/recipes',
-                type: 'GET',
-                data: {foodName: foodName},
-                success: function (data) {
+            sendAuthenticatedRequest({
+                url: apiUrl + '/recipes?foodName='+foodName,
+                method: 'GET',
+                onSuccess: function(data) {
                     updateIngredientsList(data);
                     alert("원재료 검색 성공!");
                 },
-                error: function () {
+                onError: function(jqXHR) {
                     alert("원재료 검색 실패. 다른 메뉴를 넣어주세요");
                 }
             });

@@ -2,8 +2,7 @@ const apiUrl = $('#apiUrl').data('url');
 
 $(document).ready(function() {
     $('#datePicker').change(function() {
-        const selectedDate = $(this).val();
-
+        const selectedDate = encodeURIComponent($(this).val());  // 날짜 인코딩
         fetchFoodData(selectedDate);
         fetchHealthData(selectedDate);
     });
@@ -18,54 +17,29 @@ $(document).ready(function() {
 });
 
 function fetchFoodData(date) {
-    $.ajax({
+
+    sendAuthenticatedRequest({
         url: apiUrl + `/food_health_data/food?date=${date}`,
-        type: 'GET',
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        success: function(response) {
+        method: 'GET',
+        data: {},
+        onSuccess: function(response) {
             displayFoodData(response);
         },
-        error: function(jqXHR) {
-            if (jqXHR.status === 401) {
-                Swal.fire(
-                    'Error!',
-                    '로그인이 되지 않았습니다.',
-                    'error'
-                ).then((result) => {
-                    if (result.value) {
-                        window.location.href = '/login';
-                    }
-                });
-            }
+        onError: function(jqXHR) {
             $('#foodData').html('<p>음식관련 데이터가 없습니다. 추가해주세요.</p>');
         }
     });
 }
 
 function fetchHealthData(date) {
-    $.ajax({
+    sendAuthenticatedRequest({
         url: apiUrl + `/food_health_data/health?date=${date}`,
-        type: 'GET',
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        success: function(data) {
+        method: 'GET',
+        data: {},
+        onSuccess: function(data) {
             displayHealthData(data);
         },
-        error: function(jqXHR) {
-            if (jqXHR.status === 401) {
-                Swal.fire(
-                    'Error!',
-                    '로그인이 되지 않았습니다.',
-                    'error'
-                ).then((result) => {
-                    if (result.value) {
-                        window.location.href = '/login';
-                    }
-                });
-            }
+        onError: function(jqXHR) {
             $('#healthData').html('<p>건강관련 데이터가 없습니다. 추가해주세요.</p>');
             $('#editHealthBtn').text('건강 데이터 추가');
         }
@@ -86,8 +60,7 @@ function displayFoodData(data) {
         htmlContent += `<tr>
             <td>${food.date}</td>
             <td>${food.mealType}</td>
-            <td>${food.mealTime}</td>
-            <td>${food.foodName}</td>
+        수소            <td>${food.foodName}</td>
             <td>${ingredientsList.join(', ')}</td>
             <td>${food.foodNotes}</td>
             <td>
@@ -105,7 +78,7 @@ function displayFoodData(data) {
         window.location.href = '/food_health_data/food/edit?id=' + $(this).data('id');
     });
     $('.delete-menu').click(function() {
-        const menuId = $(this).data('id');
+        const menuId = $(this).data('id')
         deleteFoodData(menuId);
     });
 }
@@ -139,29 +112,15 @@ function displayHealthData(data) {
 }
 
 function deleteFoodData(menuId) {
-    $.ajax({
+    sendAuthenticatedRequest({
         url: apiUrl + '/food_health_data/food?id=' + menuId,
-        type: "DELETE",
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        contentType: 'application/json',
-        success: function () {
+        method: "DELETE",
+        data: {},
+        onSuccess: function() {
             alert("식단을 성공적으로 삭제하였습니다.");
             window.location.href = '/food_health_data/select_date';
         },
-        error: function (jqXHR) {
-            if (jqXHR.status === 401) {
-                Swal.fire(
-                    'Error!',
-                    '로그인이 되지 않았습니다.',
-                    'error'
-                ).then((result) => {
-                    if (result.value) {
-                        window.location.href = '/login';
-                    }
-                });
-            }
+        onError: function(jqXHR) {
             alert("식단 삭제에 실패하였습니다.");
             console.error('서버 요청 실패');
         }

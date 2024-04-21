@@ -23,59 +23,41 @@ $(document).ready(function () {
                 foodData.ingredients.push(ingredientName);
             }
         });
-        $.ajax({
+
+        sendAuthenticatedRequest({
             url: apiUrl + '/food_health_data/food?id=' + $("#id").data('id'),
-            type: "PUT",
-            headers: {
-                'Authorization': sessionStorage.getItem("loginToken"),
-            },
-            contentType: 'application/json',
-            data: JSON.stringify(foodData),
-            success: function () {
+            method: "PUT",
+            data: foodData,
+            onSuccess: function() {
                 alert("식단을 성공적으로 수정하였습니다.");
                 window.location.href = '/food_health_data/select_date';
             },
-            error: function (jqXHR) {
-                if (jqXHR.status === 401) {
-                    Swal.fire(
-                        'Error!',
-                        '로그인이 되지 않았습니다.',
-                        'error'
-                    ).then((result) => {
-                        if (result.value) {
-                            window.location.href = '/login';
-                        }
-                    });
-                }
+            onError: function(jqXHR) {
                 alert("식단 수정에 실패하였습니다.");
+                console.error("Error: " + jqXHR.responseText);
             }
         });
-
     });
 });
 
 function checkMenuData() {
     const apiUrl = $('#apiUrl').data('url');
-
-    $.ajax({
+    sendAuthenticatedRequest({
         url: apiUrl + '/food_health_data/food?id=' + $("#id").data('id'),
         method: 'GET',
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        success: function (data) {
+        data: {},
+        onSuccess: function(data) {
             $("#foodType").val(data.mealType);
             $("#foodTime").val(data.mealTime);
             $("#foodName").val(data.foodName);
             $("#foodNotes").val(data.foodNotes);
             postDate = data.date;
-            // 기존에 추가된 재료 목록을 비우고 새로운 재료 목록을 할당.
             $('#ingredientsList').empty();
             data.ingredients.forEach(function (ingredient) {
-                addIngredientToList(ingredient.ingredientName); // 이미 정의된 함수를 사용하여 재료 목록에 추가
+                addIngredientToList(ingredient.ingredientName);
             });
         },
-        error: function () {
+        onError: function(jqXHR) {
             alert("해당 식단 데이터가 없습니다.");
             window.location.href = '/food_health_data/select_date';
         }

@@ -22,29 +22,40 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
         try {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String jwt = getJwtFromRequest(httpRequest);
-            if (jwt != null && jwtConfig.validateToken(jwt)) {
-                Long userId = jwtConfig.getUserIdFromJwtToken(jwt);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId,
-                        null, Collections.emptyList());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            String accessToken = getJwtFromRequest(httpRequest);
+            if (accessToken != null && jwtConfig.validateToken(accessToken)) {
+                authenticate(accessToken);
+            }else {
+                String refreshToken = httpRequest.getHeader("Refresh-Token");
+                if (refreshToken != null && jwtConfig.validateToken(refreshToken)) {
+                    String newAccessToken = jwtConfig.generateAccessToken(jwtConfig.getUserIdFromJwtToken(refreshToken));
+                    httpResponse.setHeader("New-Access-Token", newAccessToken);
+                    authenticate(newAccessToken);
+                }
             }
             chain.doFilter(request, response);
         } catch (JwtValidationException e) {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResponse.setContentType("application/json");
             httpResponse.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
 
+    private void authenticate(String jwt) {
+        Long userId = jwtConfig.getUserIdFromJwtToken(jwt);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring("Bearer ".length());
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
-        return bearerToken;
+        return null;
     }
 }

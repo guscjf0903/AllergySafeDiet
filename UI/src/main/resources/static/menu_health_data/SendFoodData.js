@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     $('#menuPostForm').submit(function (e) {
         e.preventDefault();
-        const menuData = {
+        const foodData = {
             date: $("#postDate").val(),
             mealType: $("#foodType").val(),
             mealTime: $("#foodTime").val(),
@@ -18,39 +18,22 @@ $(document).ready(function () {
         $('#ingredientsList .ingredient-container').each(function () {
             let ingredientName = $(this).find('input').val();
             if (ingredientName) { // 입력값이 있는 경우에만 추가
-                menuData.ingredients.push(ingredientName);
+                foodData.ingredients.push(ingredientName);
             }
         });
-        e.preventDefault();
-        $.ajax({
+        sendAuthenticatedRequest({
             url: apiUrl + '/food_health_data/food',
-            type: "POST",
-            headers: {
-                'Authorization': sessionStorage.getItem("loginToken"),
-            },
-            contentType: 'application/json',
-            data: JSON.stringify(menuData),
-            success: function () {
-                alert("식단을 성공적으로 추가하였습니다.");
+            method: "POST",
+            data: foodData,
+            onSuccess: function () {
+                alert("식단을 성공적으로 수정하였습니다.");
                 window.location.href = '/food_health_data/select_date';
             },
-            error: function (jqXHR) {
-                if (jqXHR.status === 401) {
-                    Swal.fire(
-                        'Error!',
-                        '로그인이 되지 않았습니다.',
-                        'error'
-                    ).then((result) => {
-                        if (result.value) {
-                            window.location.href = '/login';
-                        }
-                    });
-                }
-                alert("식단 추가에 실패하였습니다.");
-                console.error('서버 요청 실패');
+            onError: function (jqXHR) {
+                alert("식단 수정에 실패하였습니다.");
+                console.error("Error: " + jqXHR.responseText);
             }
         });
-
     });
 });
 

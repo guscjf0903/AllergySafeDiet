@@ -99,10 +99,9 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
-    // 계정 잠금 여부 반환
     @Override
     public boolean isAccountNonLocked(){
         return true;
@@ -113,9 +112,8 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
-    // 계정 사용 가능 여부 변환
     @Override
     public boolean isEnabled(){
-        return true; // true -> 사용 가능
+        return true;
     }
 }

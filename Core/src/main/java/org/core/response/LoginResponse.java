@@ -5,5 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 public record LoginResponse(
-        String loginToken
+        String accessToken,
+        String refreshToken
 ) {}

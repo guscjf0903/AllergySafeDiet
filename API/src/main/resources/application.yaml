@@ -2,8 +2,8 @@ server:
   port: 7777
 
 jwt:
-  secret-key: "3okpDDRf6HCajVusuiLSVWaAbqHdV/V7V44LIRAZeaBtSGoSi+vDK1uewFHYSmnIs6+vzq0+3ZxV4OdztVCj+g==
-"
+  secret-key: "3okpDDRf6HCajVusuiLSVWaAbqHdV/V7V44LIRAZeaBtSGoSi+vDK1uewFHYSmnIs6+vzq0+3ZxV4OdztVCj+g=="
+  expiration: 3600000
 ---
 spring:
   devtools:

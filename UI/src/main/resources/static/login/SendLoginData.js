@@ -15,7 +15,7 @@ $(document).ready(function() {
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function(response) {
-                saveLoginIdToSessionStorage(response.loginToken);
+                saveLoginIdToSessionStorage(response);
                 Swal.fire( // 성공 알림
                     'Done!',
                     '로그인이 완료되었습니다.',
@@ -56,6 +56,8 @@ $(document).ready(function() {
 });
 
 
-function saveLoginIdToSessionStorage(loginToken) {
-    sessionStorage.setItem('loginToken', loginToken);
+function saveLoginIdToSessionStorage(response) {
+    sessionStorage.setItem('accessToken', response.accessToken);
+    sessionStorage.setItem('refreshToken', response.refreshToken);
+
 }

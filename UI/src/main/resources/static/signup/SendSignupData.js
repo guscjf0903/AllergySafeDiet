@@ -16,13 +16,13 @@ $(document).ready(function() {
             height: height,
         };
         e.preventDefault();
-        $.ajax({
+
+        sendAuthenticatedRequest({
             url: apiUrl + "/signup",
             method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success: function (response) {
-                Swal.fire( // 성공 알림
+            data: data,
+            onSuccess: function(response) {
+                Swal.fire(
                     'Done!',
                     'Sign up successful.',
                     'success'
@@ -32,13 +32,13 @@ $(document).ready(function() {
                     }
                 });
             },
-            error: function (error) {
-                Swal.fire( // 오류 알림
+            onError: function(jqXHR) {
+                Swal.fire(
                     'Error!',
                     'Failed to sign up. Please try again.',
                     'error'
                 );
-                console.log(error);
+                console.log(jqXHR.responseText);
             }
         });
     });

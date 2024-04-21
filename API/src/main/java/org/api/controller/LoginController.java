@@ -17,7 +17,8 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody @Valid LoginRequest loginRequest) {
-        String token = loginService.loginUser(loginRequest);
-        return ResponseEntity.ok(new LoginResponse(token));
+        LoginResponse loginResponse = loginService.loginUser(loginRequest);
+
+        return ResponseEntity.ok(loginResponse);
     }
 }

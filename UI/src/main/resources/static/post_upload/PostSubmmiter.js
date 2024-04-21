@@ -23,7 +23,7 @@ class PostSubmitter {
             url: this.apiUrl + "/post/upload",
             method: 'POST',
             headers: {
-                'Authorization': sessionStorage.getItem("loginToken"),
+                'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
             },
             processData: false,
             contentType: false,
@@ -33,7 +33,13 @@ class PostSubmitter {
                 window.location.href = '/list';
             },
             error: (jqXHR) => {
-                handleAjaxError(jqXHR);
+                if (jqXHR.status === 401) {  // 토큰 만료 감지
+                    refreshAccessToken(() => {
+                        this.submitPost(selectedFiles, selectedData);  // 토큰 갱신 후 요청 재시도
+                    });
+                } else {
+                    console.error(jqXHR);
+                }
             }
         });
     }

@@ -7,34 +7,20 @@ $('#submitComment').click(function() {
         alert('댓글을 입력해주세요.');
         return;
     }
-
-    $.ajax({
+    sendAuthenticatedRequest({
         url: apiUrl + "/comments/create",
         method: 'POST',
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        contentType: 'application/json',
-        data: JSON.stringify({
+        data: {
             postId: postId,
             commentText: commentText
-        }),
-        success: function() {
-            fetchComments(postId);
-            $('#commentText').val(''); // 입력 필드를 비우기
         },
-        error: function(jqXHR) {
-            if (jqXHR.status === 401) {
-                Swal.fire(
-                    'Error!',
-                    '로그인이 되지 않았습니다.',
-                    'error'
-                ).then((result) => {
-                    if (result.value) {
-                        window.location.href = '/login';
-                    }
-                });
-            }
+        onSuccess: function() {
+            fetchComments(postId);
+            $('#commentText').val('');
+        },
+        onError: function(jqXHR) {
+            alert('댓글 작성에 실패했습니다. 다시 시도해주세요.');
+            console.log(jqXHR);
         }
     });
 });

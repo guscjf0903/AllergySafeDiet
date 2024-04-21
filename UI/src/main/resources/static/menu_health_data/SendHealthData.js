@@ -33,35 +33,20 @@ $(document).ready(function () {
 
         const method = healthDataExists ? 'PUT' : 'POST';
         e.preventDefault();
-        $.ajax({
-            url: apiUrl + '/food_health_data/health', // 실제 API 엔드포인트
+        sendAuthenticatedRequest({
+            url: apiUrl + '/food_health_data/health',
             method: method,
-            headers: {
-                'Authorization': sessionStorage.getItem("loginToken"),
-            },
-            contentType: 'application/json',
-            data: JSON.stringify(healthData),
-
-            success: function () {
+            data: healthData,
+            onSuccess: function () {
                 alert('데이터가 성공적으로 저장되었습니다.');
                 window.location.href = '/food_health_data/select_date';
             },
-            error: function (jqXHR) {
-                if (jqXHR.status === 401) {
-                    Swal.fire(
-                        'Error!',
-                        '로그인이 되지 않았습니다.',
-                        'error'
-                    ).then((result) => {
-                        if (result.value) {
-                            window.location.href = '/login';
-                        }
-                    });
-                }
+            onError: function (jqXHR) {
                 alert('데이터 저장에 실패했습니다. 다시 시도해주세요.');
                 console.error('데이터 저장에 실패했습니다.');
             }
         });
+
     });
 });
 
@@ -108,7 +93,7 @@ function checkHealthData() {
         url: apiUrl + '/food_health_data/health', // 실제 API 엔드포인트
         method: 'GET',
         headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
+            'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
         },
         contentType: 'application/json',
         data: {
@@ -153,29 +138,16 @@ function checkHealthData() {
 function deleteHealthData() {
     const postDate = $('#postDate').val(); // 날짜 입력 필드에서 날짜 가져오기
     const apiUrl = $('#apiUrl').data('url');
-    $.ajax({
+
+    sendAuthenticatedRequest({
         url: apiUrl + '/food_health_data/health?date=' + postDate,
-        type: "DELETE",
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        contentType: 'application/json',
-        success: function () {
+        method: "DELETE",
+        data: {},
+        onSuccess: function () {
             alert("건강데이터를 성공적으로 삭제하였습니다.");
             window.location.href = '/food_health_data/select_date';
         },
-        error: function (jqXHR) {
-            if (jqXHR.status === 401) {
-                Swal.fire(
-                    'Error!',
-                    '로그인이 되지 않았습니다.',
-                    'error'
-                ).then((result) => {
-                    if (result.value) {
-                        window.location.href = '/login';
-                    }
-                });
-            }
+        onError: function (jqXHR) {
             alert("건강데이터 삭제에 실패하였습니다.");
             console.error('서버 요청 실패');
         }

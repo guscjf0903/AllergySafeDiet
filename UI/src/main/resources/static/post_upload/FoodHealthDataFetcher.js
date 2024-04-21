@@ -17,16 +17,13 @@ class FoodHealthDataFetcher {
         this.fetchDataType(selectedDate, 'food');
         this.fetchDataType(selectedDate, 'health');
     }
-
     fetchDataType(date, type) {
         let urlType = type === 'food' ? '/food_health_data/food?date=' : '/food_health_data/health?date=';
-        $.ajax({
+        sendAuthenticatedRequest({
             url: this.apiUrl + urlType + date,
             method: 'GET',
-            headers: {
-                'Authorization': sessionStorage.getItem("loginToken"),
-            },
-            success: (data) => {
+            data: {},
+            onSuccess: (data) => {
                 if ((Array.isArray(data) && data.length === 0) || data === undefined) {
                     alert(`해당 날짜에 ${type} 데이터가 없습니다.`);
                     return;
@@ -38,8 +35,8 @@ class FoodHealthDataFetcher {
                     this.selectedData.health.push({id: data.id, date: date});
                 }
             },
-            error: (jqXHR) => {
-                handleAjaxError(jqXHR);
+            onError: (jqXHR) => {
+                console.log(jqXHR);
             }
         });
     }
@@ -105,20 +102,3 @@ class FoodHealthDataFetcher {
 
 
 }
-
-// $(document).on('click', '.delete-data', function () {
-//     const $dataItem = $(this).closest('.data-item');
-//     const $dateContainer = $(this).closest('.date-container');
-//
-//     const id = $(this).data('id');
-//     const type = $(this).data('type');
-//
-//     $dataItem.remove();
-//     this.selectedData[type] = this.selectedData[type].filter(item => item.id !== id);
-//
-//     const remainingItemsCount = $dateContainer.find('.data-item').length;
-//
-//     if (remainingItemsCount === 0) {
-//         $dateContainer.remove();
-//     }
-// });

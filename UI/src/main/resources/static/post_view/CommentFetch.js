@@ -1,25 +1,14 @@
 function fetchComments(postId) {
     const apiUrl = $('#apiUrl').data('url');
-    $.ajax({
+    sendAuthenticatedRequest({
         url: apiUrl + "/comments?postId=" + postId,
         method: 'GET',
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        success: function (comments) {
+        data: {},
+        onSuccess: function(comments) {
             displayComments(comments);
         },
-        error: function (jqXHR) {
-            if (jqXHR.status === 401) {
-                Swal.fire('Error!', '로그인이 필요합니다.', 'error')
-                    .then((result) => {
-                        if (result.value) {
-                            window.location.href = '/login';
-                        }
-                    });
-            } else {
-                alert('게시물 조회에 실패했습니다.');
-            }
+        onError: function(jqXHR) {
+            alert('게시물 조회에 실패했습니다.');
         }
     });
 }
@@ -27,7 +16,6 @@ function fetchComments(postId) {
 function displayComments(comments) {
     let commentsHtml = comments.map(comment => {
         let authorTag = comment.isPostCommentAuthor ? " (작성자)" : ""; //댓글이 작성자가 적은 댓글인가? 확인
-        console.log(comment.isOwnComment);
         let deleteButtonHtml = comment.isOwnComment ? `<button class="btn btn-danger delete-comment" data-comment-id="${comment.id}">댓글 삭제</button>` : '';<!--게시물 조회자가 본인이 쓴 댓글인지 확인하고 삭제버튼 활성화-->
 
 
@@ -77,32 +65,20 @@ function attachReplyHandlers() {
         const apiUrl = $('#apiUrl').data('url');
         const postId = new URLSearchParams(window.location.search).get('post_id');
 
-        $.ajax({
+        sendAuthenticatedRequest({
             url: apiUrl + "/comments/reply",
             method: 'POST',
-            headers: {
-                'Authorization': sessionStorage.getItem("loginToken"),
-            },
-            contentType: 'application/json',
-            data: JSON.stringify({
+            data: {
                 commentId: commentId,
                 replyText: replyText
-            }),
-            success: function() {
+            },
+            onSuccess: function() {
                 fetchComments(postId); // 댓글과 대댓글을 다시 로드
             },
-            error: function(jqXHR) {
-                if (jqXHR.status === 401) {
-                    Swal.fire('Error!', '로그인이 필요합니다.', 'error')
-                        .then((result) => {
-                            if (result.value) {
-                                window.location.href = '/login';
-                            }
-                        });
-                } else {
-                    alert('대댓글 작성에 실패했습니다.');
-                }
+            onError: function(jqXHR) {
+                alert('대댓글 작성에 실패했습니다.');
             }
         });
+
     });
 }

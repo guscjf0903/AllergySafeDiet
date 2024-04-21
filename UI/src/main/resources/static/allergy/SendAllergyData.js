@@ -21,30 +21,14 @@ $(document).ready(function() {
             allergy: allergyData
         }
         const method = allergyDataExists ? 'PUT' : 'POST';
-        $.ajax({
+        sendAuthenticatedRequest({
             url: apiUrl + "/allergy",
-            type: method,
-            headers: {
-                'Authorization': sessionStorage.getItem("loginToken"),
-            },
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function (xhr) {
+            method: method,
+            data: data,
+            onSuccess: function(xhr) {
                 alert("성공적으로 저장하였습니다.");
-
             },
-            error: function (jqXHR) {
-                if (jqXHR.status === 401) {
-                    Swal.fire(
-                        'Error!',
-                        '로그인이 되지 않았습니다.',
-                        'error'
-                    ).then((result) => {
-                        if (result.value) {
-                            window.location.href = '/login';
-                        }
-                    });
-                }
+            onError: function(jqXHR) {
                 alert("저장하는 과정에 문제가 발생했습니다.");
                 console.error(jqXHR);
             }
@@ -53,31 +37,24 @@ $(document).ready(function() {
 });
 function fetchAllergies() {
     const apiUrl = $('#apiUrl').data('url');
-
-    $.ajax({
+    sendAuthenticatedRequest({
         url: `${apiUrl}/allergy`,
         method: 'GET',
-        headers: {
-            'Authorization': sessionStorage.getItem("loginToken"),
-        },
-        contentType: 'application/json',
-    }).done(function(response, textStatus, xhr) {
-        switch(xhr.status) {
-            case 200:
-                if (response.allergies && response.allergies.length > 0) {
-                    response.allergies.forEach(allergy => addAllergyField(allergy));
-                    allergyDataExists = true;
-                }
-                break;
-            case 204:
+        data: {},
+        onSuccess: function(response) {
+            if (response.allergies && response.allergies.length > 0) {
+                response.allergies.forEach(allergy => addAllergyField(allergy));
+                allergyDataExists = true;
+            } else {
                 addAllergyField();
                 allergyDataExists = false;
-                break;
+            }
+        },
+        onError: function(jqXHR) {
+            const message = jqXHR.status === 404 ? '데이터를 찾을 수 없습니다.' : '데이터를 불러오는데 문제가 발생했습니다.';
+            $('#dataStatusMessage').text(message).show();
+            console.error(jqXHR.responseText);
         }
-    }).fail(function(xhr, textStatus, error) {
-        const message = xhr.status === 404 ? '데이터를 찾을 수 없습니다.' : '데이터를 불러오는데 문제가 발생했습니다.';
-        $('#dataStatusMessage').text(message).show();
-        console.error(error);
     });
 }
 
