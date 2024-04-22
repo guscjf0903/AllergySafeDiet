@@ -9,12 +9,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.api.exception.JwtValidationException;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @RequiredArgsConstructor
+@Configuration
+@Slf4j
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtConfig jwtConfig;
 
@@ -36,12 +41,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     authenticate(newAccessToken);
                 }
             }
-            chain.doFilter(request, response);
         } catch (JwtValidationException e) {
-            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            httpResponse.setContentType("application/json");
-            httpResponse.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+            log.error("JWT Validation Exception: {}", e.getMessage());
         }
+        chain.doFilter(request, response);
+
     }
 
     private void authenticate(String jwt) {

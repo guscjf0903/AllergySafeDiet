@@ -28,9 +28,10 @@ public class VerificationCodeService {
     private final UserService userService;
     private final StringRedisTemplate stringRedisTemplate;
     private final EncryptionUtil encryptionUtil;
-
-
     private static final String EMAIL_VERIFICATION_SUBJECT = "Email Verification";
+    private static final Random random = new SecureRandom();
+
+
 
     public void sendCodeToEmail(String email) {
         if (userService.checkDuplicateMail(email)) {
@@ -44,12 +45,7 @@ public class VerificationCodeService {
     public String createCodeAndSaveRedis(String email) {
         int length = 6;
         try {
-            Random random = SecureRandom.getInstanceStrong();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < length; i++) {
-                builder.append(random.nextInt(10));
-            }
-            String code = builder.toString();
+            String code = generateCode(length);
             stringRedisTemplate.opsForValue().set(email, code, Duration.ofMinutes(5));
 
             return code;
@@ -58,27 +54,30 @@ public class VerificationCodeService {
         }
     }
 
+    private String generateCode(int length) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            builder.append(random.nextInt(10));
+        }
+        return builder.toString();
+    }
+
+
     @Transactional
     public boolean validateEmailCodeFromRedis(VerifyCodeRequest verifyCodeRequest) {
         String storedCode = stringRedisTemplate.opsForValue().get(verifyCodeRequest.email());
-        String stringUserPk = encryptionUtil.decrypt(verifyCodeRequest.userPk());
-        Long userPk = Long.parseLong(stringUserPk);
-
-        Optional<UserEntity> userOptional = userRepository.findByUserId(userPk);
-
-        userOptional.filter(UserEntity::isEmailVerified)
-                .ifPresent(userEntity -> {
-                    throw new CustomException(ALREADY_EMAIL);
-                });
-
-        if (storedCode != null && storedCode.equals(verifyCodeRequest.verificationCode())) {
-            userOptional.ifPresent(userEntity -> {
-                userEntity.emailUpdate(verifyCodeRequest.email());
-            });
-            stringRedisTemplate.delete(verifyCodeRequest.email());
-            return true;
+        if (storedCode == null || !storedCode.equals(verifyCodeRequest.verificationCode())) {
+            return false;
         }
 
-        return false;
+        return userRepository.findByUserId(Long.parseLong(encryptionUtil.decrypt(verifyCodeRequest.userPk())))
+                .map(userEntity -> {
+                    if (userEntity.isEmailVerified()) {
+                        throw new CustomException(ALREADY_EMAIL);
+                    }
+                    userEntity.emailUpdate(verifyCodeRequest.email());
+                    stringRedisTemplate.delete(verifyCodeRequest.email());
+                    return true;
+                }).orElse(false);
     }
 }
