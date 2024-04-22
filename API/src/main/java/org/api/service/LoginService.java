@@ -1,25 +1,12 @@
 package org.api.service;
 
-import static org.api.exception.ErrorCodes.INVALID_EMAIL;
-import static org.api.exception.ErrorCodes.NOT_FOUND_LOGINID;
-import static org.api.exception.ErrorCodes.NOT_FOUND_USER;
-import static org.api.exception.ErrorCodes.PASSWORD_DISMATCH;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.api.config.JwtConfig;
-import org.api.entity.LoginEntity;
+import org.api.config.jwtsecurity.JwtConfig;
 import org.api.entity.UserEntity;
-import org.api.exception.CustomException;
-import org.api.repository.LoginRepository;
 import org.api.repository.UserRepository;
 import org.api.util.EncryptionUtil;
 import org.core.request.LoginRequest;
 import org.core.response.LoginResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

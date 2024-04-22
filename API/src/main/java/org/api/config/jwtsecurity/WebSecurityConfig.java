@@ -1,7 +1,6 @@
-package org.api.config;
+package org.api.config.jwtsecurity;
 
 import lombok.RequiredArgsConstructor;
-import org.api.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtConfig jwtConfig;
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

@@ -1,4 +1,4 @@
-package org.api.config;
+package org.api.config.jwtsecurity;
 
 
 import io.jsonwebtoken.Claims;
