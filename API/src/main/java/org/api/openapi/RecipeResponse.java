@@ -3,21 +3,46 @@ package org.api.openapi;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class RecipeResponse {
-    private int recipeId;
-
-    @SuppressWarnings("unchecked")
     @JsonProperty("Grid_20150827000000000226_1")
-    private void unpackNested(Map<String, Object> grid) {
-        List<Map<String, Object>> rows = (List<Map<String, Object>>) grid.get("row");
-        if (!rows.isEmpty()) {
-            Map<String, Object> firstRow = rows.get(0);
-            this.recipeId = (Integer) firstRow.get("RECIPE_ID");
-        }
+    private RecipeRoot root;
+
+    @Data
+    public static class RecipeRoot {
+        private int totalCnt;
+        private int startRow;
+        private int endRow;
+
+        @JsonProperty("result")
+        private RecipeResult result;
+        @JsonProperty("row")
+        private List<Row> row;
     }
+
+    @Data
+    public static class RecipeResult {
+        private String code;
+        private String message;
+    }
+
+    @Data
+    public static class Row {
+        @JsonProperty("ROW_NUM")
+        private int rowNum;
+
+        @JsonProperty("RECIPE_ID")
+        private int recipeId;
+
+        @JsonProperty("CALORIE")
+        private String calorie;
+
+        @JsonProperty("NATION_NM")
+        private String nationNm;
+    }
+
 }

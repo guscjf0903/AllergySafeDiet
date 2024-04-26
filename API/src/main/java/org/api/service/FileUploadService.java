@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.api.exception.CustomException;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,32 +26,64 @@ public class FileUploadService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
-
     public List<String> uploadFiles(List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             return Collections.emptyList();
         }
+        ExecutorService executorService = Executors.newFixedThreadPool(10); // 각 업로드 요청마다 새로운 스레드 풀 생성
+
+        List<String> fileUrls = Collections.synchronizedList(new ArrayList<>());
         try {
-            List<String> fileUrls = new ArrayList<>();
-
             for (MultipartFile file : files) {
-                String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
-                ObjectMetadata metadata = new ObjectMetadata();
-                metadata.setContentLength(file.getSize());
-
-                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(),
-                        metadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead);
-
-                amazonS3Client.putObject(putObjectRequest);
-                String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
-                fileUrls.add(fileUrl);
+                executorService.submit(() -> {
+                    try {
+                        String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
+                        ObjectMetadata metadata = new ObjectMetadata();
+                        metadata.setContentLength(file.getSize());
+                        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(), metadata)
+                                .withCannedAcl(CannedAccessControlList.PublicRead);
+                        amazonS3Client.putObject(putObjectRequest);
+                        String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
+                        fileUrls.add(fileUrl);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        throw new RuntimeException(e); // 예외 처리
+                    }
+                });
             }
-
-            return fileUrls;
+            executorService.shutdown();
+            executorService.awaitTermination(1, TimeUnit.HOURS); // 모든 작업 완료를 기다림
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new CustomException(AWS_S3_UPLOAD_FAILED);
         }
+        return fileUrls;
     }
+//    public List<String> uploadFiles(List<MultipartFile> files) {
+//        if (files == null || files.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//        try {
+//            List<String> fileUrls = new ArrayList<>();
+//
+//            for (MultipartFile file : files) {
+//                String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
+//                ObjectMetadata metadata = new ObjectMetadata();
+//                metadata.setContentLength(file.getSize());
+//
+//                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(),
+//                        metadata)
+//                        .withCannedAcl(CannedAccessControlList.PublicRead);
+//
+//                amazonS3Client.putObject(putObjectRequest);
+//                String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
+//                fileUrls.add(fileUrl);
+//            }
+//
+//            return fileUrls;
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            throw new CustomException(AWS_S3_UPLOAD_FAILED);
+//        }
+//    }
 }

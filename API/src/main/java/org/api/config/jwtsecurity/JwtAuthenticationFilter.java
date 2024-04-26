@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.api.exception.JwtValidationException;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,31 +29,38 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         try {
-            String accessToken = getJwtFromRequest(httpRequest);
+            String accessToken = extractJwtFromRequest(httpRequest);
             if (accessToken != null && jwtConfig.validateToken(accessToken)) {
-                authenticate(accessToken);
-            }else {
-                String refreshToken = httpRequest.getHeader("Refresh-Token");
-                if (refreshToken != null && jwtConfig.validateToken(refreshToken)) {
-                    String newAccessToken = jwtConfig.generateAccessToken(jwtConfig.getUserIdFromJwtToken(refreshToken));
-                    httpResponse.setHeader("New-Access-Token", newAccessToken);
-                    authenticate(newAccessToken);
-                }
+                setupAuthentication(accessToken);
+            } else {
+                refreshToken(httpRequest, httpResponse);
             }
         } catch (JwtValidationException e) {
-            log.error("JWT Validation Exception: {}", e.getMessage());
+            handleJwtException(e);
         }
         chain.doFilter(request, response);
-
     }
 
-    private void authenticate(String jwt) {
+    private void refreshToken(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws JwtValidationException {
+        String refreshToken = httpRequest.getHeader("Refresh-Token");
+        if (refreshToken != null && jwtConfig.validateToken(refreshToken)) {
+            String newAccessToken = jwtConfig.generateAccessToken(jwtConfig.getUserIdFromJwtToken(refreshToken));
+            httpResponse.setHeader("New-Access-Token", newAccessToken);
+            setupAuthentication(newAccessToken);
+        }
+    }
+
+    private void handleJwtException(JwtValidationException e) {
+        log.error("JWT Validation Exception: {}", e.getMessage());
+    }
+
+    private void setupAuthentication(String jwt) {
         Long userId = jwtConfig.getUserIdFromJwtToken(jwt);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
+    private String extractJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.api.entity.FoodEntity;
 import org.api.entity.HealthEntity;
 import org.api.entity.PostEntity;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
     private final PostRepository postRepository;
     private final PostHealthRepository postHealthRepository;
@@ -50,10 +52,13 @@ public class PostService {
 
             postFoodService.savePostFood(postEntity, postRequest);
             postHealthService.savePostHealth(postEntity, postRequest);
-            List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images());
-
+            List<String> fileUrls = fileUploadService.uploadFiles(postRequest.images()); //s3업로드 방법
             s3UrlService.savePostImageUrl(postEntity, fileUrls);
+
+            //s3UrlService.uploadImagesToDatabase(postRequest.images(), postEntity); // RDB 업로드 방법.
+
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new CustomException(POST_UPLOAD_FAILED);
         }
     }
@@ -72,7 +77,7 @@ public class PostService {
         List<HealthEntity> healthEntities = getPostHealthDetailData(postId);
         List<String> imageUrls = postImageUrlRepository.findByPostPostId(postId).stream()
                 .map(PostImageUrlEntity::getImageUrl)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); //이 부분은 서비스에서 이루어지도록 설계해야할듯,
 
         return makePostDetailResponse(postEntity, foodEntities, healthEntities, imageUrls, visitor);
     }

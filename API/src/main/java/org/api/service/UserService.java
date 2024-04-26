@@ -1,7 +1,10 @@
 package org.api.service;
 
+import static org.api.exception.ErrorCodes.INVALID_EMAIL;
 import static org.api.exception.ErrorCodes.NOT_FOUND_LOGINID;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.UserEntity;
@@ -48,8 +51,18 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserEntity loadUserByUsername(String userName) {
-        return userRepository.findByUserName(userName)
+        UserEntity userEntity = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
+
+        if (!userEntity.isEmailVerified()) {
+            Map<String, String> userPkData = new HashMap<>();
+            String userPk = encryptionUtil.encrypt(userEntity.getUserId().toString());
+            userPkData.put("userPk", userPk);
+            throw new CustomException(INVALID_EMAIL, userPkData);
+        }
+
+
+        return userEntity;
     }
 
     @Transactional(readOnly = true)

@@ -49,7 +49,7 @@ public class CacheConfig {
                 .withCacheConfiguration("recipes",
                         RedisCacheConfiguration.defaultCacheConfig()
                                 .computePrefixWith(cacheName -> "prefix:" + cacheName + ":")
-                                .entryTtl(Duration.ofHours(2))
+                                .entryTtl(Duration.ofHours(12))
                                 .disableCachingNullValues()
                                 .serializeKeysWith(
                                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())

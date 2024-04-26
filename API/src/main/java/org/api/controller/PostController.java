@@ -47,6 +47,4 @@ public class PostController {
 
         return ResponseEntity.ok().body(postDetailResponse);
     }
-
-
 }

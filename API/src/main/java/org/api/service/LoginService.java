@@ -18,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class LoginService {
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtConfig jwtConfig;
-    private final EncryptionUtil encryptionUtil;
     private final AuthenticationManager authenticationManager;
 
     @Transactional
@@ -39,18 +36,5 @@ public class LoginService {
         String refreshToken = jwtConfig.generateRefreshToken(((UserEntity) authentication.getPrincipal()).getUserId());
 
         return new LoginResponse(accessToken, refreshToken);
-//        UserEntity userEntity = userRepository.findByUserName(loginRequest.loginId())
-//                .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-//
-//        if (!bCryptPasswordEncoder.matches(loginRequest.loginPassword(), userEntity.getPassword())) {
-//            throw new CustomException(PASSWORD_DISMATCH);
-//        } else if (!userEntity.isEmailVerified()) {
-//            Map<String, String> userPkData = new HashMap<>();
-//            String userPk = encryptionUtil.encrypt(userEntity.getUserId().toString());
-//            userPkData.put("userPk", userPk);
-//            throw new CustomException(INVALID_EMAIL, userPkData);
-//        }
-//
-//        return jwtConfig.generateRefreshToken(userEntity.getUserId());
     }
 }

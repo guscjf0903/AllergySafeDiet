@@ -6,21 +6,50 @@ import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-@Getter
-@Setter
+import java.util.List;
+
+@Data
 public class IngredientResponse {
-    private List<String> ingredientNames = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
     @JsonProperty("Grid_20150827000000000227_1")
-    private void unpackNested(Map<String, Object> grid) {
-        List<Map<String, Object>> rows = (List<Map<String, Object>>) grid.get("row");
-        if (rows != null) {
-            for (Map<String, Object> row : rows) {
-                String ingredientName = (String) row.get("IRDNT_NM");
-                ingredientNames.add(ingredientName);
-            }
-        }
+    private IngredientRoot root;
+
+    @Data
+    public static class IngredientRoot {
+        private int totalCnt;
+        private int startRow;
+        private int endRow;
+        @JsonProperty("result")
+        private IngredientResult result;
+        @JsonProperty("row")
+        private List<IngredientRow> row;
+    }
+
+    @Data
+    public static class IngredientResult {
+        private String code;
+        private String message;
+    }
+
+    @Data
+    public static class IngredientRow {
+        @JsonProperty("ROW_NUM")
+        private int rowNum;
+        @JsonProperty("RECIPE_ID")
+        private int recipeId;
+        @JsonProperty("IRDNT_SN")
+        private int irdntSn;
+        @JsonProperty("IRDNT_NM")
+        private String irdntNm;
+        @JsonProperty("IRDNT_CPCTY")
+        private String irdntCpcty;
+        @JsonProperty("IRDNT_TY_CODE")
+        private String irdntTyCode;
+        @JsonProperty("IRDNT_TY_NM")
+        private String irdntTyNm;
     }
 }
+
