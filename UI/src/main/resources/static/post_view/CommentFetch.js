@@ -54,31 +54,3 @@ function displayComments(comments) {
     attachReplyHandlers();
 }
 
-function attachReplyHandlers() {
-    $('.submit-reply').click(function() {
-        let commentId = $(this).data('comment-id');
-        let replyText = $(this).prev('textarea').val();
-        if (!replyText) {
-            alert('대댓글을 입력해주세요.');
-            return;
-        }
-        const apiUrl = $('#apiUrl').data('url');
-        const postId = new URLSearchParams(window.location.search).get('post_id');
-
-        sendAuthenticatedRequest({
-            url: apiUrl + "/comments/reply",
-            method: 'POST',
-            data: {
-                commentId: commentId,
-                replyText: replyText
-            },
-            onSuccess: function() {
-                fetchComments(postId); // 댓글과 대댓글을 다시 로드
-            },
-            onError: function(jqXHR) {
-                alert('대댓글 작성에 실패했습니다.');
-            }
-        });
-
-    });
-}

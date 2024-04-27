@@ -10,7 +10,9 @@ import org.core.request.ReplyRequest;
 import org.core.response.CommentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,20 @@ public class CommentController {
                                           Authentication authentication) {
         UserEntity user = userService.loadUserById((Long) authentication.getPrincipal());
         commentService.postReply(replyRequest, user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/reply/{replyId}")
+    public ResponseEntity<Void> deleteReply(@PathVariable long replyId) {
+        commentService.deleteReply(replyId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable long commentId) {
+        commentService.deleteComment(commentId);
 
         return ResponseEntity.ok().build();
     }

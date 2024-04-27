@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "comments", schema = "allergysafediet_schema")
@@ -40,7 +42,6 @@ public class CommentEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Long createdAt;
-
 
     @PrePersist
     protected void onCreate() {

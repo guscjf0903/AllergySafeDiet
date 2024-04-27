@@ -79,4 +79,12 @@ public class CommentService {
         replyRepository.save(replyEntity);
     }
 
+    public void deleteComment(long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    public void deleteReply(long replyId) {
+        replyRepository.deleteById(replyId);
+    }
+
 }

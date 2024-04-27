@@ -53,7 +53,11 @@ $(document).ready(function() {
                     'Done!',
                     'Email verify successful.',
                     'success'
-                )
+                ).then((result) => {
+                    if (result.value) {
+                        window.location.href = 'main_menu/select';
+                    }
+                });
             },
             onError: function(jqXHR) {
                 let errorMessage = "Email verification failed. Please try again."; // 기본 에러 메시지
