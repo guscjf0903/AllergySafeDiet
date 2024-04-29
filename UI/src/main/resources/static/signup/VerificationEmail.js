@@ -55,7 +55,7 @@ $(document).ready(function() {
                     'success'
                 ).then((result) => {
                     if (result.value) {
-                        window.location.href = 'main_menu/select';
+                        window.location.href = '/login';
                     }
                 });
             },

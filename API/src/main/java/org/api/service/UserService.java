@@ -14,13 +14,14 @@ import org.api.util.EncryptionUtil;
 import org.core.request.SignupRequest;
 import org.core.response.SignupResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EncryptionUtil encryptionUtil;
@@ -46,23 +47,6 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public boolean checkDuplicateMail(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public UserEntity loadUserByUsername(String userName) {
-        UserEntity userEntity = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_LOGINID));
-
-        if (!userEntity.isEmailVerified()) {
-            Map<String, String> userPkData = new HashMap<>();
-            String userPk = encryptionUtil.encrypt(userEntity.getUserId().toString());
-            userPkData.put("userPk", userPk);
-            throw new CustomException(INVALID_EMAIL, userPkData);
-        }
-
-
-        return userEntity;
     }
 
     @Transactional(readOnly = true)

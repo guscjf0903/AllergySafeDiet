@@ -34,7 +34,8 @@ $(document).ready(function() {
                         'error'
                     );
                 } else if (jqXHR.status === 409) {
-                    var userPk = jqXHR.responseJSON && jqXHR.responseJSON.additionalData ? jqXHR.responseJSON.additionalData.userPk : null;
+                    let response = jqXHR.responseJSON;
+                    let userPk = response.userPk;
                     if(userPk !== null) {
                         Swal.fire(
                             'Error!',

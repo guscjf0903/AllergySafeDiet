@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.api.exception.JwtValidationException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,18 +29,19 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         try {
             String accessToken = extractJwtFromRequest(httpRequest);
+
             if (accessToken != null && jwtConfig.validateToken(accessToken)) {
                 setupAuthentication(accessToken);
             } else {
                 refreshToken(httpRequest, httpResponse);
             }
-        } catch (JwtValidationException e) {
-            handleJwtException(e);
+        } catch (Exception e) {
+            handleJwtException(e, request);
         }
         chain.doFilter(request, response);
     }
 
-    private void refreshToken(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws JwtValidationException {
+    private void refreshToken(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         String refreshToken = httpRequest.getHeader("Refresh-Token");
         if (refreshToken != null && jwtConfig.validateToken(refreshToken)) {
             String newAccessToken = jwtConfig.generateAccessToken(jwtConfig.getUserIdFromJwtToken(refreshToken));
@@ -50,8 +50,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
     }
 
-    private void handleJwtException(JwtValidationException e) {
+    private void handleJwtException(Exception e, ServletRequest request) {
         log.error("JWT Validation Exception: {}", e.getMessage());
+        request.setAttribute("exception", e);
     }
 
     private void setupAuthentication(String jwt) {

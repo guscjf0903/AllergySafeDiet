@@ -5,11 +5,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
-import java.util.function.Function;
 import org.api.exception.JwtValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+
 @Slf4j
 @Configuration
 public class JwtConfig {
@@ -25,12 +25,8 @@ public class JwtConfig {
     }
 
     public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            throw new JwtValidationException("Token expired");
-        }
+        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+        return true;
     }
 
     public String generateAccessToken(Long userId) {
