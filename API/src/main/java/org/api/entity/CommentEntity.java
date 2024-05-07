@@ -2,14 +2,18 @@ package org.api.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +44,9 @@ public class CommentEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @OneToMany(mappedBy = "commentEntity", fetch = FetchType.EAGER)
+    private Set<ReplyEntity> replyEntities = new HashSet<>();
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Long createdAt;
 
@@ -51,6 +58,11 @@ public class CommentEntity {
         this.post = post;
         this.user = user;
         this.content = content;
+    }
+
+    public void addReplyEntity(ReplyEntity replyEntity) {
+        this.replyEntities.add(replyEntity);
+        replyEntity.setCommentEntity(this);
     }
 
     public static CommentEntity of(PostEntity post,UserEntity user, String content) {

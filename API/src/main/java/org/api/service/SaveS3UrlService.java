@@ -30,7 +30,6 @@ public class SaveS3UrlService {
     public void uploadImagesToDatabase(List<MultipartFile> files, PostEntity postEntity) throws IOException {
         for (MultipartFile file : files) {
             byte[] imageData = file.getBytes();
-
             ImageEntity imageEntity = new ImageEntity(postEntity, imageData);
             imageRepository.save(imageEntity);
         }

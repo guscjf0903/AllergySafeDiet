@@ -6,12 +6,15 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.api.exception.CustomException;
@@ -26,64 +29,46 @@ public class FileUploadService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
-    public List<String> uploadFiles(List<MultipartFile> files) {
+
+    public List<String> uploadFiles(List<MultipartFile> files) throws InterruptedException {
+        ExecutorService executorService = Executors.newCachedThreadPool(); // 적응적인 스레드 풀 사용
+
         if (files == null || files.isEmpty()) {
             return Collections.emptyList();
         }
-        ExecutorService executorService = Executors.newFixedThreadPool(10); // 각 업로드 요청마다 새로운 스레드 풀 생성
 
+        List<Future<String>> futures = new ArrayList<>();
         List<String> fileUrls = Collections.synchronizedList(new ArrayList<>());
+
         try {
             for (MultipartFile file : files) {
-                executorService.submit(() -> {
-                    try {
-                        String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
-                        ObjectMetadata metadata = new ObjectMetadata();
-                        metadata.setContentLength(file.getSize());
-                        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(), metadata)
-                                .withCannedAcl(CannedAccessControlList.PublicRead);
-                        amazonS3Client.putObject(putObjectRequest);
-                        String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
-                        fileUrls.add(fileUrl);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                        throw new RuntimeException(e); // 예외 처리
-                    }
-                });
+                futures.add(executorService.submit(() -> uploadFile(file)));
             }
+
+            for (Future<String> future : futures) {
+                try {
+                    fileUrls.add(future.get());
+                } catch (ExecutionException e) {
+                    throw new CustomException(AWS_S3_UPLOAD_FAILED);
+                }
+            }
+        } finally {
             executorService.shutdown();
-            executorService.awaitTermination(1, TimeUnit.HOURS); // 모든 작업 완료를 기다림
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new CustomException(AWS_S3_UPLOAD_FAILED);
+            executorService.awaitTermination(1, TimeUnit.HOURS);
         }
+
         return fileUrls;
     }
-//    public List<String> uploadFiles(List<MultipartFile> files) {
-//        if (files == null || files.isEmpty()) {
-//            return Collections.emptyList();
-//        }
-//        try {
-//            List<String> fileUrls = new ArrayList<>();
-//
-//            for (MultipartFile file : files) {
-//                String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
-//                ObjectMetadata metadata = new ObjectMetadata();
-//                metadata.setContentLength(file.getSize());
-//
-//                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(),
-//                        metadata)
-//                        .withCannedAcl(CannedAccessControlList.PublicRead);
-//
-//                amazonS3Client.putObject(putObjectRequest);
-//                String fileUrl = amazonS3Client.getUrl(bucketName, fileKey).toString();
-//                fileUrls.add(fileUrl);
-//            }
-//
-//            return fileUrls;
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            throw new CustomException(AWS_S3_UPLOAD_FAILED);
-//        }
-//    }
+
+    private String uploadFile(MultipartFile file) throws IOException {
+        String fileKey = UUID.randomUUID() + "-" + file.getOriginalFilename();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileKey, file.getInputStream(), metadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead);
+        amazonS3Client.putObject(putObjectRequest);
+        return amazonS3Client.getUrl(bucketName, fileKey).toString();
+    }
+
+
 }

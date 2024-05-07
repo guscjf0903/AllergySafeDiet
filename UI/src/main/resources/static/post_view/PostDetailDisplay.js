@@ -16,6 +16,13 @@ function displayPostDetails(data) {
                 </div>
             `);
             carouselInner.append(carouselItem);
+            let startTime = Date.now();
+            carouselItem.find('img').on('load', function() {
+                let loadTime = Date.now() - startTime;
+                console.log(`Image loaded in ${loadTime} ms`);
+            }).on('error', function() {
+                console.log('Error loading the image.');
+            });
         });
         $('#postImages').empty().append(carouselInner);
         $('#postImages').append(`
@@ -101,5 +108,13 @@ function displayPostDetails(data) {
                 ${foodTableRows}
             </tbody>
         `);
+    }
+
+    if (data.isWriter === true) {
+        $('#editPost').show();
+        $('#deletePost').show();
+    } else {
+        $('#editPost').hide();
+        $('#deletePost').hide();
     }
 }

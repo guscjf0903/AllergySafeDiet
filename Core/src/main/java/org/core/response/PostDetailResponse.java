@@ -12,12 +12,13 @@ public record PostDetailResponse(
         LocalDateTime date,
         List<HealthResponse> healthDataList,
         List<FoodResponse> foodDataList,
-        List<String> images
+        List<String> images,
+        boolean isWriter
 ) {
     public static PostDetailResponse toResponse(String title, String content, List<HealthResponse> healthDataList,
                                                 String author, int views,
                                                 LocalDateTime date, List<FoodResponse> foodDataList,
-                                                List<String> images) {
-        return new PostDetailResponse(title, content, author, views, date, healthDataList, foodDataList, images);
+                                                List<String> images, boolean isWriter) {
+        return new PostDetailResponse(title, content, author, views, date, healthDataList, foodDataList, images, isWriter);
     }
 }

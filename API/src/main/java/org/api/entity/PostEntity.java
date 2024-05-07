@@ -2,11 +2,13 @@ package org.api.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -15,6 +17,8 @@ import jakarta.persistence.Transient;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +50,16 @@ public class PostEntity {
     @Column(name = "views", nullable = false)
     private Integer views = 0;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private Set<PostFoodEntity> postFoodEntities = new HashSet<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private Set<PostHealthEntity> postHealthEntities = new HashSet<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private Set<CommentEntity> commentEntities = new HashSet<>();
+
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Long createdAt;
 
@@ -74,6 +88,20 @@ public class PostEntity {
         if (this.updatedAt != null) {
             this.updatedAtDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.updatedAt), ZoneId.systemDefault());
         }
+    }
+
+    public void addPostFoodEntity(PostFoodEntity postFoodEntity) {
+        this.postFoodEntities.add(postFoodEntity);
+        postFoodEntity.setPost(this);
+    }
+
+    public void addPostHealthEntity(PostHealthEntity postHealthEntity) {
+        this.postHealthEntities.add(postHealthEntity);
+        postHealthEntity.setPost(this);
+    }
+    public void addCommentEntity(CommentEntity commentEntity) {
+        this.commentEntities.add(commentEntity);
+        commentEntity.setPost(this);
     }
 
 

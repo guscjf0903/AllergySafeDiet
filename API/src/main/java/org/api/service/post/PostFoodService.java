@@ -1,6 +1,7 @@
 package org.api.service.post;
 
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.api.entity.FoodEntity;
 import org.api.entity.PostEntity;
@@ -24,6 +25,7 @@ public class PostFoodService {
         }
         for (FoodEntity foodEntity : foodEntities) {
             PostFoodEntity postFoodEntity = new PostFoodEntity(postEntity, foodEntity);
+            postEntity.addPostFoodEntity(postFoodEntity);
             postFoodRepository.save(postFoodEntity);
         }
     }

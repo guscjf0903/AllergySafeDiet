@@ -27,6 +27,8 @@ public class CommentService {
         PostEntity postEntity = postService.getPostEntityFindById(commentRequest.postId());
 
         CommentEntity commentEntity = CommentEntity.of(postEntity, user, commentRequest.commentText());
+        postEntity.addCommentEntity(commentEntity);
+
         commentRepository.save(commentEntity);
     }
 
@@ -75,6 +77,7 @@ public class CommentService {
     public void postReply(ReplyRequest replyRequest, UserEntity user) {
         CommentEntity commentEntity = commentRepository.findByCommentId(replyRequest.commentId());
         ReplyEntity replyEntity = ReplyEntity.of(commentEntity, user, replyRequest.replyText());
+        commentEntity.addReplyEntity(replyEntity);
 
         replyRepository.save(replyEntity);
     }

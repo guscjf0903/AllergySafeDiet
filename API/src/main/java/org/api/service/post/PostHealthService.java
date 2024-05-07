@@ -22,6 +22,7 @@ public class PostHealthService {
         }
         for (HealthEntity healthEntity : healthEntities) {
             PostHealthEntity postHealthEntity = new PostHealthEntity(postEntity, healthEntity);
+            postEntity.addPostHealthEntity(postHealthEntity);
             postHealthRepository.save(postHealthEntity);
         }
     }

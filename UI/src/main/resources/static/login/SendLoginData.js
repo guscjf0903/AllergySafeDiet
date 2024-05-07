@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     $('#loginBtn').click(function(e) {
         var apiUrl = $('#apiUrl').data('url');

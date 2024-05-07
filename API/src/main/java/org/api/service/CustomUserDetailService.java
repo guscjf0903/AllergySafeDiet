@@ -14,14 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final EncryptionUtil encryptionUtil;
 
     @Override
     @Transactional(readOnly = true)
     public UserEntity loadUserByUsername(String userName) {
-        UserEntity user = userRepository.findByUserName(userName)
+        return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userName));
-
-        return  user;
     }
 }
