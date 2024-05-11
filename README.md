@@ -19,7 +19,7 @@
 ## 배포 환경
 
 ---
-![img.png](img.png)
+![img.png](image/img.png)
 
 
 ## 주요 기능
@@ -43,21 +43,22 @@
 ---
 
 ### 스프링 시큐리티 + JWT
-![스크린샷 2024-05-11 오후 7.28.02.png](..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fhn%2Frvw3_4xn67s6wspkx1cbypph0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_QQqN0N%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-05-11%20%EC%98%A4%ED%9B%84%207.28.02.png)
+![img.png](image/springSecurity.png)
 
 <br>
 
 ### S3 업로드 방식
-![스크린샷 2024-05-11 오후 7.35.13.png](..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fhn%2Frvw3_4xn67s6wspkx1cbypph0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_nRUD67%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-05-11%20%EC%98%A4%ED%9B%84%207.35.13.png)
+![img.png](image/s3upload.png)
 
 <br>
 
 ### 게시글 조회수 업데이트 Redis 방식
-![스크린샷 2024-05-11 오후 7.36.28.png](..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fhn%2Frvw3_4xn67s6wspkx1cbypph0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_fPT6mZ%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-05-11%20%EC%98%A4%ED%9B%84%207.36.28.png)
+![img.png](image/views_redis.png)
 
 ## ERD
 
-![스크린샷 2024-05-11 오후 8.10.53.png](..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fhn%2Frvw3_4xn67s6wspkx1cbypph0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_tGA6Ao%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202024-05-11%20%EC%98%A4%ED%9B%84%208.10.53.png)
+![img.png](image/ERD_image.png)
+
 
 ## 서비스 개선사항에 따른 보고서
 https://gelatinous-sage-97e.notion.site/ad2a064606b34b89ad852d65a96a85ba?pvs=4
