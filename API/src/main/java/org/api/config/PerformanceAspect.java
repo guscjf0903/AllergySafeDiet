@@ -20,7 +20,7 @@ public class PerformanceAspect {
 //        return result;
 //    }
 
-    @Around("execution(* org.api.service.post.PostService.getPostDetail(..))")
+    @Around("execution(* org.api.service.FileUploadService.uploadFiles(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed(); // 메소드 실행

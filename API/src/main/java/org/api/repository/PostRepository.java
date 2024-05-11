@@ -13,9 +13,5 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     @Query("update PostEntity p set p.views = p.views + 1 where p.postId = :postId")
     void updateViews(Long postId);
 
-    @Query("SELECT DISTINCT p FROM PostEntity p " +
-            "JOIN FETCH p.postFoodEntities pf " +
-            "JOIN FETCH pf.food f " +
-            "JOIN FETCH f.ingredientEntities WHERE p.postId = :postId ")
     Optional<PostEntity> findByPostId(Long postId);
 }

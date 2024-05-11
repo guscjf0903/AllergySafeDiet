@@ -8,33 +8,11 @@ function displayPostDetails(data) {
     if (data.images && data.images.length > 0) {
         let carouselInner = $('<div class="carousel-inner"></div>');
         data.images.forEach((image, index) => {
-            let itemClass = (index === 0) ? 'carousel-item active' : 'carousel-item';
-            let imgUrl = image;
-            let carouselItem = $(`
-                <div class="${itemClass}">
-                    <img src="${imgUrl}" class="d-block w-100" alt="Image" style="max-width: 50%; height: auto;">
-                </div>
-            `);
-            carouselInner.append(carouselItem);
-            let startTime = Date.now();
-            carouselItem.find('img').on('load', function() {
-                let loadTime = Date.now() - startTime;
-                console.log(`Image loaded in ${loadTime} ms`);
-            }).on('error', function() {
-                console.log('Error loading the image.');
-            });
+            loadImage(image, index, carouselInner);
+            // loadImageAndMeasureSize(image, index, carouselInner)
         });
         $('#postImages').empty().append(carouselInner);
-        $('#postImages').append(`
-            <a class="carousel-control-prev" href="#postImages" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#postImages" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        `);
+        $('#postImages').append(carouselControls());
     }
 
     if (data.healthDataList && data.healthDataList.length > 0) {
@@ -117,4 +95,51 @@ function displayPostDetails(data) {
         $('#editPost').hide();
         $('#deletePost').hide();
     }
+}
+function loadImage(imageUrl, index, carouselInner) {
+    let itemClass = index === 0 ? 'carousel-item active' : 'carousel-item';
+    let carouselItem = $(`
+        <div class="${itemClass}">
+            <img src="${imageUrl}" class="d-block w-100" alt="Image" style="max-width: 50%; height: auto;">
+        </div>
+    `);
+    carouselInner.append(carouselItem);
+
+    let startTime = Date.now();
+    carouselItem.find('img').on('load', function() {
+        let loadTime = Date.now() - startTime;
+        console.log(`Image ${index + 1} loaded in ${loadTime} ms`);
+    }).on('error', function() {
+        console.log(`Error loading image ${index + 1}.`);
+    });
+}
+
+function carouselControls() {
+    return `
+        <a class="carousel-control-prev" href="#postImages" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#postImages" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    `;
+}
+
+function loadImageAndMeasureSize(imageUrl, index, carouselInner) {
+    let itemClass = index === 0 ? 'carousel-item active' : 'carousel-item';
+    let carouselItem = $(`
+        <div class="${itemClass}">
+            <img src="${imageUrl}" class="d-block w-100" alt="Image" style="max-width: 50%; height: auto;">
+        </div>
+    `);
+    carouselInner.append(carouselItem);
+
+    fetch(imageUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            console.log(`Image ${index + 1} loaded, size: ${blob.size} bytes`);
+        })
+        .catch(err => console.log(`Error loading image ${index + 1}:`, err));
 }
