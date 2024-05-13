@@ -9,6 +9,7 @@ import org.api.service.post.PostService;
 import org.api.service.UserService;
 import org.core.request.PostRequest;
 import org.core.response.PostDetailResponse;
+import org.core.response.PostListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -46,5 +47,13 @@ public class PostController {
         PostDetailResponse postDetailResponse = postService.getPostDetail(postId, visitor);
 
         return ResponseEntity.ok().body(postDetailResponse);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<PostListResponse> getPostListData(@RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "10") int limit, Authentication authentication) {
+        PostListResponse postListResponse = postService.getPostList(page, limit);
+
+        return ResponseEntity.ok().body(postListResponse);
     }
 }

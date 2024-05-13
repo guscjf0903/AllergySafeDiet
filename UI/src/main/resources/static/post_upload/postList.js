@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    // 게시물 데이터 가져오기
-    fetchPosts();
+    var apiUrl = $('#apiUrl').attr('data-url'); // API URL 동적 참조
+    fetchPosts(1, 10);
 
     // 게시물 클릭 이벤트 핸들러
     $('#postList').on('click', 'tr', function () {
@@ -14,15 +14,16 @@ $(document).ready(function () {
     });
 });
 
-function fetchPosts() {
-    $.ajax({
-        url: 'https://your-api-endpoint.com/posts',
+function fetchPosts(page, limit) {
+    sendAuthenticatedRequest({
+        url: apiUrl + '/post/list?page=' + page + '&limit=' + limit,
         method: 'GET',
-        success: function (data) {
-            displayPosts(data);
+        onSuccess: function (data) {
+            displayPosts(data.posts);
+            setupPagination(data.total, limit, page);
         },
-        error: function (err) {
-            console.error('Error fetching posts:', err);
+        onError: function (jqXHR) {
+            console.error('Error fetching posts:', jqXHR);
         }
     });
 }
@@ -41,6 +42,20 @@ function displayPosts(posts) {
             </tr>`
         );
     });
+}
+function setupPagination(totalItems, itemsPerPage, currentPage) {
+    var totalPages = Math.ceil(totalItems / itemsPerPage);
+    var pagination = $('.pagination');
+    pagination.empty();
+
+    for (let i = 1; i <= totalPages; i++) {
+        var pageItem = $(`<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`);
+        pageItem.on('click', function (e) {
+            e.preventDefault();
+            fetchPosts(i, itemsPerPage);
+        });
+        pagination.append(pageItem);
+    }
 }
 
 function fetchPostDetails(postId) {
