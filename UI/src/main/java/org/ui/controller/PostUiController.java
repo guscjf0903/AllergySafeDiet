@@ -26,12 +26,6 @@ public class PostUiController {
     }
 
 
-//    @GetMapping("/upload")
-//    public String showPutPostUploadForm(Model model, @RequestParam(name = "post_id") Long postId) {
-//        model.addAttribute("post_id", postId);
-//        return "PostUploadForm";
-//    }
-
     @GetMapping("/detail")
     public String showPostDetailForm(Model model,@RequestParam(name = "post_id") Long post_id) {
         model.addAttribute("apiUrl", apiUrl);

@@ -1,6 +1,6 @@
 package org.api.repository;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 import org.api.entity.PostEntity;
 import org.springframework.data.domain.Page;

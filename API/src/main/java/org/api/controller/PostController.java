@@ -50,10 +50,9 @@ public class PostController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<PostListResponse> getPostListData(@RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "10") int limit, Authentication authentication) {
+    public ResponseEntity<PostListResponse> getPostListData(@RequestParam(name = "page",defaultValue = "0") int page,
+                                                            @RequestParam(name = "limit", defaultValue = "10") int limit, Authentication authentication) {
         PostListResponse postListResponse = postService.getPostList(page, limit);
-
         return ResponseEntity.ok().body(postListResponse);
     }
 }

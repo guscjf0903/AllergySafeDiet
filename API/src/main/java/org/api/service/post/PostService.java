@@ -3,7 +3,6 @@ package org.api.service.post;
 import static org.api.exception.ErrorCodes.POST_NOT_FOUND;
 import static org.api.exception.ErrorCodes.POST_UPLOAD_FAILED;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +33,10 @@ import org.core.response.HealthResponse;
 import org.core.response.PostDetailResponse;
 import org.core.response.PostListResponse;
 import org.core.response.PostSummary;
+import org.hibernate.dialect.SybaseSqmToSqlAstConverter;
+import org.hibernate.query.sqm.sql.BaseSqmToSqlAstConverter;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,16 +155,18 @@ public class PostService {
     }
 
     public PostListResponse getPostList(int page, int limit) {
-        Pageable pageable = (Pageable) PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit);
         Page<PostEntity> postPage = postRepository.findAll(pageable);
 
         List<PostEntity> posts = postPage.getContent();
         List<PostSummary> postDtos = posts.stream().map(post -> new PostSummary(
                 post.getPostId(),
+                post.getCreatedAtDate(),
                 post.getTitle(),
                 post.getUser().getUsername(),
                 post.getViews()
         )).collect(Collectors.toList());
+
 
         return new PostListResponse(
                 postDtos,

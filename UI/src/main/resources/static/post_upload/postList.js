@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var apiUrl = $('#apiUrl').attr('data-url'); // API URL 동적 참조
-    fetchPosts(1, 10);
+
+    fetchPosts(0, 10, apiUrl);
 
     // 게시물 클릭 이벤트 핸들러
     $('#postList').on('click', 'tr', function () {
@@ -14,13 +15,13 @@ $(document).ready(function () {
     });
 });
 
-function fetchPosts(page, limit) {
+function fetchPosts(page, limit, apiUrl) {
     sendAuthenticatedRequest({
         url: apiUrl + '/post/list?page=' + page + '&limit=' + limit,
         method: 'GET',
         onSuccess: function (data) {
             displayPosts(data.posts);
-            setupPagination(data.total, limit, page);
+            setupPagination(data.totalItems, limit, page, apiUrl);
         },
         onError: function (jqXHR) {
             console.error('Error fetching posts:', jqXHR);
@@ -33,9 +34,9 @@ function displayPosts(posts) {
     postList.empty(); // 이전 목록을 초기화합니다.
     posts.forEach(function (post) {
         postList.append(
-            `<tr data-id="${post.id}">
-                <td>${post.id}</td>
-                <td>${post.date}</td>
+            `<tr data-id="${post.postId}">
+                <td>${post.postId}</td>
+                <td>${post.createdAt}</td>
                 <td>${post.author}</td>
                 <td>${post.title}</td>
                 <td>${post.views}</td>
@@ -43,8 +44,10 @@ function displayPosts(posts) {
         );
     });
 }
-function setupPagination(totalItems, itemsPerPage, currentPage) {
+function setupPagination(totalItems, itemsPerPage, currentPage, apiUrl) {
+
     var totalPages = Math.ceil(totalItems / itemsPerPage);
+
     var pagination = $('.pagination');
     pagination.empty();
 
@@ -52,23 +55,15 @@ function setupPagination(totalItems, itemsPerPage, currentPage) {
         var pageItem = $(`<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`);
         pageItem.on('click', function (e) {
             e.preventDefault();
-            fetchPosts(i, itemsPerPage);
+            var selectedPage = parseInt($(this).text()) - 1;  // 페이지 번호를 0 기반 인덱스로 조정
+            fetchPosts(selectedPage, itemsPerPage, apiUrl);
         });
         pagination.append(pageItem);
     }
 }
 
 function fetchPostDetails(postId) {
-    $.ajax({
-        url: `https://your-api-endpoint.com/posts/${postId}`, // 실제 API 엔드포인트로 대체해야 합니다.
-        method: 'GET',
-        success: function (data) {
-            //displayPostDetails(data);
-        },
-        error: function (err) {
-            console.error(`Error fetching post details for post ${postId}:`, err);
-        }
-    });
+    window.location.href = `/post/detail?post_id=` + postId;
 }
 
 // function displayPostDetails(post) {
