@@ -19,7 +19,7 @@
 ## 배포 환경
 
 ---
-![img.png](image/img.png)
+![img.png](image/CICD.png)
 
 
 ## 주요 기능
