@@ -21,7 +21,7 @@ spring:
       on-profile: prod
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://172.16.72.131:5432/postgres
+    url: jdbc:postgresql://database-1.c96ug4gikmm4.ap-northeast-2.rds.amazonaws.com:5432/allergySafeDB
     username: guscjf0903
     password: tnthtn35
   jpa:
