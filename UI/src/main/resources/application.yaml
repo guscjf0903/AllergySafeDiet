@@ -27,7 +27,7 @@ spring:
     activate:
       on-profile: profile2
 api:
-  url: http://ec2-54-180-102-86.ap-northeast-2.compute.amazonaws.com:7777
+  url: http://ec2-3-34-179-33.ap-northeast-2.compute.amazonaws.com:7777
 
 ui:
-  url: http://ec2-54-180-102-86.ap-northeast-2.compute.amazonaws.com:8888
+  url: http://ec2-3-34-179-33.ap-northeast-2.compute.amazonaws.com:8888
