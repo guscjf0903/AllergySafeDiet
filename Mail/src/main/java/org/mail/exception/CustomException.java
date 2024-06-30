@@ -1,6 +1,5 @@
-package org.api.exception;
+package org.mail.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
