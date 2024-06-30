@@ -1,0 +1,38 @@
+server:
+  port: 6666
+
+jwt:
+  secret-key: "3okpDDRf6HCajVusuiLSVWaAbqHdV/V7V44LIRAZeaBtSGoSi+vDK1uewFHYSmnIs6+vzq0+3ZxV4OdztVCj+g=="
+  expiration: 3600000
+---
+spring:
+  devtools:
+    livereload:
+      enabled: false
+  jpa:
+    properties:
+      hibernate:
+    open-in-view: false
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+
+
+
+  profiles:
+    group:
+      dev:
+        - gmail
+
+      prod:
+        - gmail
+
+
+
+    include:
+      - db

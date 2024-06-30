@@ -1,13 +1,13 @@
-package com.example.allergysafediet;
+package org.mail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AllergySafeDietApplication {
+public class MailApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AllergySafeDietApplication.class, args);
+        SpringApplication.run(MailApplication.class, args);
     }
 
 }
