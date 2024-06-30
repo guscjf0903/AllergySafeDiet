@@ -62,6 +62,9 @@ dependencies {
     implementation "com.querydsl:querydsl-codegen:5.0.0" // QueryDSL 코드 생성
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
 }

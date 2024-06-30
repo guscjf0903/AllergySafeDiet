@@ -33,6 +33,7 @@ public class WebSecurityConfig {
                                 new AntPathRequestMatcher("/login"),
                                 new AntPathRequestMatcher("/signup"),
                                 new AntPathRequestMatcher("/email/**"),
+                                new AntPathRequestMatcher("/actuator/prometheus"),
                                 new AntPathRequestMatcher("/recipes")).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

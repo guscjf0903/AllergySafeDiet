@@ -23,6 +23,7 @@ spring:
       max-request-size: 200MB
 
 
+
   profiles:
     group:
       dev:
@@ -32,6 +33,7 @@ spring:
         - gmail
         - redis
         - s3
+        - actuator
       prod:
         - db-prod
         - openinview-prod
@@ -39,6 +41,7 @@ spring:
         - openApi
         - redis
         - s3-prod
+        - actuator
 
 
     include:

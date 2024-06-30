@@ -40,7 +40,6 @@ public class AllergyService {
     }
 
 
-
     @Transactional
     public void saveAllergyData(AllergyRequest allergyRequest, UserEntity userEntity) {
         for (String allergen : allergyRequest.allergy()) {

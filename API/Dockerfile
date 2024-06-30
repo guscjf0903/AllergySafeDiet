@@ -16,3 +16,4 @@ CMD ["java", "-jar", "api.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTI
 
 
 
+

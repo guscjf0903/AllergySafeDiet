@@ -15,6 +15,7 @@ import org.core.request.ReplyRequest;
 import org.core.response.CommentResponse;
 import org.core.response.ReplyResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +23,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
     private final PostService postService;
+    private final MailService mailService;
 
+    @Transactional
     public void postComment(CommentRequest commentRequest, UserEntity user) {
         PostEntity postEntity = postService.getPostEntityFindById(commentRequest.postId());
 
@@ -30,8 +33,30 @@ public class CommentService {
         postEntity.addCommentEntity(commentEntity);
 
         commentRepository.save(commentEntity);
+        sendNotificationEmail(postEntity.getUser(), commentEntity, null);
     }
 
+    private void sendNotificationEmail(UserEntity recipient, CommentEntity comment, ReplyEntity reply) {
+        String email = recipient.getEmail();
+        String subject;
+        String message;
+
+
+        if (comment != null) {
+            subject = "새 댓글 알림";
+            message = String.format("안녕하세요 %s님,\n\n회원님의 게시물에 새로운 댓글이 달렸습니다:\n\n%s\n\n댓글 작성자: %s",
+                    recipient.getUsername(), comment.getContent(), comment.getUser().getUsername());
+        } else {
+            subject = "새 대댓글 알림";
+            message = String.format("안녕하세요 %s님,\n\n회원님의 댓글에 새로운 대댓글이 달렸습니다:\n\n%s\n\n대댓글 작성자: %s",
+                    recipient.getUsername(), reply.getReplyText(), reply.getUser().getUsername());
+        }
+
+        mailService.sendMail(email, subject, message);
+
+    }
+
+    @Transactional(readOnly = true)
     public List<CommentResponse> getCommentAndReplyByPostId(Long postId, UserEntity user) {
         List<CommentEntity> commentEntities = commentRepository.findByPostPostId(postId);
 
@@ -73,13 +98,14 @@ public class CommentService {
 
         return commentResponseList;
     }
-
+    @Transactional
     public void postReply(ReplyRequest replyRequest, UserEntity user) {
         CommentEntity commentEntity = commentRepository.findByCommentId(replyRequest.commentId());
         ReplyEntity replyEntity = ReplyEntity.of(commentEntity, user, replyRequest.replyText());
         commentEntity.addReplyEntity(replyEntity);
 
         replyRepository.save(replyEntity);
+        sendNotificationEmail(commentEntity.getUser(), null, replyEntity);
     }
 
     public void deleteComment(long commentId) {

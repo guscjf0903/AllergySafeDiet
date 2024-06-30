@@ -2,6 +2,7 @@ package org.api.config.jwtsecurity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -17,7 +18,18 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     }
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        resolver.resolveException(request, response, null, (Exception) request.getAttribute("exception"));
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException {
+        if (authException == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            return;
+        }
+
+        Exception exception = (Exception) request.getAttribute("exception");
+        if (exception == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        } else {
+            resolver.resolveException(request, response, null, exception);
+        }
     }
 }
