@@ -1,7 +1,10 @@
 package org.mail.service;
 
+import static org.mail.exception.ErrorCodes.FAILED_MAIL_SEND;
+
 import lombok.RequiredArgsConstructor;
 import org.core.request.MailRequest;
+import org.mail.exception.CustomException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -10,10 +13,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailService {
     private final JavaMailSender mailSender;
-
     public void sendMail(MailRequest mailRequest) {
-        SimpleMailMessage mailMessage = createMailMessage(mailRequest.email(), mailRequest.subject(), mailRequest.message());
-        mailSender.send(mailMessage);
+        try {
+            SimpleMailMessage mailMessage = createMailMessage(mailRequest.email(), mailRequest.subject(), mailRequest.message());
+            mailSender.send(mailMessage);
+        } catch (Exception e) {
+            throw new CustomException(FAILED_MAIL_SEND);
+        }
+
     }
 
     private SimpleMailMessage createMailMessage(String email, String subject, String message) {

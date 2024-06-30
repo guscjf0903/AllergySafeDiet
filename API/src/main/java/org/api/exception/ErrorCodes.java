@@ -24,7 +24,9 @@ public enum ErrorCodes {
     DECRYPTION_ERROR(500, "암호화 코드 해석에 실패하였습니다."),
     POST_UPLOAD_FAILED(500, "게시글 업로드 중 문제가 발생하였습니다."),
     AWS_S3_UPLOAD_FAILED(500, "이미지 업로드 중 문제가 발생하였습니다."),
-    POST_NOT_FOUND(404, "요청한 게시물이 없습니다.");
+    POST_NOT_FOUND(404, "요청한 게시물이 없습니다."),
+    FAILED_MAIL_SEND(500, "메일 전송 중 문제가 발생했습니다.");
+
 
 
 

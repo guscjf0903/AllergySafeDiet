@@ -18,7 +18,6 @@ public class MailSendController {
     public ResponseEntity<Void> sendMail(@RequestBody MailRequest mailRequest) {
         mailService.sendMail(mailRequest);
 
+        return ResponseEntity.ok().build();
     }
-
-
 }
